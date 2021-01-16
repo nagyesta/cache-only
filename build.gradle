@@ -3,6 +3,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'maven-publish'
+    id 'io.freefair.lombok' version '5.3.0'
     id 'io.toolebox.git-versioner' version '1.6.5'
 }
 
@@ -20,9 +21,13 @@ project.ext {
     maintainerName = 'Istvan Zoltan Nagy'
 
     // dependency versions
+    lombokVersion = '1.18.16'
     jupiterVersion = '5.7.0'
     mockitoCoreVersion = '3.6.0'
     slf4jApiVersion = '1.7.30'
+    springVersion = '5.0.0.RELEASE'
+    commonsCollectionsVersion = '4.4'
+
 }
 
 versioner {
@@ -65,9 +70,13 @@ java {
 }
 
 dependencies {
+    annotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
     implementation "org.slf4j:slf4j-api:${project.ext.slf4jApiVersion}"
+    implementation "org.apache.commons:commons-collections4:${project.ext.commonsCollectionsVersion}"
+    implementation "org.springframework:spring-context-support:${project.ext.springVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter:${project.ext.jupiterVersion}"
     testImplementation "org.mockito:mockito-core:${project.ext.mockitoCoreVersion}"
+    testImplementation "org.springframework:spring-test:${project.ext.springVersion}"
 }
 
 jacocoTestReport {
@@ -122,6 +131,7 @@ jacocoTestCoverageVerification {
                 minimum = 0.5
             }
             excludes = [
+                    "com.github.nagyesta.cacheonly.raw.BatchServiceCaller"
             ]
         }
     }

@@ -1,0 +1,28 @@
+package com.github.nagyesta.cacheonly.example.replies;
+
+import com.github.nagyesta.cacheonly.core.DefaultCacheServiceTemplate;
+import com.github.nagyesta.cacheonly.example.replies.request.ThreadRequest;
+import com.github.nagyesta.cacheonly.example.replies.response.Comment;
+import com.github.nagyesta.cacheonly.example.replies.response.CommentThreads;
+import com.github.nagyesta.cacheonly.raw.BatchServiceCaller;
+import com.github.nagyesta.cacheonly.transform.BatchRequestTransformer;
+import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
+import com.github.nagyesta.cacheonly.transform.PartialCacheSupport;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class CommentCacheServiceTemplate
+        extends DefaultCacheServiceTemplate<ThreadRequest, CommentThreads, ThreadRequest, List<Comment>, String, Long> {
+
+    @Autowired
+    public CommentCacheServiceTemplate(
+            final PartialCacheSupport<ThreadRequest, List<Comment>, String, Long> partialCacheSupport,
+            final BatchRequestTransformer<ThreadRequest, ThreadRequest, Long> batchRequestTransformer,
+            final BatchResponseTransformer<CommentThreads, List<Comment>, Long> batchResponseTransformer,
+            final BatchServiceCaller<ThreadRequest, CommentThreads> batchServiceCaller) {
+        super(partialCacheSupport, batchRequestTransformer, batchResponseTransformer, batchServiceCaller);
+    }
+}

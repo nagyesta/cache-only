@@ -1,6 +1,5 @@
 # Security Policy
 
-
 ## Supported Versions 
 
 The aim is to support the fellow developers who are using this library as much as
