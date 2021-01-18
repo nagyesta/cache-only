@@ -38,11 +38,10 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew tagVersion build -PgithubToken=${{ secrets.PUBLISH_KEY }} -PgithubUser=${{ secrets.PUBLISH_USER_NAME }}
       - name: Publish with Gradle
-        run: ./gradlew publishToMavenLocal -PgithubToken=${{ secrets.PUBLISH_KEY }} -PgithubUser=${{ secrets.PUBLISH_USER_NAME }}
+        run: ./gradlew publish -PgithubToken=${{ secrets.PUBLISH_KEY }} -PgithubUser=${{ secrets.PUBLISH_USER_NAME }}
       - name: Publish to Bintray
         uses: nagyesta/bintray-maven-publisher-action@v1.1.0
         with:
-          DRY_RUN: "true"
           MANIFEST: "manifest.bau"
           API_USER: "nagyesta"
           API_KEY: "${{ secrets.BINTRAY_TOKEN }}"
