@@ -32,6 +32,7 @@ If applicable. Please do NOT share sensitive information.
 #### Environment
  - OS: [e.g. Windows/Unix]
  - Version: [e.g. 1.0.0]
+ - Spring version [e.g. 5.0.0.RELEASE]
  - Java version [e.g. 11.0.2 Open JDK]
 
 #### Additional context
