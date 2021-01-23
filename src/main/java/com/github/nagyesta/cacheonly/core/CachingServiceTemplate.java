@@ -1,6 +1,8 @@
 package com.github.nagyesta.cacheonly.core;
 
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The template that is handling caching activities and calls to the batch service
@@ -19,7 +21,8 @@ public interface CachingServiceTemplate<BR, BS> {
      * @return The batch response either from the real service or from cache.
      * @throws BatchServiceException When the service call fails with an exception.
      */
-    BS callCacheableBatchService(BR request) throws BatchServiceException;
+    @Nullable
+    BS callCacheableBatchService(@NotNull BR request) throws BatchServiceException;
 
     /**
      * Processes the provided batch request and returns an appropriate batch response.
@@ -30,5 +33,6 @@ public interface CachingServiceTemplate<BR, BS> {
      * @return The batch response from the real service.
      * @throws BatchServiceException When the service call fails with an exception.
      */
-    BS callBatchServiceAndPutAllToCache(BR request) throws BatchServiceException;
+    @Nullable
+    BS callBatchServiceAndPutAllToCache(@NotNull BR request) throws BatchServiceException;
 }

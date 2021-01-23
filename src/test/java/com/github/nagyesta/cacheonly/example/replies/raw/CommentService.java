@@ -2,6 +2,7 @@ package com.github.nagyesta.cacheonly.example.replies.raw;
 
 import com.github.nagyesta.cacheonly.example.replies.response.Comment;
 import com.github.nagyesta.cacheonly.example.replies.response.CommentThreads;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -132,7 +133,8 @@ public class CommentService {
         this.database = Collections.unmodifiableMap(map);
     }
 
-    public CommentThreads threadsOf(final UUID article, final Set<Long> threadIds) throws NotFoundException {
+    @NotNull
+    public CommentThreads threadsOf(final @NotNull UUID article, final @NotNull Set<Long> threadIds) throws NotFoundException {
         Assert.isTrue(threadIds.size() <= 5, "Batch size is too large.");
         if (!database.containsKey(article)) {
             throw new NotFoundException();

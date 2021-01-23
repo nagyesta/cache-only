@@ -25,9 +25,11 @@ project.ext {
     jupiterVersion = '5.7.0'
     mockitoCoreVersion = '3.6.0'
     slf4jApiVersion = '1.7.30'
-    springVersion = '5.0.0.RELEASE'
+    springVersion = '4.2.0.RELEASE'
+    springTestVersion = '5.2.12.RELEASE'
+    jetbrainsAnnotationVersion = '20.1.0'
     commonsCollectionsVersion = '4.4'
-
+    logbackVersion = '1.2.3'
 }
 
 versioner {
@@ -71,12 +73,16 @@ java {
 
 dependencies {
     annotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
+    compileOnly "org.jetbrains:annotations:${project.ext.jetbrainsAnnotationVersion}"
+    testCompileOnly "org.jetbrains:annotations:${project.ext.jetbrainsAnnotationVersion}"
     implementation "org.slf4j:slf4j-api:${project.ext.slf4jApiVersion}"
     implementation "org.apache.commons:commons-collections4:${project.ext.commonsCollectionsVersion}"
     implementation "org.springframework:spring-context-support:${project.ext.springVersion}"
     testImplementation "org.junit.jupiter:junit-jupiter:${project.ext.jupiterVersion}"
     testImplementation "org.mockito:mockito-core:${project.ext.mockitoCoreVersion}"
-    testImplementation "org.springframework:spring-test:${project.ext.springVersion}"
+    testImplementation "org.springframework:spring-test:${project.ext.springTestVersion}"
+    testImplementation "org.springframework:spring-context-support:${project.ext.springTestVersion}"
+    testImplementation "ch.qos.logback:logback-classic:${project.ext.logbackVersion}"
 }
 
 jacocoTestReport {
@@ -131,7 +137,8 @@ jacocoTestCoverageVerification {
                 minimum = 0.5
             }
             excludes = [
-                    "com.github.nagyesta.cacheonly.raw.BatchServiceCaller"
+                    "com.github.nagyesta.cacheonly.raw.BatchServiceCaller",
+                    "com.github.nagyesta.cacheonly.transform.NoOpPartialCacheSupport"
             ]
         }
     }

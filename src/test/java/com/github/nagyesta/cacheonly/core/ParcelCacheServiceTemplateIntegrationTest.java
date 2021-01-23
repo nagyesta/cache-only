@@ -1,15 +1,18 @@
 package com.github.nagyesta.cacheonly.core;
 
+import ch.qos.logback.classic.Level;
 import com.github.nagyesta.cacheonly.example.parcel.ParcelCacheServiceTemplate;
 import com.github.nagyesta.cacheonly.example.parcel.ParcelContext;
 import com.github.nagyesta.cacheonly.example.parcel.raw.ParcelBatchServiceCaller;
 import com.github.nagyesta.cacheonly.example.parcel.raw.ParcelService;
 import com.github.nagyesta.cacheonly.example.parcel.response.ParcelResponse;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -32,12 +35,16 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("checkstyle:MagicNumber")
 class ParcelCacheServiceTemplateIntegrationTest {
 
+    @BeforeAll
+    static void beforeAll() {
+        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ParcelCacheServiceTemplate.class)).setLevel(Level.DEBUG);
+        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework")).setLevel(Level.WARN);
+    }
+
     @Autowired
     private ParcelCacheServiceTemplate underTest;
     @Autowired
     private ParcelBatchServiceCaller batchServiceCaller;
-    @Autowired
-    private ParcelService parcelService;
 
     private static Stream<Arguments> validInputProvider() {
         return Stream.<Arguments>builder()

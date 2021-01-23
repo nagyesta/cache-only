@@ -1,5 +1,7 @@
 package com.github.nagyesta.cacheonly.entity;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 import java.util.StringJoiner;
 
@@ -20,7 +22,7 @@ public final class CacheKey<C, I> {
      * @param key The cache key value.
      * @param id  The Id of the partial request this key belongs to.
      */
-    public CacheKey(final C key, final I id) {
+    public CacheKey(final @NotNull C key, final @NotNull I id) {
         this.key = key;
         this.id = id;
     }
@@ -30,6 +32,7 @@ public final class CacheKey<C, I> {
      *
      * @return key
      */
+    @NotNull
     public C getKey() {
         return key;
     }
@@ -39,6 +42,7 @@ public final class CacheKey<C, I> {
      *
      * @return id
      */
+    @NotNull
     public I getId() {
         return id;
     }

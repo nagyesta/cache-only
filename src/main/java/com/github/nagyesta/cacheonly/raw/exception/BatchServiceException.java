@@ -1,19 +1,19 @@
 package com.github.nagyesta.cacheonly.raw.exception;
 
-import org.springframework.lang.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Exception class used for indicating fetch failure while we try to get up-to-date
  * information from the batch service we try to wrap with a cache.
  */
-public class BatchServiceException extends Exception {
+public class BatchServiceException extends RuntimeException {
 
     /**
      * See {@link Exception#Exception(String)}.
      *
      * @param message The message detailing the failure.
      */
-    public BatchServiceException(@NonNull final String message) {
+    public BatchServiceException(final @NotNull String message) {
         super(message);
     }
 
@@ -23,8 +23,8 @@ public class BatchServiceException extends Exception {
      * @param message The message detailing the failure.
      * @param cause   The cause of the failure.
      */
-    public BatchServiceException(@NonNull final String message,
-                                 @NonNull final Throwable cause) {
+    public BatchServiceException(final @NotNull String message,
+                                 final @NotNull Throwable cause) {
         super(message, cause);
     }
 }

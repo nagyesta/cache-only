@@ -3,6 +3,7 @@ package com.github.nagyesta.cacheonly.example.stock.raw;
 import com.github.nagyesta.cacheonly.core.CacheRefreshStrategy;
 import com.github.nagyesta.cacheonly.raw.BatchServiceCaller;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,19 +32,22 @@ public class StockBatchServiceCaller
         return PARTITION_SIZE;
     }
 
+    @NotNull
     @Override
     public CacheRefreshStrategy refreshStrategy() {
         return CacheRefreshStrategy.PESSIMISTIC;
     }
 
+    @NotNull
     @Override
     @SuppressWarnings("RedundantThrows")
-    public SortedMap<String, BigDecimal> callBatchService(final SortedSet<String> batchRequest)
+    public SortedMap<String, BigDecimal> callBatchService(final @NotNull SortedSet<String> batchRequest)
             throws BatchServiceException {
         // we call the service here
         return new TreeMap<>(stockService.lookup(batchRequest));
     }
 
+    @NotNull
     public final StockService getStockService() {
         return stockService;
     }
