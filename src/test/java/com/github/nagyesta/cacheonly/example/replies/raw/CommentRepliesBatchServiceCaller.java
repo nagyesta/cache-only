@@ -5,6 +5,7 @@ import com.github.nagyesta.cacheonly.example.replies.request.ThreadRequest;
 import com.github.nagyesta.cacheonly.example.replies.response.CommentThreads;
 import com.github.nagyesta.cacheonly.raw.BatchServiceCaller;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class CommentRepliesBatchServiceCaller
     private final CommentService commentService;
 
     @Autowired
-    public CommentRepliesBatchServiceCaller(final CommentService commentService) {
+    public CommentRepliesBatchServiceCaller(final @NotNull CommentService commentService) {
         this.commentService = spy(commentService);
     }
 
@@ -30,13 +31,15 @@ public class CommentRepliesBatchServiceCaller
         return PARTITION_SIZE;
     }
 
+    @NotNull
     @Override
     public CacheRefreshStrategy refreshStrategy() {
         return CacheRefreshStrategy.OPPORTUNISTIC;
     }
 
+    @NotNull
     @Override
-    public CommentThreads callBatchService(final ThreadRequest batchRequest)
+    public CommentThreads callBatchService(final @NotNull ThreadRequest batchRequest)
             throws BatchServiceException {
         // we call the service here
         try {
@@ -46,6 +49,7 @@ public class CommentRepliesBatchServiceCaller
         }
     }
 
+    @NotNull
     public final CommentService getCommentService() {
         return commentService;
     }

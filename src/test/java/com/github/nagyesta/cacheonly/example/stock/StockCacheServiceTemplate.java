@@ -5,6 +5,7 @@ import com.github.nagyesta.cacheonly.raw.BatchServiceCaller;
 import com.github.nagyesta.cacheonly.transform.BatchRequestTransformer;
 import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
 import com.github.nagyesta.cacheonly.transform.PartialCacheSupport;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,10 @@ public class StockCacheServiceTemplate
 
     @Autowired
     public StockCacheServiceTemplate(
-            final PartialCacheSupport<String, BigDecimal, String, String> partialCacheSupport,
-            final BatchRequestTransformer<SortedSet<String>, String, String> batchRequestTransformer,
-            final BatchResponseTransformer<SortedMap<String, BigDecimal>, BigDecimal, String> batchResponseTransformer,
-            final BatchServiceCaller<SortedSet<String>, SortedMap<String, BigDecimal>> batchServiceCaller) {
+            final @NotNull PartialCacheSupport<String, BigDecimal, String, String> partialCacheSupport,
+            final @NotNull BatchRequestTransformer<SortedSet<String>, String, String> batchRequestTransformer,
+            final @NotNull BatchResponseTransformer<SortedMap<String, BigDecimal>, BigDecimal, String> batchResponseTransformer,
+            final @NotNull BatchServiceCaller<SortedSet<String>, SortedMap<String, BigDecimal>> batchServiceCaller) {
         super(partialCacheSupport, batchRequestTransformer, batchResponseTransformer, batchServiceCaller);
     }
 }

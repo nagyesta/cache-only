@@ -1,10 +1,10 @@
 package com.github.nagyesta.cacheonly.transform;
 
 import com.github.nagyesta.cacheonly.entity.CacheKey;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-
-import java.util.Objects;
 
 /**
  * Defines how a given partial request-response pair should be cached.
@@ -21,6 +21,7 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      *
      * @return The cache name
      */
+    @NotNull
     String cacheName();
 
     /**
@@ -28,6 +29,7 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      *
      * @return The cached class
      */
+    @NotNull
     Class<PS> getEntityClass();
 
     /**
@@ -36,13 +38,15 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      * @param partialRequest The partial request.
      * @return The cache key
      */
-    CacheKey<C, I> toCacheKey(PR partialRequest);
+    @Nullable
+    CacheKey<C, I> toCacheKey(@NotNull PR partialRequest);
 
     /**
      * Returns the cache manager instance used for this caching operation.
      *
      * @return the cache manager
      */
+    @NotNull
     CacheManager getCacheManager();
 
     /**
@@ -50,8 +54,9 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      *
      * @return The cache
      */
+    @NotNull
     default Cache obtainCache() {
-        return Objects.requireNonNull(getCacheManager().getCache(cacheName()));
+        return getCacheManager().getCache(cacheName());
     }
 
     /**
@@ -60,7 +65,7 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      * @param key    The cache key.
      * @param entity The entity we want to cache.
      */
-    default void putToCache(final CacheKey<C, I> key, final PS entity) {
+    default void putToCache(final @NotNull CacheKey<C, I> key, final @NotNull PS entity) {
         obtainCache().put(key.getKey(), entity);
     }
 
@@ -70,7 +75,8 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      * @param key The cache key.
      * @return A partial response identified by the key or null in case of cache miss.
      */
-    default PS getFromCache(final CacheKey<C, I> key) {
+    @Nullable
+    default PS getFromCache(final @NotNull CacheKey<C, I> key) {
         return obtainCache().get(key.getKey(), getEntityClass());
     }
 }

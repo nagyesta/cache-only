@@ -1,6 +1,7 @@
 package com.github.nagyesta.cacheonly.core;
 
 import org.apache.commons.collections4.SetUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
@@ -19,9 +20,10 @@ public enum CacheRefreshStrategy {
      * Every other time, the items not found in cache will be simply skipped.
      */
     CACHE_ONLY {
+        @NotNull
         @Override
-        public <I> Set<I> selectItemsForFetch(final Set<I> allRequestIds,
-                                              final Set<I> idsFoundInCache,
+        public <I> Set<I> selectItemsForFetch(final @NotNull Set<I> allRequestIds,
+                                              final @NotNull Set<I> idsFoundInCache,
                                               final int maxPartitionSize) {
             assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
             return Collections.emptySet();
@@ -38,9 +40,10 @@ public enum CacheRefreshStrategy {
      * the cache is not an issue.
      */
     OPPORTUNISTIC {
+        @NotNull
         @Override
-        public <I> Set<I> selectItemsForFetch(final Set<I> allRequestIds,
-                                              final Set<I> idsFoundInCache,
+        public <I> Set<I> selectItemsForFetch(final @NotNull Set<I> allRequestIds,
+                                              final @NotNull Set<I> idsFoundInCache,
                                               final int maxPartitionSize) {
             assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
             final Set<I> result = new HashSet<>(SetUtils.difference(allRequestIds, idsFoundInCache));
@@ -67,9 +70,10 @@ public enum CacheRefreshStrategy {
             return true;
         }
 
+        @NotNull
         @Override
-        public <I> Set<I> selectItemsForFetch(final Set<I> allRequestIds,
-                                              final Set<I> idsFoundInCache,
+        public <I> Set<I> selectItemsForFetch(final @NotNull Set<I> allRequestIds,
+                                              final @NotNull Set<I> idsFoundInCache,
                                               final int maxPartitionSize) {
             assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
             Set<I> result = SetUtils.difference(allRequestIds, idsFoundInCache);
@@ -82,7 +86,7 @@ public enum CacheRefreshStrategy {
     /**
      * Never uses cache for read or write. Useful when you want to use only the request
      * partitioning and response merging functionality.
-     * Recommended to use with {@link org.springframework.cache.support.NoOpCache}.
+     * Recommended to use with {@link org.springframework.cache.support.NoOpCacheManager}.
      */
     NEVER_CACHE {
         @Override
@@ -135,15 +139,16 @@ public enum CacheRefreshStrategy {
      * @param <I>              The type of the request Id.
      * @return The set of request Ids we want to fetch.
      */
-    public <I> Set<I> selectItemsForFetch(final Set<I> allRequestIds,
-                                          final Set<I> idsFoundInCache,
+    @NotNull
+    public <I> Set<I> selectItemsForFetch(final @NotNull Set<I> allRequestIds,
+                                          final @NotNull Set<I> idsFoundInCache,
                                           final int maxPartitionSize) {
         assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
         return SetUtils.difference(allRequestIds, idsFoundInCache);
     }
 
-    protected <I> void assertInputIsValid(final Set<I> allRequestIds,
-                                          final Set<I> idsFoundInCache,
+    protected <I> void assertInputIsValid(final @NotNull Set<I> allRequestIds,
+                                          final @NotNull Set<I> idsFoundInCache,
                                           final int maxPartitionSize) {
         Assert.notNull(allRequestIds, "AllRequestIds cannot be null.");
         Assert.noNullElements(allRequestIds.toArray(), "AllRequestIds cannot contain null.");
@@ -151,7 +156,6 @@ public enum CacheRefreshStrategy {
         Assert.noNullElements(idsFoundInCache.toArray(), "IdsFoundInCache cannot contain null.");
         Assert.isTrue(maxPartitionSize > 0, "MaxPartitionSize must be at least 1.");
         final Set<I> foundInCacheButNotWanted = SetUtils.difference(idsFoundInCache, allRequestIds);
-        Assert.isTrue(foundInCacheButNotWanted.isEmpty(),
-                () -> "Unexpected Id(s) found in cache: " + foundInCacheButNotWanted);
+        Assert.isTrue(foundInCacheButNotWanted.isEmpty(), "Unexpected Id(s) found in cache: " + foundInCacheButNotWanted);
     }
 }

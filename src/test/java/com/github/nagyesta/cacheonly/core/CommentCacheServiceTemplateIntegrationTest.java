@@ -87,11 +87,9 @@ class CommentCacheServiceTemplateIntegrationTest {
         // all items were tried from the cache and missed
         final Cache cache = cacheManager.getCache(THREADS);
         final InOrder inOrder = Mockito.inOrder(cache);
-        threadIds.forEach(id -> {
-            inOrder.verify(cache).get(
-                    eq(CommentService.NO_COMMENT.toString() + "_thread_" + id),
-                    eq(List.class));
-        });
+        threadIds.forEach(id -> inOrder.verify(cache).get(
+                eq(CommentService.NO_COMMENT.toString() + "_thread_" + id),
+                eq(List.class)));
         // nothing is put into the cache as all of them are missed
         inOrder.verify(cache, never()).put(anyString(), any());
     }
@@ -118,11 +116,9 @@ class CommentCacheServiceTemplateIntegrationTest {
         // all items were tried from the cache and missed
         final Cache cache = cacheManager.getCache(THREADS);
         final InOrder inOrder = Mockito.inOrder(cache);
-        threadIds.forEach(id -> {
-            inOrder.verify(cache).get(
-                    eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT.toString() + "_thread_" + id),
-                    eq(List.class));
-        });
+        threadIds.forEach(id -> inOrder.verify(cache).get(
+                eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT.toString() + "_thread_" + id),
+                eq(List.class)));
         // only 1 and 3 are put into the cache as others are nulls
         inOrder.verify(cache).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT.toString() + "_thread_1"), any());
         inOrder.verify(cache).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT.toString() + "_thread_3"), any());

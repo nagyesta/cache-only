@@ -2,6 +2,8 @@ package com.github.nagyesta.cacheonly.raw;
 
 import com.github.nagyesta.cacheonly.core.CacheRefreshStrategy;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Defines how the underlying batch service will behave when we interact with it.
@@ -25,6 +27,7 @@ public interface BatchServiceCaller<BR, BS> {
      *
      * @return the strategy.
      */
+    @NotNull
     default CacheRefreshStrategy refreshStrategy() {
         return CacheRefreshStrategy.OPTIMISTIC;
     }
@@ -38,5 +41,6 @@ public interface BatchServiceCaller<BR, BS> {
      * @throws BatchServiceException In case the batch service failed to resolve the response due to an error.
      *                               Should not be used if the response is empty because items are not found.
      */
-    BS callBatchService(BR batchRequest) throws BatchServiceException;
+    @Nullable
+    BS callBatchService(@NotNull BR batchRequest) throws BatchServiceException;
 }
