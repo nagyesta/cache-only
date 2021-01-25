@@ -43,7 +43,7 @@ Cache-Only provides a few interfaces:
 
 All of these are glued together by the implementations
 of [CachingServiceTemplate](src/main/java/com/github/nagyesta/cacheonly/core/CachingServiceTemplate.java)
-are wiring these all together by managing how the bulk request is split, then each part is looked up from the cache
+which are managing how the bulk request is split, then each part is looked up from the cache
 using the cache support. For those which were missed, we can decide to merge into a bulk request and call the real API.
 When the response is received, we just need to make sure each partial response is saved to the cache one-by-one. (Please
 check out the [wiki](https://github.com/nagyesta/cache-only/wiki) for more details)
