@@ -3,17 +3,15 @@ package com.github.nagyesta.cacheonly.example.replies.transform;
 import com.github.nagyesta.cacheonly.entity.CacheKey;
 import com.github.nagyesta.cacheonly.example.replies.CommentContext;
 import com.github.nagyesta.cacheonly.example.replies.request.ThreadRequest;
-import com.github.nagyesta.cacheonly.example.replies.response.Comment;
+import com.github.nagyesta.cacheonly.example.replies.response.CommentThreads;
 import com.github.nagyesta.cacheonly.transform.PartialCacheSupport;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
-public class CommentPartialCacheSupport implements PartialCacheSupport<ThreadRequest, List<Comment>, String, Long> {
+public class CommentPartialCacheSupport implements PartialCacheSupport<ThreadRequest, CommentThreads, String, Long> {
 
     private final CacheManager cacheManager;
 
@@ -30,9 +28,8 @@ public class CommentPartialCacheSupport implements PartialCacheSupport<ThreadReq
 
     @NotNull
     @Override
-    @SuppressWarnings("unchecked")
-    public Class<List<Comment>> getEntityClass() {
-        return (Class<List<Comment>>) (Object) List.class;
+    public Class<CommentThreads> getEntityClass() {
+        return CommentThreads.class;
     }
 
     @NotNull

@@ -41,14 +41,14 @@ public interface BatchServiceCallMetricCollector {
     void partitionsCreated(int partitions);
 
     /**
-     * Called calling origin service failed for partitions.
+     * Called when calling origin service failed for partitions.
      *
      * @param partitions The number of partitions.
      */
     void partitionsFailed(int partitions);
 
     /**
-     * Called calling origin service succeeded for partitions.
+     * Called when calling origin service succeeded for partitions.
      *
      * @param partitions The number of partitions.
      */
