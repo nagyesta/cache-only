@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -35,16 +36,16 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("checkstyle:MagicNumber")
 class ParcelCacheServiceTemplateIntegrationTest {
 
+    @Autowired
+    private ParcelCacheServiceTemplate underTest;
+    @Autowired
+    private ParcelBatchServiceCaller batchServiceCaller;
+
     @BeforeAll
     static void beforeAll() {
         ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ParcelCacheServiceTemplate.class)).setLevel(Level.DEBUG);
         ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger("org.springframework")).setLevel(Level.WARN);
     }
-
-    @Autowired
-    private ParcelCacheServiceTemplate underTest;
-    @Autowired
-    private ParcelBatchServiceCaller batchServiceCaller;
 
     private static Stream<Arguments> validInputProvider() {
         return Stream.<Arguments>builder()
@@ -84,8 +85,12 @@ class ParcelCacheServiceTemplateIntegrationTest {
         final List<ParcelResponse> actual = underTest.callCacheableBatchService(ids);
 
         //then
-        assertNotNull(actual);
-        assertIterableEquals(expected, actual);
+        if (expectedCalls == 0) {
+            assertNull(actual);
+        } else {
+            assertNotNull(actual);
+            assertIterableEquals(expected, actual);
+        }
         // the real service was called the right amount of times
         verify(spyService, times(expectedCalls)).lookup(anyList());
     }

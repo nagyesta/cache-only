@@ -12,4 +12,12 @@ import java.util.Map;
 @EqualsAndHashCode
 public class CommentThreads {
     private Map<Long, List<Comment>> threads;
+
+    public CommentThreads() {
+    }
+
+    public CommentThreads(final Map<Long, List<Comment>> threads) {
+        this.threads = threads;
+    }
+
 }

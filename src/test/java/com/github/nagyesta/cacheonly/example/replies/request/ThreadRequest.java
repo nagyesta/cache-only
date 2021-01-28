@@ -11,4 +11,12 @@ import java.util.UUID;
 public class ThreadRequest {
     private UUID articleId;
     private List<Long> threadIds;
+
+    public ThreadRequest() {
+    }
+
+    public ThreadRequest(final UUID articleId, final List<Long> threadIds) {
+        this.articleId = articleId;
+        this.threadIds = threadIds;
+    }
 }
