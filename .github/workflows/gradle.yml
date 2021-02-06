@@ -41,7 +41,7 @@ jobs:
           echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}" | base64 --decode > ~/.gnupg/secring.gpg
       - name: Build with Gradle and publish
         run: >
-          ./gradlew tagVersion build publish
+          ./gradlew build tagVersion publish
           -PgithubUser=${{ secrets.PUBLISH_USER_NAME }}
           -PgithubToken=${{ secrets.PUBLISH_KEY }}
           -PossrhUsername=${{ secrets.OSSRH_USER }}
