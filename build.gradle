@@ -3,8 +3,10 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'maven-publish'
+    id 'signing'
     id 'io.freefair.lombok' version '5.3.0'
     id 'io.toolebox.git-versioner' version '1.6.5'
+    id "org.sonatype.gradle.plugins.scan" version "1.0.0"
 }
 
 group = 'com.github.nagyesta'
@@ -12,6 +14,8 @@ group = 'com.github.nagyesta'
 project.ext {
     gitToken = project.hasProperty('githubToken') ? (project.property('githubToken') as String) : ''
     gitUser = project.hasProperty('githubUser') ? (project.property('githubUser') as String) : ''
+    ossrhUser = project.hasProperty('ossrhUsername') ? (project.property('ossrhUsername') as String) : ''
+    ossrhPass = project.hasProperty('ossrhPassword') ? (project.property('ossrhPassword') as String) : ''
     artifactDisplayName = "Cache-Only"
     artifactDescription = "Cache-Only is a minimal library augmenting the Spring cache abstraction with a way for caching bulk API calls."
     repoUrl = 'https://github.com/nagyesta/cache-only'
@@ -19,6 +23,9 @@ project.ext {
     licenseUrl = 'https://raw.githubusercontent.com/nagyesta/cache-only/main/LICENSE'
     maintainerId = 'nagyesta'
     maintainerName = 'Istvan Zoltan Nagy'
+    maintainerUrl = 'https://github.com/nagyesta/'
+    scmConnection = 'scm:git:https://github.com/nagyesta/cache-only.git'
+    scmProjectUrl = 'https://github.com/nagyesta/cache-only/'
 
     // dependency versions
     lombokVersion = '1.18.16'
@@ -30,6 +37,9 @@ project.ext {
     jetbrainsAnnotationVersion = '20.1.0'
     commonsCollectionsVersion = '4.4'
     logbackVersion = '1.2.3'
+
+    // tool
+    jacocoVersion = '0.8.2'
 }
 
 versioner {
@@ -102,7 +112,7 @@ test.finalizedBy jacocoTestReport
 jacocoTestReport.finalizedBy jacocoTestCoverageVerification
 
 jacoco {
-    toolVersion = "0.8.2"
+    toolVersion = project.ext.jacocoVersion
 }
 
 jacocoTestCoverageVerification {
@@ -168,6 +178,14 @@ publishing {
                 password = project.ext.gitToken
             }
         }
+        maven {
+            name = "ossrh"
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+            credentials {
+                username = project.ext.ossrhUser
+                password = project.ext.ossrhPass
+            }
+        }
     }
     publications {
         //noinspection GroovyAssignabilityCheck
@@ -188,7 +206,13 @@ publishing {
                     developer {
                         id = project.ext.maintainerId
                         name = project.ext.maintainerName
+                        url = project.ext.maintainerUrl
                     }
+                }
+                scm {
+                    connection = project.ext.scmConnection
+                    developerConnection = project.ext.scmConnection
+                    url = project.ext.scmProjectUrl
                 }
                 withXml {
                     asNode().dependencies.'*'.findAll() {
@@ -203,4 +227,8 @@ publishing {
 //Disable metadata publishing and rely on Maven only
 tasks.withType(GenerateModuleMetadata) {
     enabled = false
+}
+
+signing {
+    sign publishing.publications.mavenJava
 }

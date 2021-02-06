@@ -1,7 +1,0 @@
-# GROUP_ID:ARTIFACT_ID:CLASSIFIER:PACKAGING:File pattern
-#
-com.github.nagyesta:cache-only:-:pom:build/publications/mavenJava/pom-default.xml
-com.github.nagyesta:cache-only:-:jar:build/libs/cache-only-*.?.jar
-com.github.nagyesta:cache-only:javadoc:jar:build/libs/cache-only-*.?-javadoc.jar
-com.github.nagyesta:cache-only:sources:jar:build/libs/cache-only-*.?-sources.jar
-
