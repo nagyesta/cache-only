@@ -29,11 +29,11 @@ project.ext {
 
     // dependency versions
     lombokVersion = '1.18.16'
-    jupiterVersion = '5.7.0'
+    jupiterVersion = '5.8.0'
     mockitoCoreVersion = '3.6.0'
     slf4jApiVersion = '1.7.30'
-    springVersion = '4.2.0.RELEASE'
-    springTestVersion = '5.2.12.RELEASE'
+    springVersion = '5.3.13'
+    springTestVersion = '5.3.13'
     jetbrainsAnnotationVersion = '20.1.0'
     commonsCollectionsVersion = '4.4'
     logbackVersion = '1.2.3'
@@ -97,10 +97,11 @@ dependencies {
 
 jacocoTestReport {
     reports {
-        xml.enabled true
+        xml.required.set(true)
         xml.destination file("$buildDir/reports/jacoco/report.xml")
-        csv.enabled false
-        html.enabled true
+        csv.required.set(false)
+        html.required.set(true)
+        html.destination file("$buildDir/reports/jacoco/html")
     }
 }
 
@@ -161,10 +162,10 @@ jar.dependsOn check
 tasks.withType(Checkstyle) {
     configProperties = [base_dir: rootDir.toString(), cache_file: file("${buildDir}/checkstyle/cacheFile")]
     reports {
-        xml.enabled false
-        html.enabled true
+        xml.required.set(false)
+        html.required.set(true)
         html.stylesheet resources.text
-                .fromFile(project.file('config/checkstyle/checkstyle-stylesheet.xsl') as String)
+                .fromFile(rootProject.file('config/checkstyle/checkstyle-stylesheet.xsl') as String)
     }
 }
 
