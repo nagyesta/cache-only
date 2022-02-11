@@ -52,7 +52,7 @@ jobs:
         with:
           java-version: 8
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@46110c361b7e9ea1b6f9c6ba2cc941fa7a106cca
+        uses: github/codeql-action/init@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 #v1.1.0
         with:
           languages: ${{ matrix.language }}
           # If you wish to specify custom queries, you can do so here or in a config file.
@@ -62,6 +62,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x test
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@46110c361b7e9ea1b6f9c6ba2cc941fa7a106cca
+        uses: github/codeql-action/analyze@474bbf07f9247ffe1856c6a0f94aeeb10e7afee6 #v1.1.0
       - name: Check OSS Index with Gradle
         run: ./gradlew ossIndexAudit --info
