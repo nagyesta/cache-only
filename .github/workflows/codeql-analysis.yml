@@ -33,6 +33,8 @@ on:
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/assets/**'
 
+permissions: read-all
+
 jobs:
   analyze:
     name: Analyze
