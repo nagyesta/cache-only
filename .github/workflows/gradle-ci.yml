@@ -13,6 +13,8 @@ on:
       - 'LICENSE'
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/assets/**'
+      - '.github/dependabot.yml'
+      - '.github/workflows/**'
 
 permissions: read-all
 
