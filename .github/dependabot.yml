@@ -9,5 +9,5 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
-    # Disable version updates for npm dependencies
-    open-pull-requests-limit: 0
+    # Disable version updates for gradle dependencies
+    open-pull-requests-limit: 1
