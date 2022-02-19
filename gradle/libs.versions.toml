@@ -1,0 +1,34 @@
+[versions]
+slf4j = "1.7.36"
+logback = "1.2.10"
+spring = "5.3.16"
+commonsCollections = "4.4"
+jupiter = "5.8.2"
+mockitoCore = "4.3.1"
+lombok = "1.18.22"
+jetbrainsAnnotation = "20.1.0"
+
+lombokPlugin = "6.4.1"
+gitVersionerPlugin = "1.6.7"
+indexScanPlugin = "2.2.3"
+owaspPlugin = "6.5.3"
+
+checkstyle = "9.2.1"
+jacoco = "0.8.2"
+
+[libraries]
+spring-test = { module = "org.springframework:spring-test", version.ref = "spring" }
+spring-context-support = { module = "org.springframework:spring-context-support", version.ref = "spring" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollections" }
+jupiter-core = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jupiter" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrainsAnnotation" }
+
+[plugins]
+lombok = { id = "io.freefair.lombok", version.ref = "lombokPlugin" }
+versioner = { id = "io.toolebox.git-versioner", version.ref = "gitVersionerPlugin" }
+index-scan = { id = "org.sonatype.gradle.plugins.scan", version.ref = "indexScanPlugin" }
+owasp-dependencycheck = { id = "org.owasp.dependencycheck", version.ref = "owaspPlugin" }

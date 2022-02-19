@@ -4,9 +4,10 @@ plugins {
     id 'jacoco'
     id 'maven-publish'
     id 'signing'
-    id 'io.freefair.lombok' version '6.4.0'
-    id 'io.toolebox.git-versioner' version '1.6.7'
-    id "org.sonatype.gradle.plugins.scan" version '2.2.3'
+    alias(libs.plugins.lombok)
+    alias(libs.plugins.versioner)
+    alias(libs.plugins.index.scan)
+    alias(libs.plugins.owasp.dependencycheck)
 }
 
 group = 'com.github.nagyesta'
@@ -16,6 +17,8 @@ project.ext {
     gitUser = project.hasProperty('githubUser') ? (project.property('githubUser') as String) : ''
     ossrhUser = project.hasProperty('ossrhUsername') ? (project.property('ossrhUsername') as String) : ''
     ossrhPass = project.hasProperty('ossrhPassword') ? (project.property('ossrhPassword') as String) : ''
+    ossIndexUser = project.hasProperty('ossIndexUsername') ? (project.property('ossIndexUsername') as String) : ''
+    ossIndexPass = project.hasProperty('ossIndexPassword') ? (project.property('ossIndexPassword') as String) : ''
     artifactDisplayName = "Cache-Only"
     artifactDescription = "Cache-Only is a minimal library augmenting the Spring cache abstraction with a way for caching bulk API calls."
     repoUrl = 'https://github.com/nagyesta/cache-only'
@@ -26,20 +29,6 @@ project.ext {
     maintainerUrl = 'https://github.com/nagyesta/'
     scmConnection = 'scm:git:https://github.com/nagyesta/cache-only.git'
     scmProjectUrl = 'https://github.com/nagyesta/cache-only/'
-
-    // dependency versions
-    lombokVersion = '1.18.16'
-    jupiterVersion = '5.8.0'
-    mockitoCoreVersion = '3.6.0'
-    slf4jApiVersion = '1.7.30'
-    springVersion = '5.3.13'
-    springTestVersion = '5.3.13'
-    jetbrainsAnnotationVersion = '20.1.0'
-    commonsCollectionsVersion = '4.4'
-    logbackVersion = '1.2.3'
-
-    // tool
-    jacocoVersion = '0.8.2'
 }
 
 versioner {
@@ -82,17 +71,17 @@ java {
 }
 
 dependencies {
-    annotationProcessor "org.projectlombok:lombok:${project.ext.lombokVersion}"
-    compileOnly "org.jetbrains:annotations:${project.ext.jetbrainsAnnotationVersion}"
-    testCompileOnly "org.jetbrains:annotations:${project.ext.jetbrainsAnnotationVersion}"
-    implementation "org.slf4j:slf4j-api:${project.ext.slf4jApiVersion}"
-    implementation "org.apache.commons:commons-collections4:${project.ext.commonsCollectionsVersion}"
-    implementation "org.springframework:spring-context-support:${project.ext.springVersion}"
-    testImplementation "org.junit.jupiter:junit-jupiter:${project.ext.jupiterVersion}"
-    testImplementation "org.mockito:mockito-core:${project.ext.mockitoCoreVersion}"
-    testImplementation "org.springframework:spring-test:${project.ext.springTestVersion}"
-    testImplementation "org.springframework:spring-context-support:${project.ext.springTestVersion}"
-    testImplementation "ch.qos.logback:logback-classic:${project.ext.logbackVersion}"
+    annotationProcessor libs.lombok
+    compileOnly libs.jetbrains.annotations
+    testCompileOnly libs.jetbrains.annotations
+    implementation libs.slf4j.api
+    implementation libs.commons.collections4
+    implementation libs.spring.context.support
+    testImplementation libs.jupiter.core
+    testImplementation libs.mockito.core
+    testImplementation libs.spring.test
+    testImplementation libs.spring.context.support
+    testImplementation libs.logback.classic
 }
 
 jacocoTestReport {
@@ -113,7 +102,7 @@ test.finalizedBy jacocoTestReport
 jacocoTestReport.finalizedBy jacocoTestCoverageVerification
 
 jacoco {
-    toolVersion = project.ext.jacocoVersion
+    toolVersion = libs.versions.jacoco.get()
 }
 
 jacocoTestCoverageVerification {
@@ -168,6 +157,7 @@ tasks.withType(Checkstyle) {
                 .fromFile(rootProject.file('config/checkstyle/checkstyle-stylesheet.xsl') as String)
     }
 }
+checkstyle.toolVersion = libs.versions.checkstyle.get()
 
 publishing {
     repositories {
@@ -228,6 +218,15 @@ publishing {
 //Disable metadata publishing and rely on Maven only
 tasks.withType(GenerateModuleMetadata) {
     enabled = false
+}
+
+ossIndexAudit {
+    username = rootProject.ext.ossIndexUser
+    password = rootProject.ext.ossIndexPass
+    printBanner = false
+    colorEnabled = true
+    showAll = false
+    dependencyGraph = true
 }
 
 signing {
