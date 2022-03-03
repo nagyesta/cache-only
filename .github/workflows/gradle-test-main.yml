@@ -6,16 +6,8 @@ name: JavaCI-PR
 on:
   pull_request:
     branches: [ main ]
-    paths-ignore:
-      - 'README.md'
-      - '**/README.md'
-      - 'SECURITY.md'
-      - 'LICENSE'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.github/assets/**'
-      - '.github/workflows/**'
-      - '.whitesource'
-      - 'renovate.json'
+    paths:
+      - 'gradle/libs.versions.toml'
 
 permissions: read-all
 
