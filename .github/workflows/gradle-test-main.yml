@@ -4,7 +4,7 @@
 name: JavaCI-PR
 
 on:
-  pull_request:
+  push:
     branches: [ main ]
     paths:
       - 'gradle/libs.versions.toml'
