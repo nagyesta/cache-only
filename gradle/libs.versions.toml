@@ -4,7 +4,7 @@ logback = "1.2.11"
 spring = "5.3.19"
 commonsCollections = "4.4"
 jupiter = "5.8.2"
-mockitoCore = "4.5.0"
+mockitoCore = "4.5.1"
 lombok = "1.18.24"
 jetbrainsAnnotation = "23.0.0"
 
