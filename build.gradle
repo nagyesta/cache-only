@@ -59,7 +59,7 @@ versioner {
 }
 
 versioner.apply()
-sourceCompatibility = '8'
+sourceCompatibility = '11'
 
 repositories {
     mavenCentral {
