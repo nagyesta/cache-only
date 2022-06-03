@@ -62,7 +62,13 @@ versioner.apply()
 sourceCompatibility = '8'
 
 repositories {
-    mavenCentral()
+    mavenCentral {
+        metadataSources {
+            mavenPom()
+            artifact()
+            ignoreGradleMetadataRedirection()
+        }
+    }
 }
 
 java {
