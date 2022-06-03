@@ -21,6 +21,6 @@ jobs:
         uses: actions/setup-java@f0bb91606209742fe3ea40199be2f3ef195ecabf # tag=v2.5.0
         with:
           distribution: temurin
-          java-version: 11
+          java-version: 8
       - name: Check dependencies with Gradle
         run: ./gradlew ossIndexAudit -PossIndexUsername=${{ secrets.OSS_INDEX_USER }} -PossIndexPassword=${{ secrets.OSS_INDEX_PASSWORD }}
