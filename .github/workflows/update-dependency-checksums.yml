@@ -29,7 +29,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-wrapper-
       - name: "Remove previous version"
-        run: rm gradle/verification-metadata.xml
+        run: cp gradle/verification-metadata-clean.xml gradle/verification-metadata.xml
       - name: "Update checksums"
         run: ./gradlew --write-verification-metadata sha256
       - name: "Git commit"
