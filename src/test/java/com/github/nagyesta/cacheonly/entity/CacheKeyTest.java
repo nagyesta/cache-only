@@ -20,7 +20,7 @@ class CacheKeyTest {
                 .add(Arguments.of(aCacheKey, aCacheKey, true))
                 .add(Arguments.of(new CacheKey<>(KEY_1, 1), new CacheKey<>(KEY_2, 1), false))
                 .add(Arguments.of(new CacheKey<>(KEY_2, 1), new CacheKey<>(KEY_2, 2), false))
-                .add(Arguments.of(new CacheKey<>(KEY_1, new Integer(23432)), new CacheKey<>(KEY_1, new Integer(23432)), true))
+                .add(Arguments.of(new CacheKey<>(KEY_1, Integer.valueOf(23432)), new CacheKey<>(KEY_1, Integer.valueOf(23432)), true))
                 .add(Arguments.of(new CacheKey<>(KEY_1, 1), KEY_1, false))
                 .build();
     }
