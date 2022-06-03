@@ -1,12 +1,11 @@
 {
   "extends": [
-    "config:base"
+    "config:base",
+    ":gitSignOff"
   ],
   "commitMessageSuffix": "{patch}",
   "github-actions": {
     "pinDigests": true
   },
-  "automerge": true,
-  "automergeStrategy": "fast-forward",
   "ignorePaths": [ ".github/workflows/**" ]
 }
