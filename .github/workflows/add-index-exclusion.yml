@@ -28,7 +28,7 @@ jobs:
           git checkout -b feature/exclude-vulnerability-run-${{ github.run_number }}
           git add config/ossindex/exclusions.txt
           git commit -asm "Excluding vulnerability ${{ github.event.inputs.exclusion }} {patch}"
-          git push -f --set-upstream origin release/run-${{ github.run_number }}
+          git push -f --set-upstream origin feature/exclude-vulnerability-run-${{ github.run_number }}
       - uses: actions/github-script@9ac08808f993958e9de277fe43a64532a609130e  # tag=v6.0.0
         with:
           github-token: ${{ secrets.PUBLISH_KEY }}
