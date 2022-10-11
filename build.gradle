@@ -12,6 +12,8 @@ plugins {
 
 group = 'com.github.nagyesta'
 
+apply from: "config/ossindex/ossIndexAudit.gradle"
+
 project.ext {
     gitToken = project.hasProperty('githubToken') ? (project.property('githubToken') as String) : ''
     gitUser = project.hasProperty('githubUser') ? (project.property('githubUser') as String) : ''
@@ -227,6 +229,7 @@ ossIndexAudit {
     colorEnabled = true
     showAll = false
     outputFormat = 'DEPENDENCY_GRAPH'
+    excludeVulnerabilityIds = rootProject.ext.ossIndexExclusions
 }
 
 signing {

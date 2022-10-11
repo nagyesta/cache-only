@@ -20,6 +20,7 @@ on:
       - '.whitesource'
       - 'renovate.json'
       - 'gradle/libs.versions.toml'
+      - 'config/ossindex/exclusions.txt'
 
 permissions: read-all
 
