@@ -11,7 +11,7 @@ jetbrainsAnnotation = "24.0.0"
 lombokPlugin = "6.6.1"
 gitVersionerPlugin = "1.6.7"
 indexScanPlugin = "2.5.4"
-owaspPlugin = "7.4.4"
+owaspPlugin = "8.0.0"
 
 checkstyle = "9.2.1"
 jacoco = "0.8.2"
