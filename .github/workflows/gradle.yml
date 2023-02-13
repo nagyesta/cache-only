@@ -22,6 +22,7 @@ on:
       - '.whitesource'
       - 'gradle/libs.versions.toml'
       - 'gradle/verification-metadata.xml'
+      - 'gradle/verification-metadata-clean.xml'
       - 'gradle/wrapper/gradle-wrapper.properties'
       - 'config/ossindex/exclusions.txt'
 
