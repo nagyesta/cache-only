@@ -1,7 +1,7 @@
 ![Cache-Only](.github/assets/CacheOnly_small.png)
 
 [![GitHub license](https://img.shields.io/github/license/nagyesta/cache-only?color=informational)](https://raw.githubusercontent.com/nagyesta/cache-only/main/LICENSE)
-[![Java version](https://img.shields.io/badge/Java%20version-11-yellow?logo=java)](https://img.shields.io/badge/Java%20version-11-yellow?logo=java)
+[![Java version](https://img.shields.io/badge/Java%20version-17-yellow?logo=java)](https://img.shields.io/badge/Java%20version-17-yellow?logo=java)
 [![latest-release](https://img.shields.io/github/v/tag/nagyesta/cache-only?color=blue&logo=git&label=releases&sort=semver)](https://github.com/nagyesta/cache-only/releases)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.nagyesta/cache-only?logo=apache-maven)](https://search.maven.org/artifact/com.github.nagyesta/cache-only)
 [![JavaCI](https://img.shields.io/github/actions/workflow/status/nagyesta/cache-only/gradle.yml?logo=github&branch=main)](https://img.shields.io/github/actions/workflow/status/nagyesta/cache-only/gradle.yml?logo=github&branch=main)
