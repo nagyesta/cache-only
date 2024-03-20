@@ -33,7 +33,7 @@ If applicable. Please do NOT share sensitive information.
  - OS: [e.g. Windows/Unix]
  - Version: [e.g. 1.0.0]
  - Spring version [e.g. 5.0.0.RELEASE]
- - Java version [e.g. 11.0.2 Open JDK]
+ - Java version [e.g. 17.0.2 Open JDK]
 
 #### Additional context
 Add any other context about the problem here.
