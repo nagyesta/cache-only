@@ -90,13 +90,30 @@ dependencies {
     testImplementation libs.logback.classic
 }
 
+tasks.register('copyLicense', Copy.class) {
+    from file("${projectDir}/LICENSE")
+    into layout.buildDirectory.dir("resources/main/META-INF").get().asFile
+}
+tasks.register('copyDependencies', Copy.class) {
+    from file("${projectDir}/DEPENDENCIES")
+    into layout.buildDirectory.dir("resources/main/META-INF").get().asFile
+}
+tasks.javadoc.dependsOn(tasks.copyLicense)
+tasks.javadoc.dependsOn(tasks.copyDependencies)
+tasks.compileTestJava.dependsOn(tasks.copyLicense)
+tasks.compileTestJava.dependsOn(tasks.copyDependencies)
+tasks.checkstyleMain.dependsOn(tasks.copyLicense)
+tasks.checkstyleMain.dependsOn(tasks.copyDependencies)
+tasks.processResources.finalizedBy(tasks.copyLicense)
+tasks.processResources.finalizedBy(tasks.copyDependencies)
+
 jacocoTestReport {
     reports {
         xml.required.set(true)
-        xml.outputLocation.set(file("$buildDir/reports/jacoco/report.xml"))
+        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/report.xml").get().asFile)
         csv.required.set(false)
         html.required.set(true)
-        html.outputLocation.set(file("$buildDir/reports/jacoco/html"))
+        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html").get().asFile)
     }
 }
 
@@ -112,8 +129,8 @@ jacoco {
 }
 
 jacocoTestCoverageVerification {
-    inputs.file(file("${buildDir}/reports/jacoco/report.xml") as String)
-    outputs.file(file("${buildDir}/reports/jacoco/jacocoTestCoverageVerification") as String)
+    inputs.file(layout.buildDirectory.file("reports/jacoco/report.xml").get().asFile)
+    outputs.file(layout.buildDirectory.file("reports/jacoco/jacocoTestCoverageVerification").get().asFile)
 
     violationRules {
         rule {
@@ -149,13 +166,13 @@ jacocoTestCoverageVerification {
         }
     }
     doLast {
-        file("${buildDir}/reports/jacoco/jacocoTestCoverageVerification").write("Passed")
+        layout.buildDirectory.file("reports/jacoco/jacocoTestCoverageVerification").get().asFile.write("Passed")
     }
 }
 jar.dependsOn check
 
 tasks.withType(Checkstyle).configureEach {
-    configProperties = [base_dir: rootDir.toString(), cache_file: file("${buildDir}/checkstyle/cacheFile")]
+    configProperties = [base_dir: rootDir.toString(), cache_file: layout.buildDirectory.file("checkstyle/cacheFile").get().asFile]
     reports {
         xml.required.set(false)
         html.required.set(true)
@@ -221,6 +238,8 @@ publishing {
         }
     }
 }
+
+
 
 //Disable metadata publishing and rely on Maven only
 tasks.withType(GenerateModuleMetadata).configureEach {
