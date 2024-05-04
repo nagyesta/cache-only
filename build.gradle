@@ -9,6 +9,9 @@ plugins {
     alias(libs.plugins.versioner)
     alias(libs.plugins.index.scan)
     alias(libs.plugins.owasp.dependencycheck)
+    alias(libs.plugins.cyclonedx.bom)
+    alias(libs.plugins.licensee.plugin)
+    alias(libs.plugins.nexus.publish.plugin)
 }
 
 group = 'com.github.nagyesta'
@@ -90,22 +93,36 @@ dependencies {
     testImplementation libs.logback.classic
 }
 
-tasks.register('copyLicense', Copy.class) {
+cyclonedxBom {
+    includeConfigs = ["runtimeClasspath"]
+    skipConfigs = ["compileClasspath", "testCompileClasspath"]
+    skipProjects = []
+    projectType = project.name == "lowkey-vault-app" ? "application" : "library"
+    schemaVersion = "1.5"
+    destination = file("build/reports")
+    outputName = "bom"
+    outputFormat = "json"
+}
+
+licensee {
+    allow("Apache-2.0")
+    allow("MIT")
+}
+
+tasks.register('copyLegalDocs', Copy.class) {
     from file("${projectDir}/LICENSE")
+    from layout.buildDirectory.file("reports/licensee/artifacts.json").get().asFile
+    from layout.buildDirectory.file("reports/bom.json").get().asFile
     into layout.buildDirectory.dir("resources/main/META-INF").get().asFile
+    rename('artifacts.json', 'dependency-licenses.json')
+    rename('bom.json', 'SBOM.json')
 }
-tasks.register('copyDependencies', Copy.class) {
-    from file("${projectDir}/DEPENDENCIES")
-    into layout.buildDirectory.dir("resources/main/META-INF").get().asFile
-}
-tasks.javadoc.dependsOn(tasks.copyLicense)
-tasks.javadoc.dependsOn(tasks.copyDependencies)
-tasks.compileTestJava.dependsOn(tasks.copyLicense)
-tasks.compileTestJava.dependsOn(tasks.copyDependencies)
-tasks.checkstyleMain.dependsOn(tasks.copyLicense)
-tasks.checkstyleMain.dependsOn(tasks.copyDependencies)
-tasks.processResources.finalizedBy(tasks.copyLicense)
-tasks.processResources.finalizedBy(tasks.copyDependencies)
+tasks.copyLegalDocs.dependsOn(tasks.licensee)
+tasks.copyLegalDocs.dependsOn(tasks.cyclonedxBom)
+tasks.javadoc.dependsOn(tasks.copyLegalDocs)
+tasks.compileTestJava.dependsOn(tasks.copyLegalDocs)
+tasks.checkstyleMain.dependsOn(tasks.copyLegalDocs)
+tasks.processResources.finalizedBy(tasks.copyLegalDocs)
 
 jacocoTestReport {
     reports {
@@ -116,7 +133,6 @@ jacocoTestReport {
         html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/html").get().asFile)
     }
 }
-
 
 test {
     useJUnitPlatform()
@@ -182,6 +198,15 @@ tasks.withType(Checkstyle).configureEach {
 }
 checkstyle.toolVersion = libs.versions.checkstyle.get()
 
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = project.ext.ossrhUser
+            password = project.ext.ossrhPass
+        }
+    }
+}
+
 publishing {
     repositories {
         maven {
@@ -190,14 +215,6 @@ publishing {
             credentials {
                 username = project.ext.gitUser
                 password = project.ext.gitToken
-            }
-        }
-        maven {
-            name = "ossrh"
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            credentials {
-                username = project.ext.ossrhUser
-                password = project.ext.ossrhPass
             }
         }
     }
@@ -238,7 +255,6 @@ publishing {
         }
     }
 }
-
 
 
 //Disable metadata publishing and rely on Maven only
