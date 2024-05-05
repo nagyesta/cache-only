@@ -97,7 +97,7 @@ cyclonedxBom {
     includeConfigs = ["runtimeClasspath"]
     skipConfigs = ["compileClasspath", "testCompileClasspath"]
     skipProjects = []
-    projectType = project.name == "lowkey-vault-app" ? "application" : "library"
+    projectType = "library"
     schemaVersion = "1.5"
     destination = file("build/reports")
     outputName = "bom"
