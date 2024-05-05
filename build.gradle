@@ -102,6 +102,19 @@ cyclonedxBom {
     destination = file("build/reports")
     outputName = "bom"
     outputFormat = "json"
+    //noinspection UnnecessaryQualifiedReference
+    final def attachmentText = new org.cyclonedx.model.AttachmentText()
+    attachmentText.setText(file("LICENSE").readBytes().encodeBase64().toString())
+    attachmentText.setEncoding("base64")
+    attachmentText.setContentType("text/plain")
+    //noinspection UnnecessaryQualifiedReference
+    final def license = new org.cyclonedx.model.License()
+    license.setName(project.ext.licenseName)
+    license.setLicenseText(attachmentText)
+    license.setUrl(project.ext.licenseUrl)
+    setLicenseChoice {
+        it.addLicense(license)
+    }
 }
 
 licensee {
