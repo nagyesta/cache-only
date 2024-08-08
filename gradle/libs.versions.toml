@@ -1,5 +1,5 @@
 [versions]
-slf4j = "2.0.14"
+slf4j = "2.0.15"
 logback = "1.5.6"
 spring = "6.1.11"
 commonsCollections = "4.4"
