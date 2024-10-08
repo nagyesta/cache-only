@@ -1,6 +1,6 @@
 [versions]
 slf4j = "2.0.16"
-logback = "1.5.8"
+logback = "1.5.9"
 spring = "6.1.13"
 commonsCollections = "4.4"
 jupiter = "5.11.2"
