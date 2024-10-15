@@ -6,7 +6,7 @@ commonsCollections = "4.4"
 jupiter = "5.11.2"
 mockitoCore = "5.14.1"
 lombok = "1.18.34"
-jetbrainsAnnotation = "26.0.0"
+jetbrainsAnnotation = "26.0.1"
 
 lombokPlugin = "8.10.2"
 gitVersionerPlugin = "1.6.7"
