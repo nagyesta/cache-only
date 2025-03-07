@@ -5,6 +5,7 @@ import com.github.nagyesta.cacheonly.transform.NoOpPartialCacheSupport;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ParcelPartialCacheSupport extends NoOpPartialCacheSupport<String, ParcelResponse, String, String> {
+public class ParcelPartialCacheSupport
+        extends NoOpPartialCacheSupport<String, ParcelResponse, String, String> {
 
 }

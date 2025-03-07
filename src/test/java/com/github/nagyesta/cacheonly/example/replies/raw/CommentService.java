@@ -6,13 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,9 +24,7 @@ public class CommentService {
     private final Map<UUID, List<Comment>> database;
 
     CommentService() {
-        final Map<UUID, List<Comment>> map = new HashMap<>();
-        map.put(NO_COMMENT, Collections.emptyList());
-        map.put(CACHING_IS_NOT_ALWAYS_EASY, Collections.unmodifiableList(Arrays.asList(
+        this.database = Map.of(NO_COMMENT, Collections.emptyList(), CACHING_IS_NOT_ALWAYS_EASY, Collections.unmodifiableList(Arrays.asList(
                 Comment.builder()
                         .articleId(CACHING_IS_NOT_ALWAYS_EASY)
                         .commentId(1L)
@@ -79,8 +71,7 @@ public class CommentService {
                         .author(S_SERIOUS)
                         .message("I am looking for one too, could you send a link?")
                         .build()
-        )));
-        map.put(ARE_YOU_OUT_OF_QUOTA, Collections.unmodifiableList(Arrays.asList(
+        )), ARE_YOU_OUT_OF_QUOTA, Collections.unmodifiableList(Arrays.asList(
                 Comment.builder()
                         .articleId(ARE_YOU_OUT_OF_QUOTA)
                         .commentId(1L)
@@ -101,8 +92,7 @@ public class CommentService {
                         .author(O_PEN)
                         .message("It happens.")
                         .build()
-        )));
-        map.put(AINT_NOBODY_GOT_TIME_FOR_THAT, Collections.unmodifiableList(Arrays.asList(
+        )), AINT_NOBODY_GOT_TIME_FOR_THAT, Collections.unmodifiableList(Arrays.asList(
                 Comment.builder()
                         .articleId(AINT_NOBODY_GOT_TIME_FOR_THAT)
                         .commentId(1L)
@@ -130,20 +120,22 @@ public class CommentService {
                         .message("LOL, more like third.")
                         .build()
         )));
-        this.database = Collections.unmodifiableMap(map);
     }
 
     @NotNull
-    public CommentThreads threadsOf(final @NotNull UUID article, final @NotNull Set<Long> threadIds) throws NotFoundException {
+    public CommentThreads threadsOf(
+            final @NotNull UUID article,
+            final @NotNull Set<Long> threadIds)
+            throws NotFoundException {
         Assert.isTrue(threadIds.size() <= 5, "Batch size is too large.");
         if (!database.containsKey(article)) {
             throw new NotFoundException();
         }
-        final Set<Long> threadStarters = this.database.get(article).stream()
+        final var threadStarters = this.database.get(article).stream()
                 .filter(comment -> comment.getThreadId() == null)
                 .map(Comment::getCommentId)
                 .collect(Collectors.toSet());
-        final Map<Long, List<Comment>> threads = this.database.get(article).stream()
+        final var threads = this.database.get(article).stream()
                 .filter(comment -> comment.getThreadId() != null)
                 .filter(comment -> threadIds.contains(comment.getThreadId()))
                 .collect(Collectors.groupingBy(Comment::getThreadId));

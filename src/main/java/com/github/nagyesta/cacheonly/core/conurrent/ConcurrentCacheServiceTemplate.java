@@ -12,11 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -29,7 +25,7 @@ import java.util.function.Consumer;
  * @param <PR> The type of the partial request.
  * @param <PS> The type of the partial response.
  * @param <C>  The type of the cache key.
- * @param <I>  The type of the Id which allows unique association of partial request
+ * @param <I>  The type of the ID which allows unique association of partial request
  *             and partial response pairs in the scope of the batch.
  */
 public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
@@ -41,7 +37,7 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
     private final ForkJoinPool originPool;
 
     /**
-     * Creates a new instance and injects all of the dependencies which are necessary for it to work.
+     * Creates a new instance and injects all the dependencies which are necessary for it to work.
      *
      * @param partialCacheSupport      The component defining how caching should work for a partial request.
      * @param batchRequestTransformer  The component handling transformations between batch and partial requests.
@@ -60,9 +56,11 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
 
     @NotNull
     @Override
-    protected Map<I, PS> fetchAllFromCache(final @NotNull CacheRefreshStrategy strategy,
-                                           final @NotNull Map<I, PR> requestMap) throws CacheMissException {
-        final long start = System.currentTimeMillis();
+    protected Map<I, PS> fetchAllFromCache(
+            final @NotNull CacheRefreshStrategy strategy,
+            final @NotNull Map<I, PR> requestMap)
+            throws CacheMissException {
+        final var start = System.currentTimeMillis();
         final Map<I, PS> result = new ConcurrentHashMap<>();
         try {
             callCacheParallel(strategy, requestMap, result::put);
@@ -75,11 +73,11 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
                 result.clear();
             }
         } catch (final InterruptedException | TimeoutException e) {
-            final long end = System.currentTimeMillis();
+            final var end = System.currentTimeMillis();
             logger().warn("Cache call stopped after {} (timeout set to {}).", (end - start), partialCacheSupport().timeoutMillis(), e);
             result.clear();
         } finally {
-            final long end = System.currentTimeMillis();
+            final var end = System.currentTimeMillis();
             logger().debug("Fetch all from cache completed under {} ms.", end - start);
         }
         return result;
@@ -87,9 +85,10 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
 
     @NotNull
     @Override
-    protected Map<I, PS> callOriginWithPartitions(final @NotNull List<Map<I, PR>> requestPartitions)
+    protected Map<I, PS> callOriginWithPartitions(
+            final @NotNull List<Map<I, PR>> requestPartitions)
             throws BatchServiceException {
-        final long start = System.currentTimeMillis();
+        final var start = System.currentTimeMillis();
         final Map<I, PS> response = new ConcurrentHashMap<>();
         try {
             callOriginParallel(requestPartitions, response::putAll);
@@ -97,19 +96,20 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
             logger().error(e.getCause().getMessage(), e.getCause());
             throw new BatchServiceException(e.getCause().getMessage(), e.getCause());
         } catch (final InterruptedException | TimeoutException e) {
-            final long end = System.currentTimeMillis();
+            final var end = System.currentTimeMillis();
             logger().warn("Origin call stopped after {} ms (timeout set to {}).", (end - start), batchServiceCaller().timeoutMillis(), e);
             throw new BatchServiceException("Origin call timed out.", e);
         } finally {
-            final long end = System.currentTimeMillis();
+            final var end = System.currentTimeMillis();
             logger().debug("Fetch all from origin completed under {} ms.", end - start);
         }
         return response;
     }
 
-    private void callCacheParallel(final @NotNull CacheRefreshStrategy strategy,
-                                   final @NotNull Map<I, PR> requestMap,
-                                   final @NotNull BiConsumer<I, PS> resultConsumer)
+    private void callCacheParallel(
+            final @NotNull CacheRefreshStrategy strategy,
+            final @NotNull Map<I, PR> requestMap,
+            final @NotNull BiConsumer<I, PS> resultConsumer)
             throws InterruptedException, ExecutionException, TimeoutException {
         cachePool
                 .submit(() -> requestMap.entrySet()
@@ -119,8 +119,9 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
                 .get(partialCacheSupport().timeoutMillis(), TimeUnit.MILLISECONDS);
     }
 
-    private void callOriginParallel(final @NotNull List<Map<I, PR>> requestPartitions,
-                                    final @NotNull Consumer<Map<I, PS>> responseProcessor)
+    private void callOriginParallel(
+            final @NotNull List<Map<I, PR>> requestPartitions,
+            final @NotNull Consumer<Map<I, PS>> responseProcessor)
             throws InterruptedException, ExecutionException, TimeoutException {
         originPool
                 .submit(() -> requestPartitions

@@ -1,5 +1,5 @@
 [versions]
-slf4j = "2.0.16"
+slf4j = "2.0.17"
 logback = "1.5.17"
 spring = "6.2.3"
 commonsCollections = "4.4"
@@ -13,8 +13,8 @@ gitVersionerPlugin = "1.6.7"
 indexScanPlugin = "3.0.0"
 owaspPlugin = "12.1.0"
 
-checkstyle = "10.12.2"
-jacoco = "0.8.10"
+checkstyle = "10.21.4"
+jacoco = "0.8.12"
 cycloneDxBomPlugin = "2.2.0"
 licenseePlugin = "1.12.0"
 nexusPublishPlugin = "2.0.0"
@@ -29,6 +29,10 @@ jupiter-core = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jupi
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrainsAnnotation" }
+# used by Renovate
+checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
+# used by Renovate
+jacoco = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 
 [plugins]
 lombok = { id = "io.freefair.lombok", version.ref = "lombokPlugin" }

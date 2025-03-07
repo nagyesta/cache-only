@@ -9,6 +9,7 @@ import com.github.nagyesta.cacheonly.raw.BatchServiceCaller;
  * @param <BR> The type of the batch request.
  * @param <BS> The type of the batch response.
  */
-public interface AsyncBatchServiceCaller<BR, BS> extends BatchServiceCaller<BR, BS>, ConcurrentOperationSupport {
+public interface AsyncBatchServiceCaller<BR, BS>
+        extends BatchServiceCaller<BR, BS>, ConcurrentOperationSupport {
 
 }

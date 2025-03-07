@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @param <B> The type of the batch wrapper class.
  * @param <C> The type of the {@link Map} holding the values we want to partition.
  * @param <E> The type of the partial entities.
- * @param <I> The type of the Id we can use for partial entity identification.
+ * @param <I> The type of the ID we can use for partial entity identification.
  */
 public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>, E, I> {
 
@@ -30,32 +30,34 @@ public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>,
     private final Collector<Map.Entry<I, E>, ?, C> mapCollector;
 
     /**
-     * Creates a new instance and sets all of the parameters we can use for customization.
+     * Creates a new instance and sets all the parameters we can use for customization.
      *
      * @param instanceSupplier   The {@link Supplier} we can use for getting a new empty batch instance.
      * @param mapReadFunction    The function that can read the map from a batch.
      * @param mapWriteBiFunction The function that can write the map into a batch.
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
-    public AbstractWrappedMapBasedTransformer(final @NotNull Supplier<B> instanceSupplier,
-                                              final @NotNull Function<B, C> mapReadFunction,
-                                              final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
-                                              final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
+    public AbstractWrappedMapBasedTransformer(
+            final @NotNull Supplier<B> instanceSupplier,
+            final @NotNull Function<B, C> mapReadFunction,
+            final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
+            final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
         this(request -> cloneWrapper(request, instanceSupplier), mapReadFunction, mapWriteBiFunction, mapCollector);
     }
 
     /**
-     * Creates a new instance and sets all of the parameters we can use for customization.
+     * Creates a new instance and sets all the parameters we can use for customization.
      *
      * @param cloneFunction      The function that can clone a batch.
      * @param mapReadFunction    The function that can read the map from a batch.
      * @param mapWriteBiFunction The function that can write the map into a batch.
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
-    public AbstractWrappedMapBasedTransformer(final @NotNull Function<B, B> cloneFunction,
-                                              final @NotNull Function<B, C> mapReadFunction,
-                                              final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
-                                              final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
+    public AbstractWrappedMapBasedTransformer(
+            final @NotNull Function<B, B> cloneFunction,
+            final @NotNull Function<B, C> mapReadFunction,
+            final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
+            final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
         this.cloneFunction = cloneFunction;
         this.mapReadFunction = mapReadFunction;
         this.mapWriteBiFunction = mapWriteBiFunction;
@@ -63,8 +65,10 @@ public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>,
     }
 
     @NotNull
-    private static <B> B cloneWrapper(final @NotNull B batch, final @NotNull Supplier<B> instanceSupplier) {
-        final B target = instanceSupplier.get();
+    private static <B> B cloneWrapper(
+            final @NotNull B batch,
+            final @NotNull Supplier<B> instanceSupplier) {
+        final var target = instanceSupplier.get();
         BeanUtils.copyProperties(batch, target);
         return target;
     }

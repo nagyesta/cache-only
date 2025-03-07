@@ -1,11 +1,15 @@
 package com.github.nagyesta.cacheonly.transform;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+@Setter
+@Getter
 public final class CollectionWrapper<E> {
 
     private Collection<E> collection;
@@ -14,23 +18,14 @@ public final class CollectionWrapper<E> {
         this.collection = collection;
     }
 
-    public Collection<E> getCollection() {
-        return collection;
-    }
-
-    public void setCollection(final Collection<E> collection) {
-        this.collection = collection;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CollectionWrapper)) {
+        if (!(o instanceof final CollectionWrapper<?> that)) {
             return false;
         }
-        final CollectionWrapper<?> that = (CollectionWrapper<?>) o;
         return CollectionUtils.containsAll(this.collection, that.collection)
                 && CollectionUtils.containsAll(that.collection, this.collection);
     }

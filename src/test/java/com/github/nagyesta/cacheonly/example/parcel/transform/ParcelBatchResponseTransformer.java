@@ -16,12 +16,13 @@ public class ParcelBatchResponseTransformer
         extends CollectionBasedResponseTransformer<List<ParcelResponse>, ParcelResponse, String> {
 
     public ParcelBatchResponseTransformer() {
-        super(Collectors.toList(), ParcelResponse::getId, true);
+        super(Collectors.toList(), ParcelResponse::id, true);
     }
 
     @Nullable
     @Override
-    public List<ParcelResponse> mergeToBatchResponse(final @NotNull Map<String, ParcelResponse> entityMap) {
+    public List<ParcelResponse> mergeToBatchResponse(
+            final @NotNull Map<String, ParcelResponse> entityMap) {
         return super.mergeToBatchResponse(new TreeMap<>(entityMap));
     }
 }

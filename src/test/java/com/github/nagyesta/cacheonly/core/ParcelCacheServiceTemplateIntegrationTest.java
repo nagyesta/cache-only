@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level;
 import com.github.nagyesta.cacheonly.example.parcel.ParcelCacheServiceTemplate;
 import com.github.nagyesta.cacheonly.example.parcel.ParcelContext;
 import com.github.nagyesta.cacheonly.example.parcel.raw.ParcelBatchServiceCaller;
-import com.github.nagyesta.cacheonly.example.parcel.raw.ParcelService;
 import com.github.nagyesta.cacheonly.example.parcel.response.ParcelResponse;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,13 +22,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = ParcelContext.class)
@@ -70,19 +64,21 @@ class ParcelCacheServiceTemplateIntegrationTest {
     @ParameterizedTest
     @MethodSource("validInputProvider")
     void testCallCacheableBatchServiceShouldBeSplittingRequestsWhenItHasMoreItemsThanAllowed(
-            final List<String> ids, final int expectedCalls) throws BatchServiceException {
+            final List<String> ids,
+            final int expectedCalls)
+            throws BatchServiceException {
         //given
         // reset spy
-        final ParcelService spyService = batchServiceCaller.getParcelService();
+        final var spyService = batchServiceCaller.getParcelService();
         reset(spyService);
         // create the expected test response
-        final List<ParcelResponse> expected = ids.stream()
+        final var expected = ids.stream()
                 .sorted()
                 .map(id -> new ParcelResponse(id, spyService.lookup(id)))
                 .collect(Collectors.toList());
 
         //when
-        final List<ParcelResponse> actual = underTest.callCacheableBatchService(ids);
+        final var actual = underTest.callCacheableBatchService(ids);
 
         //then
         if (expectedCalls == 0) {

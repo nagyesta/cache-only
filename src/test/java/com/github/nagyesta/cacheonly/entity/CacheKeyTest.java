@@ -15,7 +15,7 @@ class CacheKeyTest {
 
     @SuppressWarnings({"UnnecessaryBoxing", "checkstyle:MagicNumber"})
     private static Stream<Arguments> keyPairProvider() {
-        final CacheKey<String, Integer> aCacheKey = new CacheKey<>(KEY_1, 1);
+        final var aCacheKey = new CacheKey<>(KEY_1, 1);
         return Stream.<Arguments>builder()
                 .add(Arguments.of(aCacheKey, aCacheKey, true))
                 .add(Arguments.of(new CacheKey<>(KEY_1, 1), new CacheKey<>(KEY_2, 1), false))
@@ -27,11 +27,14 @@ class CacheKeyTest {
 
     @ParameterizedTest
     @MethodSource("keyPairProvider")
-    void testEqualsShouldCompareBothFieldsWhenCalled(final Object a, final Object b, final boolean expected) {
+    void testEqualsShouldCompareBothFieldsWhenCalled(
+            final Object a,
+            final Object b,
+            final boolean expected) {
         //given
 
         //when
-        final boolean actual = a.equals(b);
+        final var actual = a.equals(b);
 
         //then
         assertEquals(expected, actual);
@@ -39,12 +42,15 @@ class CacheKeyTest {
 
     @ParameterizedTest
     @MethodSource("keyPairProvider")
-    void testHashCodeShouldCompareBothFieldsWhenCalled(final Object a, final Object b, final boolean expected) {
+    void testHashCodeShouldCompareBothFieldsWhenCalled(
+            final Object a,
+            final Object b,
+            final boolean expected) {
         //given
 
         //when
-        final int hashA = a.hashCode();
-        final int hashB = b.hashCode();
+        final var hashA = a.hashCode();
+        final var hashB = b.hashCode();
 
         //then
         assertEquals(expected, hashA == hashB);

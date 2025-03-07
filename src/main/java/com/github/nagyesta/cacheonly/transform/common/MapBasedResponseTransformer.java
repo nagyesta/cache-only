@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * Abstract transformer intended to be used in cases when the batch response is a
- * simple {@link Map} of the partial responses using the Id as key.
+ * simple {@link Map} of the partial responses using the ID as key.
  *
  * @param <C> The {@link Map} type used for the batch.
  * @param <P> The type of the partial response payload.
@@ -40,10 +40,11 @@ public class MapBasedResponseTransformer<C extends Map<I, P>, P, I>
      *                              an Entry to a value in the partial response entry.
      * @param nullIfEmpty           True is we need to return null in case we are merging an empty map.
      */
-    public MapBasedResponseTransformer(final @NotNull Collector<Map.Entry<I, P>, ?, C> mergeMapCollector,
-                                       final @NotNull Function<Map.Entry<I, P>, I> splitKeyTransformer,
-                                       final @NotNull Function<Map.Entry<I, P>, P> splitValueTransformer,
-                                       final boolean nullIfEmpty) {
+    public MapBasedResponseTransformer(
+            final @NotNull Collector<Map.Entry<I, P>, ?, C> mergeMapCollector,
+            final @NotNull Function<Map.Entry<I, P>, I> splitKeyTransformer,
+            final @NotNull Function<Map.Entry<I, P>, P> splitValueTransformer,
+            final boolean nullIfEmpty) {
         super(mergeMapCollector, splitKeyTransformer, splitValueTransformer, nullIfEmpty);
     }
 

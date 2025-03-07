@@ -6,6 +6,8 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
+import java.util.Optional;
+
 /**
  * Defines how a given partial request-response pair should be cached.
  *
@@ -54,7 +56,7 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      *
      * @return The cache
      */
-    @NotNull
+    @Nullable
     default Cache obtainCache() {
         return getCacheManager().getCache(cacheName());
     }
@@ -66,7 +68,8 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      * @param entity The entity we want to cache.
      */
     default void putToCache(final @NotNull CacheKey<C, I> key, final @NotNull PS entity) {
-        obtainCache().put(key.getKey(), entity);
+        Optional.ofNullable(obtainCache())
+                .ifPresent(cache -> cache.put(key.key(), entity));
     }
 
     /**
@@ -77,6 +80,8 @@ public interface PartialCacheSupport<PR, PS, C, I> {
      */
     @Nullable
     default PS getFromCache(final @NotNull CacheKey<C, I> key) {
-        return obtainCache().get(key.getKey(), getEntityClass());
+        return Optional.ofNullable(obtainCache())
+                .map(cache -> cache.get(key.key(), getEntityClass()))
+                .orElse(null);
     }
 }

@@ -46,14 +46,15 @@ class MapBasedResponseTransformerTest {
 
     @ParameterizedTest
     @MethodSource("splitInputProvider")
-    void testSplitToPartialResponseShouldSplitValidInput(final SortedMap<Long, String> input,
-                                                         final Map<Long, String> expected) {
+    void testSplitToPartialResponseShouldSplitValidInput(
+            final SortedMap<Long, String> input,
+            final Map<Long, String> expected) {
         //given
-        final MapBasedResponseTransformer<SortedMap<Long, String>, String, Long> underTest =
-                new MapBasedResponseTransformer<>(TreeMap::new);
+        final var underTest =
+                new MapBasedResponseTransformer<SortedMap<Long, String>, String, Long>(TreeMap::new);
 
         //when
-        final Map<Long, String> actual = underTest.splitToPartialResponse(input);
+        final var actual = underTest.splitToPartialResponse(input);
 
         //then
         assertIterableEquals(expected.entrySet(), actual.entrySet());
@@ -61,15 +62,18 @@ class MapBasedResponseTransformerTest {
 
     @ParameterizedTest
     @MethodSource("mergeInputProvider")
-    void testMergeToBatchResponseShouldMergeValidInput(final Map<Long, String> input,
-                                                       final SortedMap<Long, String> expected) {
+    void testMergeToBatchResponseShouldMergeValidInput(
+            final Map<Long, String> input,
+            final SortedMap<Long, String> expected) {
         //given
-        final MapBasedResponseTransformer<SortedMap<Long, String>, String, Long> underTest =
-                new MapBasedResponseTransformer<>(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (T, U) -> T, TreeMap::new),
-                        Map.Entry::getKey, Map.Entry::getValue, true);
+        final var underTest =
+                new MapBasedResponseTransformer<SortedMap<Long, String>, String, Long>(
+                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (T, U) -> T, TreeMap::new),
+                        Map.Entry::getKey,
+                        Map.Entry::getValue, true);
 
         //when
-        final SortedMap<Long, String> actual = underTest.mergeToBatchResponse(input);
+        final var actual = underTest.mergeToBatchResponse(input);
 
         //then
         assertEquals(expected, actual);

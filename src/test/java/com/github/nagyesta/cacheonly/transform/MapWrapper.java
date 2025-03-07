@@ -1,9 +1,14 @@
 package com.github.nagyesta.cacheonly.transform;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
+@Setter
+@Getter
 public final class MapWrapper<K, V> {
 
     private Map<K, V> map;
@@ -12,23 +17,14 @@ public final class MapWrapper<K, V> {
         this.map = map;
     }
 
-    public Map<K, V> getMap() {
-        return map;
-    }
-
-    public void setMap(final Map<K, V> map) {
-        this.map = map;
-    }
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof MapWrapper)) {
+        if (!(o instanceof final MapWrapper<?, ?> that)) {
             return false;
         }
-        final MapWrapper<?, ?> that = (MapWrapper<?, ?>) o;
         return Objects.equals(map, that.map);
     }
 

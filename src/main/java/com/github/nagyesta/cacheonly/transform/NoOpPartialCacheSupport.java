@@ -37,7 +37,9 @@ public class NoOpPartialCacheSupport<PR, PS, C, I> implements AsyncPartialCacheS
     }
 
     @Override
-    public void putToCache(final @NotNull CacheKey<C, I> key, final @NotNull PS entity) {
+    public void putToCache(
+            final @NotNull CacheKey<C, I> key,
+            final @NotNull PS entity) {
         //noop
     }
 

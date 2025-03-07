@@ -24,7 +24,7 @@ public class CommentContext {
 
     @Bean
     public CacheManager cacheManager() {
-        final SimpleCacheManager cacheManager = new SimpleCacheManager();
+        final var cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Collections.singletonList(spy(new ConcurrentMapCache(THREADS))));
         return cacheManager;
     }

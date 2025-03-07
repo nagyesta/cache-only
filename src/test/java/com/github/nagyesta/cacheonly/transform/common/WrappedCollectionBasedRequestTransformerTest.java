@@ -51,11 +51,13 @@ class WrappedCollectionBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("splitInputProvider")
-    void testSplitToPartialRequestShouldSplitValidInput(final CollectionWrapper<String> input,
-                                                        final Map<Long, CollectionWrapper<String>> expected) {
+    void testSplitToPartialRequestShouldSplitValidInput(
+            final CollectionWrapper<String> input,
+            final Map<Long, CollectionWrapper<String>> expected) {
         //given
-        final WrappedCollectionBasedRequestTransformer<CollectionWrapper<String>, Collection<String>, String, Long> underTest =
-                new WrappedCollectionBasedRequestTransformer<>(() -> new CollectionWrapper<>(new ArrayList<>()),
+        final var underTest =
+                new WrappedCollectionBasedRequestTransformer<CollectionWrapper<String>, Collection<String>, String, Long>(
+                        () -> new CollectionWrapper<>(new ArrayList<>()),
                         CollectionWrapper::getCollection,
                         (wrapper, collection) -> {
                             wrapper.setCollection(collection);
@@ -63,7 +65,7 @@ class WrappedCollectionBasedRequestTransformerTest {
                         }, Collectors.toCollection(ArrayList::new), Long::parseLong);
 
         //when
-        final Map<Long, CollectionWrapper<String>> actual = underTest.splitToPartialRequest(input);
+        final var actual = underTest.splitToPartialRequest(input);
 
         //then
         assertIterableEquals(expected.entrySet(), actual.entrySet());
@@ -71,11 +73,13 @@ class WrappedCollectionBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("mergeInputProvider")
-    void testMergeToBatchRequestShouldMergeValidInput(final Map<Long, CollectionWrapper<String>> input,
-                                                      final CollectionWrapper<String> expected) {
+    void testMergeToBatchRequestShouldMergeValidInput(
+            final Map<Long, CollectionWrapper<String>> input,
+            final CollectionWrapper<String> expected) {
         //given
-        final WrappedCollectionBasedRequestTransformer<CollectionWrapper<String>, Collection<String>, String, Long> underTest =
-                new WrappedCollectionBasedRequestTransformer<>(w -> new CollectionWrapper<>(new ArrayList<>()),
+        final var underTest =
+                new WrappedCollectionBasedRequestTransformer<CollectionWrapper<String>, Collection<String>, String, Long>(
+                        w -> new CollectionWrapper<>(new ArrayList<>()),
                         CollectionWrapper::getCollection,
                         (wrapper, collection) -> {
                             wrapper.setCollection(collection);
@@ -83,7 +87,7 @@ class WrappedCollectionBasedRequestTransformerTest {
                         }, Collectors.toCollection(ArrayList::new), Long::parseLong);
 
         //when
-        final CollectionWrapper<String> actual = underTest.mergeToBatchRequest(input);
+        final var actual = underTest.mergeToBatchRequest(input);
 
         //then
         assertEquals(expected, actual);

@@ -35,7 +35,7 @@ public class CommentPartialCacheSupport implements PartialCacheSupport<ThreadReq
     @NotNull
     @Override
     public CacheKey<String, Long> toCacheKey(final @NotNull ThreadRequest partialRequest) {
-        final Long id = partialRequest.getThreadIds().get(0);
+        final var id = partialRequest.getThreadIds().get(0);
         return new CacheKey<>(partialRequest.getArticleId().toString() + "_thread_" + id, id);
     }
 

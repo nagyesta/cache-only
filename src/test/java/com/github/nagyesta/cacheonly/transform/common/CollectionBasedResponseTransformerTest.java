@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("checkstyle:MagicNumber")
 class CollectionBasedResponseTransformerTest {
@@ -49,14 +47,16 @@ class CollectionBasedResponseTransformerTest {
 
     @ParameterizedTest
     @MethodSource("splitInputProvider")
-    void testSplitToPartialResponseShouldSplitValidInput(final List<String> input,
-                                                         final Map<Long, String> expected) {
+    void testSplitToPartialResponseShouldSplitValidInput(
+            final List<String> input,
+            final Map<Long, String> expected) {
         //given
-        final CollectionBasedResponseTransformer<List<String>, String, Long> underTest =
-                new CollectionBasedResponseTransformer<>(Collectors.toList(), Long::parseLong);
+        final var underTest =
+                new CollectionBasedResponseTransformer<List<String>, String, Long>(
+                        Collectors.toList(), Long::parseLong);
 
         //when
-        final Map<Long, String> actual = underTest.splitToPartialResponse(input);
+        final var actual = underTest.splitToPartialResponse(input);
 
         //then
         assertIterableEquals(expected.entrySet(), actual.entrySet());
@@ -64,14 +64,16 @@ class CollectionBasedResponseTransformerTest {
 
     @ParameterizedTest
     @MethodSource("mergeInputProvider")
-    void testMergeToBatchResponseShouldMergeValidInput(final Map<Long, String> input,
-                                                       final List<String> expected) {
+    void testMergeToBatchResponseShouldMergeValidInput(
+            final Map<Long, String> input,
+            final List<String> expected) {
         //given
-        final CollectionBasedResponseTransformer<List<String>, String, Long> underTest =
-                new CollectionBasedResponseTransformer<>(Collectors.toList(), Long::parseLong, false);
+        final var underTest =
+                new CollectionBasedResponseTransformer<List<String>, String, Long>(
+                        Collectors.toList(), Long::parseLong, false);
 
         //when
-        final List<String> actual = underTest.mergeToBatchResponse(input);
+        final var actual = underTest.mergeToBatchResponse(input);
 
         //then
         assertNotNull(actual);

@@ -51,11 +51,13 @@ class WrappedCollectionBasedResponseTransformerTest {
 
     @ParameterizedTest
     @MethodSource("splitInputProvider")
-    void testSplitToPartialResponseShouldSplitValidInput(final CollectionWrapper<String> input,
-                                                         final Map<Long, CollectionWrapper<String>> expected) {
+    void testSplitToPartialResponseShouldSplitValidInput(
+            final CollectionWrapper<String> input,
+            final Map<Long, CollectionWrapper<String>> expected) {
         //given
-        final WrappedCollectionBasedResponseTransformer<CollectionWrapper<String>, Collection<String>, String, Long> underTest =
-                new WrappedCollectionBasedResponseTransformer<>(() -> new CollectionWrapper<>(new ArrayList<>()),
+        final var underTest =
+                new WrappedCollectionBasedResponseTransformer<CollectionWrapper<String>, Collection<String>, String, Long>(
+                        () -> new CollectionWrapper<>(new ArrayList<>()),
                         CollectionWrapper::getCollection,
                         (wrapper, collection) -> {
                             wrapper.setCollection(collection);
@@ -63,7 +65,7 @@ class WrappedCollectionBasedResponseTransformerTest {
                         }, Collectors.toCollection(ArrayList::new), Long::parseLong);
 
         //when
-        final Map<Long, CollectionWrapper<String>> actual = underTest.splitToPartialResponse(input);
+        final var actual = underTest.splitToPartialResponse(input);
 
         //then
         assertIterableEquals(expected.entrySet(), actual.entrySet());
@@ -71,11 +73,13 @@ class WrappedCollectionBasedResponseTransformerTest {
 
     @ParameterizedTest
     @MethodSource("mergeInputProvider")
-    void testMergeToBatchResponseShouldMergeValidInput(final Map<Long, CollectionWrapper<String>> input,
-                                                       final CollectionWrapper<String> expected) {
+    void testMergeToBatchResponseShouldMergeValidInput(
+            final Map<Long, CollectionWrapper<String>> input,
+            final CollectionWrapper<String> expected) {
         //given
-        final WrappedCollectionBasedResponseTransformer<CollectionWrapper<String>, Collection<String>, String, Long> underTest =
-                new WrappedCollectionBasedResponseTransformer<>(w -> new CollectionWrapper<>(new ArrayList<>()),
+        final var underTest =
+                new WrappedCollectionBasedResponseTransformer<CollectionWrapper<String>, Collection<String>, String, Long>(
+                        w -> new CollectionWrapper<>(new ArrayList<>()),
                         CollectionWrapper::getCollection,
                         (wrapper, collection) -> {
                             wrapper.setCollection(collection);
@@ -83,7 +87,7 @@ class WrappedCollectionBasedResponseTransformerTest {
                         }, Collectors.toCollection(ArrayList::new), Long::parseLong);
 
         //when
-        final CollectionWrapper<String> actual = underTest.mergeToBatchResponse(input);
+        final var actual = underTest.mergeToBatchResponse(input);
 
         //then
         assertEquals(expected, actual);

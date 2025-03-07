@@ -46,14 +46,15 @@ class MapBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("splitInputProvider")
-    void testSplitToPartialRequestShouldSplitValidInput(final SortedMap<Long, String> input,
-                                                        final Map<Long, String> expected) {
+    void testSplitToPartialRequestShouldSplitValidInput(
+            final SortedMap<Long, String> input,
+            final Map<Long, String> expected) {
         //given
-        final MapBasedRequestTransformer<SortedMap<Long, String>, String, Long> underTest =
-                new MapBasedRequestTransformer<>(TreeMap::new);
+        final var underTest =
+                new MapBasedRequestTransformer<SortedMap<Long, String>, String, Long>(TreeMap::new);
 
         //when
-        final Map<Long, String> actual = underTest.splitToPartialRequest(input);
+        final var actual = underTest.splitToPartialRequest(input);
 
         //then
         assertIterableEquals(expected.entrySet(), actual.entrySet());
@@ -61,15 +62,18 @@ class MapBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("mergeInputProvider")
-    void testMergeToBatchRequestShouldMergeValidInput(final Map<Long, String> input,
-                                                      final SortedMap<Long, String> expected) {
+    void testMergeToBatchRequestShouldMergeValidInput(
+            final Map<Long, String> input,
+            final SortedMap<Long, String> expected) {
         //given
-        final MapBasedRequestTransformer<SortedMap<Long, String>, String, Long> underTest =
-                new MapBasedRequestTransformer<>(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (T, U) -> T, TreeMap::new),
-                        Map.Entry::getKey, Map.Entry::getValue);
+        final var underTest =
+                new MapBasedRequestTransformer<SortedMap<Long, String>, String, Long>(
+                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (T, U) -> T, TreeMap::new),
+                        Map.Entry::getKey,
+                        Map.Entry::getValue);
 
         //when
-        final SortedMap<Long, String> actual = underTest.mergeToBatchRequest(input);
+        final var actual = underTest.mergeToBatchRequest(input);
 
         //then
         assertEquals(expected, actual);
