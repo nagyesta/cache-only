@@ -41,7 +41,8 @@ public class StockBatchServiceCaller
     @NotNull
     @Override
     @SuppressWarnings("RedundantThrows")
-    public SortedMap<String, BigDecimal> callBatchService(final @NotNull SortedSet<String> batchRequest)
+    public SortedMap<String, BigDecimal> callBatchService(
+            final @NotNull SortedSet<String> batchRequest)
             throws BatchServiceException {
         // we call the service here
         return new TreeMap<>(stockService.lookup(batchRequest));

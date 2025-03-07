@@ -20,7 +20,7 @@ import java.util.stream.Stream;
  * @param <B> The type of the batch wrapper class.
  * @param <C> The type of the {@link Collection} holding the values we want to partition.
  * @param <E> The type of the partial entities.
- * @param <I> The type of the Id we can use for partial entity identification.
+ * @param <I> The type of the ID we can use for partial entity identification.
  */
 public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E>, E, I> {
 
@@ -31,37 +31,39 @@ public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E
     private final Function<E, I> idFunction;
 
     /**
-     * Creates a new instance and sets all of the parameters we can use for customization.
+     * Creates a new instance and sets all the parameters we can use for customization.
      *
      * @param instanceSupplier          The {@link Supplier} we can use for getting a new empty batch instance.
      * @param collectionReadFunction    The function that can read the collection from a batch.
      * @param collectionWriteBiFunction The function that can write the collection into a batch.
      * @param collectionCollector       The collector creating a new collection from the partial entities.
-     * @param idFunction                The function that can convert an entity to the Id identifying it.
+     * @param idFunction                The function that can convert an entity to the ID identifying it.
      */
-    public AbstractWrappedCollectionBasedTransformer(final @NotNull Supplier<B> instanceSupplier,
-                                                     final @NotNull Function<B, C> collectionReadFunction,
-                                                     final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
-                                                     final @NotNull Collector<E, ?, C> collectionCollector,
-                                                     final @NotNull Function<E, I> idFunction) {
+    public AbstractWrappedCollectionBasedTransformer(
+            final @NotNull Supplier<B> instanceSupplier,
+            final @NotNull Function<B, C> collectionReadFunction,
+            final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
+            final @NotNull Collector<E, ?, C> collectionCollector,
+            final @NotNull Function<E, I> idFunction) {
         this(response -> cloneWrapper(response, instanceSupplier), collectionReadFunction,
                 collectionWriteBiFunction, collectionCollector, idFunction);
     }
 
     /**
-     * Creates a new instance and sets all of the parameters we can use for customization.
+     * Creates a new instance and sets all the parameters we can use for customization.
      *
      * @param cloneFunction             The function that can clone a batch.
      * @param collectionReadFunction    The function that can read the collection from a batch.
      * @param collectionWriteBiFunction The function that can write the collection into a batch.
      * @param collectionCollector       The collector creating a new collection from the partial entities.
-     * @param idFunction                The function that can convert an entity to the Id identifying it.
+     * @param idFunction                The function that can convert an entity to the ID identifying it.
      */
-    public AbstractWrappedCollectionBasedTransformer(final @NotNull Function<B, B> cloneFunction,
-                                                     final @NotNull Function<B, C> collectionReadFunction,
-                                                     final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
-                                                     final @NotNull Collector<E, ?, C> collectionCollector,
-                                                     final @NotNull Function<E, I> idFunction) {
+    public AbstractWrappedCollectionBasedTransformer(
+            final @NotNull Function<B, B> cloneFunction,
+            final @NotNull Function<B, C> collectionReadFunction,
+            final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
+            final @NotNull Collector<E, ?, C> collectionCollector,
+            final @NotNull Function<E, I> idFunction) {
         this.cloneFunction = cloneFunction;
         this.collectionReadFunction = collectionReadFunction;
         this.collectionWriteBiFunction = collectionWriteBiFunction;
@@ -70,8 +72,10 @@ public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E
     }
 
     @NotNull
-    private static <B> B cloneWrapper(final @NotNull B batch, final @NotNull Supplier<B> instanceSupplier) {
-        final B target = instanceSupplier.get();
+    private static <B> B cloneWrapper(
+            final @NotNull B batch,
+            final @NotNull Supplier<B> instanceSupplier) {
+        final var target = instanceSupplier.get();
         BeanUtils.copyProperties(batch, target);
         return target;
     }

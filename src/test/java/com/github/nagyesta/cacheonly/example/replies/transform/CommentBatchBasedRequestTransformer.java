@@ -9,7 +9,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public class CommentBatchBasedRequestTransformer extends WrappedCollectionBasedRequestTransformer<ThreadRequest, List<Long>, Long, Long> {
+public class CommentBatchBasedRequestTransformer
+        extends WrappedCollectionBasedRequestTransformer<ThreadRequest, List<Long>, Long, Long> {
 
     public CommentBatchBasedRequestTransformer() {
         super(ThreadRequest::new, ThreadRequest::getThreadIds, (request, threadIds) -> {

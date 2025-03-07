@@ -15,7 +15,9 @@ public class ThreadRequest {
     public ThreadRequest() {
     }
 
-    public ThreadRequest(final UUID articleId, final List<Long> threadIds) {
+    public ThreadRequest(
+            final UUID articleId,
+            final List<Long> threadIds) {
         this.articleId = articleId;
         this.threadIds = threadIds;
     }

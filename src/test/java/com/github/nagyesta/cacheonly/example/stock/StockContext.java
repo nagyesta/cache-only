@@ -24,7 +24,7 @@ public class StockContext {
 
     @Bean
     public CacheManager cacheManager() {
-        final SimpleCacheManager cacheManager = new SimpleCacheManager();
+        final var cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(Collections.singletonList(spy(new ConcurrentMapCache(STOCKS))));
         return cacheManager;
     }

@@ -16,13 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -36,7 +30,7 @@ import java.util.stream.Collectors;
  * @param <PR> The type of the partial request.
  * @param <PS> The type of the partial response.
  * @param <C>  The type of the cache key.
- * @param <I>  The type of the Id which allows unique association of partial request
+ * @param <I>  The type of the ID which allows unique association of partial request
  *             and partial response pairs in the scope of the batch.
  */
 public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller<BR, BS>,
@@ -63,9 +57,10 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
 
     @Nullable
     @Override
-    public BS callCacheableBatchService(final @NotNull BR request) throws BatchServiceException {
-        final long start = System.currentTimeMillis();
-        Map<I, PR> requestMap = batchRequestTransformer.splitToPartialRequest(request);
+    public BS callCacheableBatchService(
+            final @NotNull BR request) throws BatchServiceException {
+        final var start = System.currentTimeMillis();
+        var requestMap = batchRequestTransformer.splitToPartialRequest(request);
         try {
             logger.info("Processing batch of {} partial requests.", requestMap.size());
             logger.trace("Processing batch of partial requests with ids: {}", requestMap.keySet());
@@ -82,16 +77,17 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
             fromCache.putAll(fetchAllFromOriginService(requestMap));
             return batchResponseTransformer.mergeToBatchResponse(fromCache);
         } finally {
-            final long end = System.currentTimeMillis();
+            final var end = System.currentTimeMillis();
             logger().debug("Total execution completed under {} ms.", end - start);
         }
     }
 
     @Nullable
     @Override
-    public BS callBatchServiceAndPutAllToCache(final @NotNull BR request) throws BatchServiceException {
-        final Map<I, PR> requestMap = batchRequestTransformer.splitToPartialRequest(request);
-        final Map<I, PS> response = fetchAllFromOriginService(requestMap);
+    public BS callBatchServiceAndPutAllToCache(
+            final @NotNull BR request) throws BatchServiceException {
+        final var requestMap = batchRequestTransformer.splitToPartialRequest(request);
+        final var response = fetchAllFromOriginService(requestMap);
         return batchResponseTransformer.mergeToBatchResponse(response);
     }
 
@@ -103,12 +99,13 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
      * @throws BatchServiceException When the resolution failed.
      */
     @NotNull
-    protected Map<I, PS> fetchAllFromOriginService(final @NotNull Map<I, PR> requestMap) throws BatchServiceException {
+    protected Map<I, PS> fetchAllFromOriginService(
+            final @NotNull Map<I, PR> requestMap) throws BatchServiceException {
         final Map<I, PS> response;
         if (requestMap.isEmpty()) {
             response = Collections.emptyMap();
         } else {
-            final List<Map<I, PR>> partitions = partitionOriginRequests(requestMap);
+            final var partitions = partitionOriginRequests(requestMap);
             metricsCollector.partitionsCreated(partitions.size());
             try {
                 response = callOriginWithPartitions(partitions);
@@ -129,19 +126,21 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
      * @throws BatchServiceException When the origin call failed.
      */
     @NotNull
-    protected abstract Map<I, PS> callOriginWithPartitions(@NotNull List<Map<I, PR>> requestPartitions) throws BatchServiceException;
+    protected abstract Map<I, PS> callOriginWithPartitions(
+            @NotNull List<Map<I, PR>> requestPartitions) throws BatchServiceException;
 
     /**
      * Evaluates whether the refresh strategy allows us to put to the cache and performs
-     * a put with all of the responses if it is allowed.
+     * a put with all the responses if it is allowed.
      *
      * @param strategy The refresh strategy.
      * @param request  The request we need to use to find the cache keys when we put items into the cache.
      * @param response The response we need to put into the cache.
      */
-    protected void populateCacheWithResponse(final @NotNull CacheRefreshStrategy strategy,
-                                             final @NotNull Map<I, PR> request,
-                                             final @NotNull Map<I, PS> response) {
+    protected void populateCacheWithResponse(
+            final @NotNull CacheRefreshStrategy strategy,
+            final @NotNull Map<I, PR> request,
+            final @NotNull Map<I, PS> response) {
         if (strategy.allowsCachePut()) {
             logger.trace("Responses passed for cache PUT with ids: {}", response.keySet());
             logger.trace("Requests passed for cache PUT with ids: {}", request.keySet());
@@ -158,8 +157,8 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
 
     @NotNull
     private List<Map<I, PR>> partitionOriginRequests(final @NotNull Map<I, PR> requestMap) {
-        final ArrayList<I> keyList = new ArrayList<>(requestMap.keySet());
-        final List<List<I>> partitions = ListUtils.partition(keyList, batchServiceCaller.maxPartitionSize());
+        final var keyList = new ArrayList<>(requestMap.keySet());
+        final var partitions = ListUtils.partition(keyList, batchServiceCaller.maxPartitionSize());
         logger.debug("Created {} partitions.", partitions.size());
         return partitions.stream()
                 .map(p -> p.stream().collect(Collectors.toMap(Function.identity(), requestMap::get)))
@@ -167,8 +166,10 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
     }
 
     @NotNull
-    private Map<I, PR> selectRemainingKeysToFetchFromOrigin(final @NotNull Map<I, PR> requestMap, final Map<I, PS> fromCache) {
-        final Set<I> toBeFetched = batchServiceCaller.refreshStrategy()
+    private Map<I, PR> selectRemainingKeysToFetchFromOrigin(
+            final @NotNull Map<I, PR> requestMap,
+            final Map<I, PS> fromCache) {
+        final var toBeFetched = batchServiceCaller.refreshStrategy()
                 .selectItemsForFetch(requestMap.keySet(), fromCache.keySet(), batchServiceCaller.maxPartitionSize());
         logger.trace("Fetch will be performed for ids: {}", toBeFetched);
         logger.debug("Fetch will be performed for {} items.", toBeFetched.size());
@@ -177,8 +178,10 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
     }
 
     @NotNull
-    private Map<I, PS> attemptFetchingFromCache(final @NotNull Map<I, PR> requestMap,
-                                                final @NotNull CacheRefreshStrategy strategy) throws CacheMissException {
+    private Map<I, PS> attemptFetchingFromCache(
+            final @NotNull Map<I, PR> requestMap,
+            final @NotNull CacheRefreshStrategy strategy)
+            throws CacheMissException {
         final Map<I, PS> result = new HashMap<>();
         if (strategy.allowsCacheGet()) {
             metricsCollector.cacheGet(requestMap.size());
@@ -203,8 +206,10 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
      * @throws CacheMissException When a request is not found and the strategy does not allow us to continue.
      */
     @NotNull
-    protected abstract Map<I, PS> fetchAllFromCache(@NotNull CacheRefreshStrategy strategy,
-                                                    @NotNull Map<I, PR> requestMap) throws CacheMissException;
+    protected abstract Map<I, PS> fetchAllFromCache(
+            @NotNull CacheRefreshStrategy strategy,
+            @NotNull Map<I, PR> requestMap)
+            throws CacheMissException;
 
     /**
      * Attempts to fetch a single entry from cache.
@@ -215,13 +220,15 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
      * @throws CacheMissException When the request is not found and the strategy does not allow us to continue.
      */
     @NotNull
-    protected Optional<PS> fetchOneFromCache(final @NotNull CacheRefreshStrategy strategy,
-                                             final @NotNull PR request) throws CacheMissException {
-        final Optional<CacheKey<C, I>> key = Optional.ofNullable(partialCacheSupport.toCacheKey(request));
-        final Optional<PS> fromCache = key.map(partialCacheSupport::getFromCache);
-        if (!fromCache.isPresent()) {
+    protected Optional<PS> fetchOneFromCache(
+            final @NotNull CacheRefreshStrategy strategy,
+            final @NotNull PR request)
+            throws CacheMissException {
+        final var key = Optional.ofNullable(partialCacheSupport.toCacheKey(request));
+        final var fromCache = key.map(partialCacheSupport::getFromCache);
+        if (fromCache.isEmpty()) {
             if (strategy.shouldFailOnMiss()) {
-                throw new CacheMissException("Item with id not found in cache: " + key.map(CacheKey::getId).orElse(null));
+                throw new CacheMissException("Item with id not found in cache: " + key.map(CacheKey::id).orElse(null));
             }
             key.ifPresent(k -> logger.trace("Cache miss observed for key: {}", k));
         }
@@ -238,8 +245,10 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
      * @throws BatchServiceException When the origin call fails.
      */
     @NotNull
-    protected Map<I, PS> fetchSinglePartitionFromOrigin(final @NotNull Map<I, PR> requestMap,
-                                                        final @NotNull CacheRefreshStrategy strategy) throws BatchServiceException {
+    protected Map<I, PS> fetchSinglePartitionFromOrigin(
+            final @NotNull Map<I, PR> requestMap,
+            final @NotNull CacheRefreshStrategy strategy)
+            throws BatchServiceException {
         final Map<I, PS> response = new HashMap<>(doFetchFromOrigin(requestMap));
         logger().trace("Responses fetched for ids: {}", response.keySet());
         logger().debug("Responses fetched for {} items.", response.size());
@@ -248,11 +257,13 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
     }
 
     @NotNull
-    private Map<I, PS> doFetchFromOrigin(final @NotNull Map<I, PR> requestMap) throws BatchServiceException {
-        final Optional<BR> batchRequest = Optional.ofNullable(batchRequestTransformer().mergeToBatchRequest(requestMap));
+    private Map<I, PS> doFetchFromOrigin(
+            final @NotNull Map<I, PR> requestMap)
+            throws BatchServiceException {
+        final var batchRequest = Optional.ofNullable(batchRequestTransformer().mergeToBatchRequest(requestMap));
         Map<I, PS> response = Collections.emptyMap();
         if (batchRequest.isPresent()) {
-            final Optional<BS> listResponse = Optional.ofNullable(batchServiceCaller().callBatchService(batchRequest.get()));
+            final var listResponse = Optional.ofNullable(batchServiceCaller().callBatchService(batchRequest.get()));
             response = listResponse.map(batchResponseTransformer()::splitToPartialResponse).orElse(Collections.emptyMap());
         }
         return response;
@@ -278,7 +289,8 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
         return logger;
     }
 
-    public final void setMetricsCollector(final BatchServiceCallMetricCollector metricsCollector) {
+    public final void setMetricsCollector(
+            final BatchServiceCallMetricCollector metricsCollector) {
         this.metricsCollector = metricsCollector;
     }
 }

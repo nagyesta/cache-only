@@ -7,33 +7,19 @@ import com.github.nagyesta.cacheonly.example.stock.raw.StockService;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InOrder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static com.github.nagyesta.cacheonly.example.stock.StockContext.STOCKS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = StockContext.class)
@@ -51,20 +37,21 @@ class StockCacheServiceTemplateIntegrationTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    void testCallCacheableBatchServiceShouldNotPutAnythingWhenNoResultsFound() throws BatchServiceException {
+    void testCallCacheableBatchServiceShouldNotPutAnythingWhenNoResultsFound()
+            throws BatchServiceException {
         //given
         // create the test request
         final SortedSet<String> request = new TreeSet<>(Arrays.asList("A", "B", "C"));
 
         //when
-        final SortedMap<String, BigDecimal> actual = underTest.callCacheableBatchService(request);
+        final var actual = underTest.callCacheableBatchService(request);
 
         //then
         assertNotNull(actual);
         assertEquals(Collections.emptyMap(), actual);
         // all items were tried from the cache and missed
-        final Cache cache = cacheManager.getCache(STOCKS);
-        final InOrder inOrder = Mockito.inOrder(cache);
+        final var cache = cacheManager.getCache(STOCKS);
+        final var inOrder = Mockito.inOrder(cache);
         inOrder.verify(cache).get(eq("price_A"), eq(BigDecimal.class));
         // pessimistic strategy aborts after first failure
         inOrder.verify(cache, never()).get(eq("price_B"), eq(BigDecimal.class));
@@ -75,14 +62,15 @@ class StockCacheServiceTemplateIntegrationTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    void testCallCacheableBatchServiceShouldCacheWhenResultsAreFound() throws BatchServiceException {
+    void testCallCacheableBatchServiceShouldCacheWhenResultsAreFound()
+            throws BatchServiceException {
         //given
         // create the test request
         final SortedSet<String> request = new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM, "UNKNOWN"));
-        final Map<String, BigDecimal> expected = stockService.lookupNoLimit(request);
+        final var expected = stockService.lookupNoLimit(request);
 
         //when
-        final SortedMap<String, BigDecimal> actual = underTest.callCacheableBatchService(request);
+        final var actual = underTest.callCacheableBatchService(request);
 
         //then
         assertNotNull(actual);
@@ -90,9 +78,9 @@ class StockCacheServiceTemplateIntegrationTest {
         assertIterableEquals(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM), actual.keySet());
         assertEquals(expected, actual);
         // all items were tried from the cache and missed
-        final Cache cache = cacheManager.getCache(STOCKS);
-        final StockService spyService = batchServiceCaller.getStockService();
-        final InOrder inOrder = Mockito.inOrder(cache, spyService);
+        final var cache = cacheManager.getCache(STOCKS);
+        final var spyService = batchServiceCaller.getStockService();
+        final var inOrder = Mockito.inOrder(cache, spyService);
         inOrder.verify(cache).get(eq("price_" + StockService.AAPL), eq(BigDecimal.class));
         // pessimistic strategy aborts after first failure
         inOrder.verify(cache, never()).get(eq("price_" + StockService.AMD), eq(BigDecimal.class));
@@ -109,14 +97,15 @@ class StockCacheServiceTemplateIntegrationTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    void testCallCacheableBatchServiceShouldNotUseRealServiceWhenAllFoundInCache() throws BatchServiceException {
+    void testCallCacheableBatchServiceShouldNotUseRealServiceWhenAllFoundInCache()
+            throws BatchServiceException {
         //given
         // create the test request
         final SortedSet<String> request = new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM));
         final Map<String, BigDecimal> expected = underTest.callBatchServiceAndPutAllToCache(request);
         // verify that items where just put into cache
-        final Cache cache = cacheManager.getCache(STOCKS);
-        final StockService spyService = batchServiceCaller.getStockService();
+        final var cache = cacheManager.getCache(STOCKS);
+        final var spyService = batchServiceCaller.getStockService();
         verify(spyService).lookup(eq(new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.EPAM))));
         verify(spyService).lookup(eq(new TreeSet<>(Collections.singletonList(StockService.AMD))));
         reset(spyService);
@@ -126,7 +115,7 @@ class StockCacheServiceTemplateIntegrationTest {
         reset(cache);
 
         //when
-        final SortedMap<String, BigDecimal> actual = underTest.callCacheableBatchService(request);
+        final var actual = underTest.callCacheableBatchService(request);
 
         //then
         assertNotNull(actual);
@@ -134,7 +123,7 @@ class StockCacheServiceTemplateIntegrationTest {
         assertIterableEquals(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM), actual.keySet());
         assertEquals(expected, actual);
         // all items were tried from the cache and missed
-        final InOrder inOrder = Mockito.inOrder(cache, spyService);
+        final var inOrder = Mockito.inOrder(cache, spyService);
         inOrder.verify(cache).get(eq("price_" + StockService.AAPL), eq(BigDecimal.class));
         inOrder.verify(cache).get(eq("price_" + StockService.EPAM), eq(BigDecimal.class));
         inOrder.verify(cache).get(eq("price_" + StockService.AMD), eq(BigDecimal.class));
@@ -148,24 +137,25 @@ class StockCacheServiceTemplateIntegrationTest {
 
     @Test
     @DirtiesContext(methodMode = DirtiesContext.MethodMode.AFTER_METHOD)
-    void testCallCacheableBatchServiceShouldUseRealServiceOnlyWhenSomeNotFoundInCache() throws BatchServiceException {
+    void testCallCacheableBatchServiceShouldUseRealServiceOnlyWhenSomeNotFoundInCache()
+            throws BatchServiceException {
         //given
         // create the warm-up request
         final SortedSet<String> warmUpRequest = new TreeSet<>(Collections.singletonList(StockService.AAPL));
         underTest.callBatchServiceAndPutAllToCache(warmUpRequest);
         // verify that items where just put into cache
-        final Cache cache = cacheManager.getCache(STOCKS);
-        final StockService spyService = batchServiceCaller.getStockService();
+        final var cache = cacheManager.getCache(STOCKS);
+        final var spyService = batchServiceCaller.getStockService();
         verify(spyService).lookup(eq(new TreeSet<>(Collections.singletonList(StockService.AAPL))));
         reset(spyService);
         verify(cache).put(eq("price_" + StockService.AAPL), any());
         reset(cache);
         // create the test request
         final SortedSet<String> request = new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM));
-        final Map<String, BigDecimal> expected = stockService.lookupNoLimit(request);
+        final var expected = stockService.lookupNoLimit(request);
 
         //when
-        final SortedMap<String, BigDecimal> actual = underTest.callCacheableBatchService(request);
+        final var actual = underTest.callCacheableBatchService(request);
 
         //then
         assertNotNull(actual);
@@ -173,7 +163,7 @@ class StockCacheServiceTemplateIntegrationTest {
         assertIterableEquals(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM), actual.keySet());
         assertEquals(expected, actual);
         // all items were tried from the cache and missed
-        final InOrder inOrder = Mockito.inOrder(cache, spyService);
+        final var inOrder = Mockito.inOrder(cache, spyService);
         inOrder.verify(cache).get(eq("price_" + StockService.AAPL), eq(BigDecimal.class));
         inOrder.verify(cache).get(eq("price_" + StockService.EPAM), eq(BigDecimal.class));
         // pessimistic strategy aborts after first failure

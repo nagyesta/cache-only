@@ -5,23 +5,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Stream;
 
-import static com.github.nagyesta.cacheonly.core.CacheRefreshStrategy.CACHE_ONLY;
-import static com.github.nagyesta.cacheonly.core.CacheRefreshStrategy.NEVER_CACHE;
-import static com.github.nagyesta.cacheonly.core.CacheRefreshStrategy.OPPORTUNISTIC;
-import static com.github.nagyesta.cacheonly.core.CacheRefreshStrategy.OPTIMISTIC;
-import static com.github.nagyesta.cacheonly.core.CacheRefreshStrategy.PESSIMISTIC;
-import static com.github.nagyesta.cacheonly.core.CacheRefreshStrategy.values;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.github.nagyesta.cacheonly.core.CacheRefreshStrategy.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 /**
@@ -111,11 +99,12 @@ class CacheRefreshStrategyTest {
     @ParameterizedTest
     @MethodSource("cacheUseProvider")
     void testAllowsCacheGetShouldReturnTheExpectedValueWhenCalled(
-            final CacheRefreshStrategy underTest, final boolean expected) {
+            final CacheRefreshStrategy underTest,
+            final boolean expected) {
         //given
 
         //when
-        final boolean actual = underTest.allowsCacheGet();
+        final var actual = underTest.allowsCacheGet();
 
         //then
         assertEquals(expected, actual);
@@ -124,11 +113,12 @@ class CacheRefreshStrategyTest {
     @ParameterizedTest
     @MethodSource("failOnMissProvider")
     void testShouldFailOnMissShouldReturnTheExpectedValueWhenCalled(
-            final CacheRefreshStrategy underTest, final boolean expected) {
+            final CacheRefreshStrategy underTest,
+            final boolean expected) {
         //given
 
         //when
-        final boolean actual = underTest.shouldFailOnMiss();
+        final var actual = underTest.shouldFailOnMiss();
 
         //then
         assertEquals(expected, actual);
@@ -137,11 +127,12 @@ class CacheRefreshStrategyTest {
     @ParameterizedTest
     @MethodSource("cacheUseProvider")
     void testAllowsCachePutShouldReturnTheExpectedValueWhenCalled(
-            final CacheRefreshStrategy underTest, final boolean expected) {
+            final CacheRefreshStrategy underTest,
+            final boolean expected) {
         //given
 
         //when
-        final boolean actual = underTest.allowsCachePut();
+        final var actual = underTest.allowsCachePut();
 
         //then
         assertEquals(expected, actual);
@@ -151,12 +142,15 @@ class CacheRefreshStrategyTest {
     @MethodSource("validSelectItemProvider")
     void testSelectItemsForFetchShouldKeepTheExpectedItemsWhenCalledWithValidInput(
             final CacheRefreshStrategy underTest,
-            final Set<Integer> allIds, final Set<Integer> foundIds, final int partitionSize,
-            final SortedSet<Integer> expectedMandatory, final int expectedAdditional) {
+            final Set<Integer> allIds,
+            final Set<Integer> foundIds,
+            final int partitionSize,
+            final SortedSet<Integer> expectedMandatory,
+            final int expectedAdditional) {
         //given
 
         //when
-        final Set<Integer> actual = underTest.selectItemsForFetch(allIds, foundIds, partitionSize);
+        final var actual = underTest.selectItemsForFetch(allIds, foundIds, partitionSize);
 
         //then
         final SortedSet<Integer> common = new TreeSet<>(SetUtils.intersection(actual, expectedMandatory));
@@ -171,7 +165,9 @@ class CacheRefreshStrategyTest {
     @MethodSource("invalidSelectItemProvider")
     void testSelectItemsForFetchShouldThrowExceptionWhenCalledWithInvalidInput(
             final CacheRefreshStrategy underTest,
-            final Set<Integer> allIds, final Set<Integer> foundIds, final int partitionSize) {
+            final Set<Integer> allIds,
+            final Set<Integer> foundIds,
+            final int partitionSize) {
         //given
 
         //when

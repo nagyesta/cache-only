@@ -48,17 +48,19 @@ class WrappedMapBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("splitInputProvider")
-    void testSplitToPartialRequestShouldSplitValidInput(final MapWrapper<Long, String> input,
-                                                        final Map<Long, MapWrapper<Long, String>> expected) {
+    void testSplitToPartialRequestShouldSplitValidInput(
+            final MapWrapper<Long, String> input,
+            final Map<Long, MapWrapper<Long, String>> expected) {
         //given
-        final WrappedMapBasedRequestTransformer<MapWrapper<Long, String>, Map<Long, String>, String, Long> underTest =
-                new WrappedMapBasedRequestTransformer<>(() -> new MapWrapper<>(new HashMap<>()), MapWrapper::getMap, (wrapper, map) -> {
+        final var underTest =
+                new WrappedMapBasedRequestTransformer<MapWrapper<Long, String>, Map<Long, String>, String, Long>(
+                        () -> new MapWrapper<>(new HashMap<>()), MapWrapper::getMap, (wrapper, map) -> {
                     wrapper.setMap(map);
                     return wrapper;
                 }, Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         //when
-        final Map<Long, MapWrapper<Long, String>> actual = underTest.splitToPartialRequest(input);
+        final var actual = underTest.splitToPartialRequest(input);
 
         //then
         assertIterableEquals(expected.entrySet(), actual.entrySet());
@@ -66,17 +68,21 @@ class WrappedMapBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("mergeInputProvider")
-    void testMergeToBatchRequestShouldMergeValidInput(final Map<Long, MapWrapper<Long, String>> input,
-                                                      final MapWrapper<Long, String> expected) {
+    void testMergeToBatchRequestShouldMergeValidInput(
+            final Map<Long, MapWrapper<Long, String>> input,
+            final MapWrapper<Long, String> expected) {
         //given
-        final WrappedMapBasedRequestTransformer<MapWrapper<Long, String>, Map<Long, String>, String, Long> underTest =
-                new WrappedMapBasedRequestTransformer<>(w -> new MapWrapper<>(new HashMap<>()), MapWrapper::getMap, (wrapper, map) -> {
-                    wrapper.setMap(map);
-                    return wrapper;
-                }, Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        final var underTest =
+                new WrappedMapBasedRequestTransformer<MapWrapper<Long, String>, Map<Long, String>, String, Long>(
+                        w -> new MapWrapper<>(new HashMap<>()),
+                        MapWrapper::getMap,
+                        (wrapper, map) -> {
+                            wrapper.setMap(map);
+                            return wrapper;
+                        }, Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         //when
-        final MapWrapper<Long, String> actual = underTest.mergeToBatchRequest(input);
+        final var actual = underTest.mergeToBatchRequest(input);
 
         //then
         assertEquals(expected, actual);

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class UnstableCacheServiceTemplate extends ConcurrentCacheServiceTemplate<List<Long>, List<String>, Long, String, String, Long> {
 
     private static final BatchRequestTransformer<List<Long>, Long, Long> BATCH_REQUEST_TRANSFORMER =
-            new BatchRequestTransformer<List<Long>, Long, Long>() {
+            new BatchRequestTransformer<>() {
                 @NotNull
                 @Override
                 public Map<Long, Long> splitToPartialRequest(final @NotNull List<Long> batchRequest) {
@@ -32,7 +32,7 @@ public class UnstableCacheServiceTemplate extends ConcurrentCacheServiceTemplate
                 }
             };
     private static final BatchResponseTransformer<List<String>, String, Long> BATCH_RESPONSE_TRANSFORMER =
-            new BatchResponseTransformer<List<String>, String, Long>() {
+            new BatchResponseTransformer<>() {
                 @NotNull
                 @Override
                 public Map<Long, String> splitToPartialResponse(final @NotNull List<String> batchResponse) {

@@ -38,9 +38,10 @@ public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCa
 
     @Nullable
     @Override
-    public List<String> callBatchService(final @NotNull List<Long> batchRequest) throws BatchServiceException {
+    public List<String> callBatchService(final @NotNull List<Long> batchRequest)
+            throws BatchServiceException {
         handleExceptionalCases(batchRequest);
-        final List<String> result = batchRequest.stream()
+        final var result = batchRequest.stream()
                 .filter(i -> i > 10)
                 .map(String::valueOf)
                 .collect(Collectors.toList());
@@ -54,9 +55,9 @@ public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCa
     private void handleExceptionalCases(final @NotNull List<Long> batchRequest) {
         if (batchRequest.stream().anyMatch(i -> i < -30L)) {
             try {
-                final long start = System.currentTimeMillis();
+                final var start = System.currentTimeMillis();
                 Thread.sleep(60);
-                final long end = System.currentTimeMillis();
+                final var end = System.currentTimeMillis();
                 log.trace("Took: {} ms", (end - start));
             } catch (final InterruptedException e) {
                 log.error(e.getMessage(), e);

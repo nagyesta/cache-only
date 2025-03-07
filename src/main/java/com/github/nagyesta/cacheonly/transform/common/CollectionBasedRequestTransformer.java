@@ -25,10 +25,11 @@ public class CollectionBasedRequestTransformer<C extends Collection<P>, P, I>
      * Creates a new instance and defines how the {@link Collection} should be collected from a {@link java.util.stream.Stream}.
      *
      * @param collectionCollector The {@link Collector} we want to use to get a batch from a stream of elements.
-     * @param idFunction          The transformation that can determine the Id of a given partial request.
+     * @param idFunction          The transformation that can determine the ID of a given partial request.
      */
-    public CollectionBasedRequestTransformer(final @NotNull Collector<P, ?, C> collectionCollector,
-                                             final @NotNull Function<P, I> idFunction) {
+    public CollectionBasedRequestTransformer(
+            final @NotNull Collector<P, ?, C> collectionCollector,
+            final @NotNull Function<P, I> idFunction) {
         super(collectionCollector, idFunction);
     }
 

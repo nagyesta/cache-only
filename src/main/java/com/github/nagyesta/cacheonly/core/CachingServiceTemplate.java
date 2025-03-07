@@ -26,7 +26,7 @@ public interface CachingServiceTemplate<BR, BS> {
 
     /**
      * Processes the provided batch request and returns an appropriate batch response.
-     * Does not read from cache but puts all of the returned partial responses into it.
+     * Does not read from cache but puts all the returned partial responses into it.
      * Can be ideal for background cache warm-ups.
      *
      * @param request The batch request we need to process.

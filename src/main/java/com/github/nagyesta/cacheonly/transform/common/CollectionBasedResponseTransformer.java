@@ -25,10 +25,11 @@ public class CollectionBasedResponseTransformer<C extends Collection<P>, P, I>
      * Creates a new instance and defines how the {@link Collection} should be collected from a {@link java.util.stream.Stream}.
      *
      * @param collectionCollector The {@link Collector} we want to use to get a batch from a stream of elements.
-     * @param idFunction          The transformation that can determine the Id of a given partial response.
+     * @param idFunction          The transformation that can determine the ID of a given partial response.
      */
-    public CollectionBasedResponseTransformer(final @NotNull Collector<P, ?, C> collectionCollector,
-                                              final @NotNull Function<P, I> idFunction) {
+    public CollectionBasedResponseTransformer(
+            final @NotNull Collector<P, ?, C> collectionCollector,
+            final @NotNull Function<P, I> idFunction) {
         super(collectionCollector, idFunction);
     }
 
@@ -36,12 +37,13 @@ public class CollectionBasedResponseTransformer<C extends Collection<P>, P, I>
      * Creates a new instance and defines how the {@link Collection} should be collected from a {@link java.util.stream.Stream}.
      *
      * @param collectionCollector The {@link Collector} we want to use to get a batch from a stream of elements.
-     * @param idFunction          The transformation that can determine the Id of a given partial response.
+     * @param idFunction          The transformation that can determine the ID of a given partial response.
      * @param nullIfEmpty         Flag telling the implementation whether we want to use null in case of an empty {@link Collection}.
      */
-    public CollectionBasedResponseTransformer(final @NotNull Collector<P, ?, C> collectionCollector,
-                                              final @NotNull Function<P, I> idFunction,
-                                              final boolean nullIfEmpty) {
+    public CollectionBasedResponseTransformer(
+            final @NotNull Collector<P, ?, C> collectionCollector,
+            final @NotNull Function<P, I> idFunction,
+            final boolean nullIfEmpty) {
         super(collectionCollector, idFunction, nullIfEmpty);
     }
 

@@ -27,10 +27,11 @@ public class AbstractCollectionBasedTransformer<C extends Collection<P>, P, I> {
      * Creates a new instance and defines how the {@link Collection} should be collected from a {@link java.util.stream.Stream}.
      *
      * @param collectionCollector The {@link Collector} we want to use to get a batch from a stream of elements.
-     * @param idFunction          The transformation that can determine the Id of a given partial request (or response).
+     * @param idFunction          The transformation that can determine the ID of a given partial request (or response).
      */
-    public AbstractCollectionBasedTransformer(final @NotNull Collector<P, ?, C> collectionCollector,
-                                              final @NotNull Function<P, I> idFunction) {
+    public AbstractCollectionBasedTransformer(
+            final @NotNull Collector<P, ?, C> collectionCollector,
+            final @NotNull Function<P, I> idFunction) {
         this(collectionCollector, idFunction, false);
     }
 
@@ -38,12 +39,13 @@ public class AbstractCollectionBasedTransformer<C extends Collection<P>, P, I> {
      * Creates a new instance and defines how the {@link Collection} should be collected from a {@link java.util.stream.Stream}.
      *
      * @param collectionCollector The {@link Collector} we want to use to get a batch from a stream of elements.
-     * @param idFunction          The transformation that can determine the Id of a given partial request (or response).
+     * @param idFunction          The transformation that can determine the ID of a given partial request (or response).
      * @param nullIfEmpty         Flag telling the implementation whether we want to use null in case of an empty {@link Collection}.
      */
-    public AbstractCollectionBasedTransformer(final @NotNull Collector<P, ?, C> collectionCollector,
-                                              final @NotNull Function<P, I> idFunction,
-                                              final boolean nullIfEmpty) {
+    public AbstractCollectionBasedTransformer(
+            final @NotNull Collector<P, ?, C> collectionCollector,
+            final @NotNull Function<P, I> idFunction,
+            final boolean nullIfEmpty) {
         this.collectionCollector = collectionCollector;
         this.idFunction = idFunction;
         this.nullIfEmpty = nullIfEmpty;

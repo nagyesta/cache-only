@@ -23,8 +23,9 @@ public class BatchServiceException extends RuntimeException {
      * @param message The message detailing the failure.
      * @param cause   The cause of the failure.
      */
-    public BatchServiceException(final @NotNull String message,
-                                 final @NotNull Throwable cause) {
+    public BatchServiceException(
+            final @NotNull String message,
+            final @NotNull Throwable cause) {
         super(message, cause);
     }
 }

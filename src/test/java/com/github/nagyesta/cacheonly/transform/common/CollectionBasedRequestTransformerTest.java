@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("checkstyle:MagicNumber")
 class CollectionBasedRequestTransformerTest {
@@ -49,14 +47,15 @@ class CollectionBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("splitInputProvider")
-    void testSplitToPartialRequestShouldSplitValidInput(final List<String> input,
-                                                        final Map<Long, String> expected) {
+    void testSplitToPartialRequestShouldSplitValidInput(
+            final List<String> input,
+            final Map<Long, String> expected) {
         //given
-        final CollectionBasedRequestTransformer<List<String>, String, Long> underTest =
-                new CollectionBasedRequestTransformer<>(Collectors.toList(), Long::parseLong);
+        final var underTest =
+                new CollectionBasedRequestTransformer<List<String>, String, Long>(Collectors.toList(), Long::parseLong);
 
         //when
-        final Map<Long, String> actual = underTest.splitToPartialRequest(input);
+        final var actual = underTest.splitToPartialRequest(input);
 
         //then
         assertIterableEquals(expected.entrySet(), actual.entrySet());
@@ -64,14 +63,16 @@ class CollectionBasedRequestTransformerTest {
 
     @ParameterizedTest
     @MethodSource("mergeInputProvider")
-    void testMergeToBatchRequestShouldMergeValidInput(final Map<Long, String> input,
-                                                      final List<String> expected) {
+    void testMergeToBatchRequestShouldMergeValidInput(
+            final Map<Long, String> input,
+            final List<String> expected) {
         //given
-        final CollectionBasedRequestTransformer<List<String>, String, Long> underTest =
-                new CollectionBasedRequestTransformer<>(Collectors.toList(), Long::parseLong);
+        final var underTest =
+                new CollectionBasedRequestTransformer<List<String>, String, Long>(
+                        Collectors.toList(), Long::parseLong);
 
         //when
-        final List<String> actual = underTest.mergeToBatchRequest(input);
+        final var actual = underTest.mergeToBatchRequest(input);
 
         //then
         assertNotNull(actual);

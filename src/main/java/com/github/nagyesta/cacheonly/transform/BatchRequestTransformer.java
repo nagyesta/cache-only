@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @param <B> The type of the batch request.
  * @param <P> The type of the partial request.
- * @param <I> The type of the Id that can identify a partial request in the scope
+ * @param <I> The type of the ID that can identify a partial request in the scope
  *            of a batch.
  */
 public interface BatchRequestTransformer<B, P, I> {

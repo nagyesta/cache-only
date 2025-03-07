@@ -52,21 +52,21 @@ public class UnstablePartialCacheSupport implements AsyncPartialCacheSupport<Lon
     @Override
     public String getFromCache(final @NotNull CacheKey<String, Long> key) {
         handleExceptionalCases(key);
-        if (key.getId() < 5 || key.getId() > 20) {
+        if (key.id() < 5 || key.id() > 20) {
             return null;
         }
-        return key.getKey();
+        return key.key();
     }
 
     private void handleExceptionalCases(final @NotNull CacheKey<String, Long> key) {
-        if (key.getId() == -15L) {
+        if (key.id() == -15L) {
             throw new IllegalStateException("Get failed.");
         }
-        if (key.getId() < -30) {
+        if (key.id() < -30) {
             try {
-                final long start = System.currentTimeMillis();
+                final var start = System.currentTimeMillis();
                 Thread.sleep(60);
-                final long end = System.currentTimeMillis();
+                final var end = System.currentTimeMillis();
                 log.trace("Took: {} ms", (end - start));
             } catch (final InterruptedException e) {
                 log.error(e.getMessage(), e);

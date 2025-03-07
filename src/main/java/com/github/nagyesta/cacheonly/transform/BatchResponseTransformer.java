@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * @param <B> The type of the batch response.
  * @param <P> The type of the partial response.
- * @param <I> The type of the Id that can identify a partial response and pair it
+ * @param <I> The type of the ID that can identify a partial response and pair it
  *            with a partial request of a batch request we try to respond to.
  */
 public interface BatchResponseTransformer<B, P, I> {

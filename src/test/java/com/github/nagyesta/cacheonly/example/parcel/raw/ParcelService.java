@@ -21,7 +21,7 @@ public class ParcelService {
     }
 
     public ParcelStatus lookup(final String id) {
-        ParcelStatus result = ParcelStatus.NEW;
+        var result = ParcelStatus.NEW;
         if (id.startsWith("A")) {
             result = ParcelStatus.PICKED_UP;
         } else if (id.startsWith("B")) {
