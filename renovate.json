@@ -12,5 +12,26 @@
   "separateMinorPatch": true,
   "github-actions": {
     "pinDigests": true
-  }
+  },
+  "packageRules": [
+    {
+      "groupName": "Github Actions",
+      "matchManagers": [
+        "github-actions"
+      ]
+    },
+    {
+      "groupName": "Logback dependencies",
+      "matchPackageNames": [
+        "ch.qos.logback:{/,}**"
+      ]
+    },
+    {
+      "groupName": "Spring dependencies",
+      "matchPackageNames": [
+        "org.springframework:{/,}**",
+        "org.springframework.boot:{/,}**"
+      ]
+    }
+  ]
 }
