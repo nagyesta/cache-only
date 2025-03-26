@@ -72,7 +72,12 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
                 logger().error("Failed to fetch from cache.", e.getCause());
                 result.clear();
             }
-        } catch (final InterruptedException | TimeoutException e) {
+        } catch (final InterruptedException e) {
+            final var end = System.currentTimeMillis();
+            logger().warn("Cache call stopped after {} (timeout set to {}).", (end - start), partialCacheSupport().timeoutMillis(), e);
+            result.clear();
+            Thread.currentThread().interrupt();
+        } catch (final TimeoutException e) {
             final var end = System.currentTimeMillis();
             logger().warn("Cache call stopped after {} (timeout set to {}).", (end - start), partialCacheSupport().timeoutMillis(), e);
             result.clear();
@@ -95,7 +100,12 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
         } catch (final ExecutionException e) {
             logger().error(e.getCause().getMessage(), e.getCause());
             throw new BatchServiceException(e.getCause().getMessage(), e.getCause());
-        } catch (final InterruptedException | TimeoutException e) {
+        } catch (final InterruptedException e) {
+            final var end = System.currentTimeMillis();
+            logger().warn("Origin call stopped after {} ms (timeout set to {}).", (end - start), batchServiceCaller().timeoutMillis(), e);
+            Thread.currentThread().interrupt();
+            throw new BatchServiceException("Origin call timed out.", e);
+        } catch (final TimeoutException e) {
             final var end = System.currentTimeMillis();
             logger().warn("Origin call stopped after {} ms (timeout set to {}).", (end - start), batchServiceCaller().timeoutMillis(), e);
             throw new BatchServiceException("Origin call timed out.", e);

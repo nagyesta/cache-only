@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,7 +25,7 @@ import java.util.stream.Stream;
  */
 public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>, E, I> {
 
-    private final Function<B, B> cloneFunction;
+    private final UnaryOperator<B> cloneFunction;
     private final Function<B, C> mapReadFunction;
     private final BiFunction<B, C, B> mapWriteBiFunction;
     private final Collector<Map.Entry<I, E>, ?, C> mapCollector;
@@ -37,7 +38,7 @@ public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>,
      * @param mapWriteBiFunction The function that can write the map into a batch.
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
-    public AbstractWrappedMapBasedTransformer(
+    protected AbstractWrappedMapBasedTransformer(
             final @NotNull Supplier<B> instanceSupplier,
             final @NotNull Function<B, C> mapReadFunction,
             final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
@@ -53,8 +54,8 @@ public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>,
      * @param mapWriteBiFunction The function that can write the map into a batch.
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
-    public AbstractWrappedMapBasedTransformer(
-            final @NotNull Function<B, B> cloneFunction,
+    protected AbstractWrappedMapBasedTransformer(
+            final @NotNull UnaryOperator<B> cloneFunction,
             final @NotNull Function<B, C> mapReadFunction,
             final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
             final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {

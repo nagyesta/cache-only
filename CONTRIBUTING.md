@@ -1,12 +1,12 @@
 # Contribution guidelines
 
-
 First of all, thank you for considering a contribution to Cache-Only!
 
 ## Purpose
 
 This document exists to let contributors navigate how we like to maintain this project.
 A contribution might be any of the following:
+
 - Writing a bug report
 - Submitting a feature request
 - Giving feedback on the repository contents or the wiki
@@ -18,10 +18,10 @@ A contribution might be any of the following:
 Regardless of the option you choose, please be mindful about the fact that this is
 an open source project. Your contribution is considered to be voluntary and your
 contribution will become part of the Cache-Only project. Your code contributions
-will be released under our MIT license agreement. Once your code becomes part of our
-repository, you irrevocably transfer ownership to the Cache-Only project. Due to
-this, we require you to sign off your commits and by doing so, sign the 
-[Developer Certificate of Origin (DCO)](https://developercertificate.org). 
+will be released under our MIT license agreement. Once your code becomes part of
+our repository, you irrevocably transfer ownership to the Cache-Only project. Due
+to this, we require you to sign off your commits and by doing so, sign the
+[Developer Certificate of Origin (DCO)](https://developercertificate.org).
 
 ## Issue creation guidelines
 
@@ -61,4 +61,4 @@ conclusions if something is not clear. It is a good practice to give feedback or
 provide suggestions in the form of a question. Code reviews are a dialogue after
 all!
 
-## Thank you!
+## Thank you

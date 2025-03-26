@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,7 +25,7 @@ import java.util.stream.Stream;
  */
 public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E>, E, I> {
 
-    private final Function<B, B> cloneFunction;
+    private final UnaryOperator<B> cloneFunction;
     private final Function<B, C> collectionReadFunction;
     private final BiFunction<B, C, B> collectionWriteBiFunction;
     private final Collector<E, ?, C> collectionCollector;
@@ -59,7 +60,7 @@ public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E
      * @param idFunction                The function that can convert an entity to the ID identifying it.
      */
     public AbstractWrappedCollectionBasedTransformer(
-            final @NotNull Function<B, B> cloneFunction,
+            final @NotNull UnaryOperator<B> cloneFunction,
             final @NotNull Function<B, C> collectionReadFunction,
             final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
             final @NotNull Collector<E, ?, C> collectionCollector,

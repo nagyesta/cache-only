@@ -26,6 +26,9 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("checkstyle:MagicNumber")
 class StockCacheServiceTemplateIntegrationTest {
 
+    private static final String PRICE = "price_";
+    private static final String UNKNOWN = "UNKNOWN";
+    private static final String PRICE_UNKNOWN = PRICE + UNKNOWN;
     @Autowired
     private StockCacheServiceTemplate underTest;
     @Autowired
@@ -66,7 +69,7 @@ class StockCacheServiceTemplateIntegrationTest {
             throws BatchServiceException {
         //given
         // create the test request
-        final SortedSet<String> request = new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM, "UNKNOWN"));
+        final SortedSet<String> request = new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM, UNKNOWN));
         final var expected = stockService.lookupNoLimit(request);
 
         //when
@@ -81,18 +84,18 @@ class StockCacheServiceTemplateIntegrationTest {
         final var cache = cacheManager.getCache(STOCKS);
         final var spyService = batchServiceCaller.getStockService();
         final var inOrder = Mockito.inOrder(cache, spyService);
-        inOrder.verify(cache).get(eq("price_" + StockService.AAPL), eq(BigDecimal.class));
+        inOrder.verify(cache).get(eq(PRICE + StockService.AAPL), eq(BigDecimal.class));
         // pessimistic strategy aborts after first failure
-        inOrder.verify(cache, never()).get(eq("price_" + StockService.AMD), eq(BigDecimal.class));
-        inOrder.verify(cache, never()).get(eq("price_" + StockService.EPAM), eq(BigDecimal.class));
-        inOrder.verify(cache, never()).get(eq("price_UNKNOWN"), eq(BigDecimal.class));
+        inOrder.verify(cache, never()).get(eq(PRICE + StockService.AMD), eq(BigDecimal.class));
+        inOrder.verify(cache, never()).get(eq(PRICE + StockService.EPAM), eq(BigDecimal.class));
+        inOrder.verify(cache, never()).get(eq(PRICE_UNKNOWN), eq(BigDecimal.class));
         // verify service calls and that found items are put into the cache
         inOrder.verify(spyService).lookup(eq(new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.EPAM))));
-        inOrder.verify(cache).put(eq("price_" + StockService.AAPL), any());
-        inOrder.verify(cache).put(eq("price_" + StockService.EPAM), any());
-        inOrder.verify(spyService).lookup(eq(new TreeSet<>(Arrays.asList(StockService.AMD, "UNKNOWN"))));
-        inOrder.verify(cache).put(eq("price_" + StockService.AMD), any());
-        inOrder.verify(cache, never()).put(eq("price_UNKNOWN"), any());
+        inOrder.verify(cache).put(eq(PRICE + StockService.AAPL), any());
+        inOrder.verify(cache).put(eq(PRICE + StockService.EPAM), any());
+        inOrder.verify(spyService).lookup(eq(new TreeSet<>(Arrays.asList(StockService.AMD, UNKNOWN))));
+        inOrder.verify(cache).put(eq(PRICE + StockService.AMD), any());
+        inOrder.verify(cache, never()).put(eq(PRICE_UNKNOWN), any());
     }
 
     @Test
@@ -109,9 +112,9 @@ class StockCacheServiceTemplateIntegrationTest {
         verify(spyService).lookup(eq(new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.EPAM))));
         verify(spyService).lookup(eq(new TreeSet<>(Collections.singletonList(StockService.AMD))));
         reset(spyService);
-        verify(cache).put(eq("price_" + StockService.AAPL), any());
-        verify(cache).put(eq("price_" + StockService.AMD), any());
-        verify(cache).put(eq("price_" + StockService.EPAM), any());
+        verify(cache).put(eq(PRICE + StockService.AAPL), any());
+        verify(cache).put(eq(PRICE + StockService.AMD), any());
+        verify(cache).put(eq(PRICE + StockService.EPAM), any());
         reset(cache);
 
         //when
@@ -124,13 +127,13 @@ class StockCacheServiceTemplateIntegrationTest {
         assertEquals(expected, actual);
         // all items were tried from the cache and missed
         final var inOrder = Mockito.inOrder(cache, spyService);
-        inOrder.verify(cache).get(eq("price_" + StockService.AAPL), eq(BigDecimal.class));
-        inOrder.verify(cache).get(eq("price_" + StockService.EPAM), eq(BigDecimal.class));
-        inOrder.verify(cache).get(eq("price_" + StockService.AMD), eq(BigDecimal.class));
+        inOrder.verify(cache).get(eq(PRICE + StockService.AAPL), eq(BigDecimal.class));
+        inOrder.verify(cache).get(eq(PRICE + StockService.EPAM), eq(BigDecimal.class));
+        inOrder.verify(cache).get(eq(PRICE + StockService.AMD), eq(BigDecimal.class));
         // verify service calls are never made, and nothing else is put into the cache
-        inOrder.verify(cache, never()).put(eq("price_" + StockService.AAPL), any());
-        inOrder.verify(cache, never()).put(eq("price_" + StockService.EPAM), any());
-        inOrder.verify(cache, never()).put(eq("price_" + StockService.AMD), any());
+        inOrder.verify(cache, never()).put(eq(PRICE + StockService.AAPL), any());
+        inOrder.verify(cache, never()).put(eq(PRICE + StockService.EPAM), any());
+        inOrder.verify(cache, never()).put(eq(PRICE + StockService.AMD), any());
         inOrder.verify(spyService, never()).lookup(eq(new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.EPAM))));
         inOrder.verify(spyService, never()).lookup(eq(new TreeSet<>(Collections.singletonList(StockService.AMD))));
     }
@@ -148,7 +151,7 @@ class StockCacheServiceTemplateIntegrationTest {
         final var spyService = batchServiceCaller.getStockService();
         verify(spyService).lookup(eq(new TreeSet<>(Collections.singletonList(StockService.AAPL))));
         reset(spyService);
-        verify(cache).put(eq("price_" + StockService.AAPL), any());
+        verify(cache).put(eq(PRICE + StockService.AAPL), any());
         reset(cache);
         // create the test request
         final SortedSet<String> request = new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.AMD, StockService.EPAM));
@@ -164,16 +167,16 @@ class StockCacheServiceTemplateIntegrationTest {
         assertEquals(expected, actual);
         // all items were tried from the cache and missed
         final var inOrder = Mockito.inOrder(cache, spyService);
-        inOrder.verify(cache).get(eq("price_" + StockService.AAPL), eq(BigDecimal.class));
-        inOrder.verify(cache).get(eq("price_" + StockService.EPAM), eq(BigDecimal.class));
+        inOrder.verify(cache).get(eq(PRICE + StockService.AAPL), eq(BigDecimal.class));
+        inOrder.verify(cache).get(eq(PRICE + StockService.EPAM), eq(BigDecimal.class));
         // pessimistic strategy aborts after first failure
-        inOrder.verify(cache, never()).get(eq("price_" + StockService.AMD), eq(BigDecimal.class));
-        inOrder.verify(cache, never()).get(eq("price_UNKNOWN"), eq(BigDecimal.class));
+        inOrder.verify(cache, never()).get(eq(PRICE + StockService.AMD), eq(BigDecimal.class));
+        inOrder.verify(cache, never()).get(eq(PRICE_UNKNOWN), eq(BigDecimal.class));
         // verify service calls and that found items are put into the cache
         inOrder.verify(spyService).lookup(eq(new TreeSet<>(Arrays.asList(StockService.AAPL, StockService.EPAM))));
-        inOrder.verify(cache).put(eq("price_" + StockService.AAPL), any());
-        inOrder.verify(cache).put(eq("price_" + StockService.EPAM), any());
+        inOrder.verify(cache).put(eq(PRICE + StockService.AAPL), any());
+        inOrder.verify(cache).put(eq(PRICE + StockService.EPAM), any());
         inOrder.verify(spyService).lookup(eq(new TreeSet<>(Collections.singletonList(StockService.AMD))));
-        inOrder.verify(cache).put(eq("price_" + StockService.AMD), any());
+        inOrder.verify(cache).put(eq(PRICE + StockService.AMD), any());
     }
 }

@@ -70,6 +70,7 @@ public class UnstablePartialCacheSupport implements AsyncPartialCacheSupport<Lon
                 log.trace("Took: {} ms", (end - start));
             } catch (final InterruptedException e) {
                 log.error(e.getMessage(), e);
+                Thread.currentThread().interrupt();
             }
         }
     }

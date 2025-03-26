@@ -61,6 +61,7 @@ public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCa
                 log.trace("Took: {} ms", (end - start));
             } catch (final InterruptedException e) {
                 log.error(e.getMessage(), e);
+                Thread.currentThread().interrupt();
             }
         }
         if (batchRequest.stream().anyMatch(i -> i < 0L)) {

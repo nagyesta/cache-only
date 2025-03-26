@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Data
 @Builder
+// qlty-ignore: radarlint:java:S1068
 public class ThreadRequest {
     private UUID articleId;
     private List<Long> threadIds;
