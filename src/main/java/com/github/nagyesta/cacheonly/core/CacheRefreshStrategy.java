@@ -50,7 +50,7 @@ public enum CacheRefreshStrategy {
                 final List<I> fetchExtra = new ArrayList<>(idsFoundInCache);
                 Collections.shuffle(fetchExtra);
                 fetchExtra.stream()
-                        .limit(maxPartitionSize - mustBeInLastPartition)
+                        .limit((long) maxPartitionSize - mustBeInLastPartition)
                         .forEach(result::add);
             }
             return result;

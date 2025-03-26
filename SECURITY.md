@@ -1,6 +1,6 @@
 # Security Policy
 
-## Supported Versions 
+## Supported Versions
 
 The aim is to support the fellow developers who are using this library as much as
 possible but at the end of the day, this is a hobby project which maintained in

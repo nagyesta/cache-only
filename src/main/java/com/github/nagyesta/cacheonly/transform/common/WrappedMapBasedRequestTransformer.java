@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collector;
 
 /**
@@ -48,7 +49,7 @@ public class WrappedMapBasedRequestTransformer<B, C extends Map<I, E>, E, I>
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
     public WrappedMapBasedRequestTransformer(
-            final @NotNull Function<B, B> cloneFunction,
+            final @NotNull UnaryOperator<B> cloneFunction,
             final @NotNull Function<B, C> mapReadFunction,
             final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
             final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {

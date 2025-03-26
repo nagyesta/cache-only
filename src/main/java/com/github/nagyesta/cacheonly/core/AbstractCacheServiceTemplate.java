@@ -43,7 +43,7 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
     private final SC batchServiceCaller;
     private BatchServiceCallMetricCollector metricsCollector = new NoOpBatchServiceCallMetricCollector();
 
-    public AbstractCacheServiceTemplate(
+    protected AbstractCacheServiceTemplate(
             final @NotNull CS partialCacheSupport,
             final @NotNull BatchRequestTransformer<BR, PR, I> batchRequestTransformer,
             final @NotNull BatchResponseTransformer<BS, PS, I> batchResponseTransformer,

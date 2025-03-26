@@ -2,10 +2,11 @@ name: AddOssIndexExclusion
 on:
   workflow_dispatch:
     inputs:
+      # qlty-ignore: checkov:CKV_GHA_7
       exclusion:
-        description: 'Vulnerability to exclude'
+        description: "Vulnerability to exclude"
         required: true
-        type: text
+        type: string
 
 permissions: read-all
 
@@ -36,8 +37,8 @@ jobs:
           github-token: ${{ secrets.PUBLISH_KEY }}
           script: |
             github.rest.pulls.create({
-              owner: "${{ github.repository_owner }}",
-              repo: "cache-only",
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               head: "feature/exclude-vulnerability-run-${{ github.run_number }}",
               base: "main",
               title: "Excluding vulnerability ${{ github.event.inputs.exclusion }} {patch}"

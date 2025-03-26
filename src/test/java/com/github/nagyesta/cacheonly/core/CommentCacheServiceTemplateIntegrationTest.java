@@ -28,6 +28,11 @@ import static org.mockito.Mockito.*;
 @SuppressWarnings("checkstyle:MagicNumber")
 class CommentCacheServiceTemplateIntegrationTest {
 
+    private static final String THREAD = "_thread_";
+    private static final String THREAD_1 = THREAD + 1;
+    private static final String THREAD_2 = THREAD + 2;
+    private static final String THREAD_3 = THREAD + 3;
+    private static final String THREAD_4 = THREAD + 4;
     @Autowired
     private CommentCacheServiceTemplate underTest;
     @Autowired
@@ -74,7 +79,7 @@ class CommentCacheServiceTemplateIntegrationTest {
         final var cache = cacheManager.getCache(THREADS);
         final var inOrder = Mockito.inOrder(cache);
         threadIds.forEach(id -> inOrder.verify(cache).get(
-                eq(CommentService.NO_COMMENT + "_thread_" + id),
+                eq(CommentService.NO_COMMENT + THREAD + id),
                 eq(CommentThreads.class)));
         // nothing is put into the cache as all of them are missed
         inOrder.verify(cache, never()).put(anyString(), any());
@@ -104,13 +109,13 @@ class CommentCacheServiceTemplateIntegrationTest {
         final var cache = cacheManager.getCache(THREADS);
         final var inOrder = Mockito.inOrder(cache);
         threadIds.forEach(id -> inOrder.verify(cache).get(
-                eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + "_thread_" + id),
+                eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + THREAD + id),
                 eq(CommentThreads.class)));
         // only 1 and 3 are put into the cache as others are nulls
-        inOrder.verify(cache).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + "_thread_1"), any());
-        inOrder.verify(cache).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + "_thread_3"), any());
-        inOrder.verify(cache, never()).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + "_thread_2"), any());
-        inOrder.verify(cache, never()).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + "_thread_4"), any());
+        inOrder.verify(cache).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + THREAD_1), any());
+        inOrder.verify(cache).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + THREAD_3), any());
+        inOrder.verify(cache, never()).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + THREAD_2), any());
+        inOrder.verify(cache, never()).put(eq(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT + THREAD_4), any());
     }
 
     @Test
@@ -128,8 +133,8 @@ class CommentCacheServiceTemplateIntegrationTest {
         final var expected = underTest.callBatchServiceAndPutAllToCache(request);
         // verify it was just put into the cache
         final var cache = cacheManager.getCache(THREADS);
-        verify(cache, never()).get(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + "_thread_1"), eq(List.class));
-        verify(cache).put(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + "_thread_1"), any());
+        verify(cache, never()).get(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + THREAD_1), eq(List.class));
+        verify(cache).put(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + THREAD_1), any());
         reset(cache);
         // the real service is called this time
         final var spyService = batchServiceCaller.getCommentService();
@@ -144,8 +149,8 @@ class CommentCacheServiceTemplateIntegrationTest {
         assertEquals(1, actual.getThreads().size());
         assertEquals(expected, actual);
         // opportunistic processing will not call when all the items are already cached
-        verify(cache).get(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + "_thread_1"), eq(CommentThreads.class));
-        verify(cache, never()).put(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + "_thread_1"), any());
+        verify(cache).get(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + THREAD_1), eq(CommentThreads.class));
+        verify(cache, never()).put(eq(CommentService.ARE_YOU_OUT_OF_QUOTA + THREAD_1), any());
         // the real service is not called again
         verify(spyService, never()).threadsOf(eq(CommentService.ARE_YOU_OUT_OF_QUOTA), eq(Collections.singleton(1L)));
     }
@@ -161,8 +166,8 @@ class CommentCacheServiceTemplateIntegrationTest {
         underTest.callBatchServiceAndPutAllToCache(warmUpRequest);
         // verify it was just put into the cache
         final var cache = cacheManager.getCache(THREADS);
-        verify(cache, never()).get(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + "_thread_1"), eq(CommentThreads.class));
-        verify(cache, atLeastOnce()).put(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + "_thread_1"), any());
+        verify(cache, never()).get(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + THREAD_1), eq(CommentThreads.class));
+        verify(cache, atLeastOnce()).put(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + THREAD_1), any());
         reset(cache);
         // create the test request
         final var threadIds = Arrays.asList(1L, 5L);
@@ -182,8 +187,8 @@ class CommentCacheServiceTemplateIntegrationTest {
         assertEquals(2, actual.getThreads().size());
         assertEquals(expected, actual);
         // opportunistic processing will refresh the already cached value as well
-        verify(cache).get(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + "_thread_1"), eq(CommentThreads.class));
-        verify(cache).put(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + "_thread_1"), any());
+        verify(cache).get(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + THREAD_1), eq(CommentThreads.class));
+        verify(cache).put(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + THREAD_1), any());
         verify(cache).get(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + "_thread_5"), eq(CommentThreads.class));
         verify(cache).put(eq(CommentService.CACHING_IS_NOT_ALWAYS_EASY + "_thread_5"), any());
         // only a single call will be made
