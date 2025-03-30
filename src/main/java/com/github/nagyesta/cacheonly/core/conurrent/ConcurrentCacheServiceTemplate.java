@@ -28,6 +28,7 @@ import java.util.function.Consumer;
  * @param <I>  The type of the ID which allows unique association of partial request
  *             and partial response pairs in the scope of the batch.
  */
+@SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
         extends AbstractCacheServiceTemplate<AsyncBatchServiceCaller<BR, BS>,
         AsyncPartialCacheSupport<PR, PS, C, I>, BR, BS, PR, PS, C, I> {
@@ -98,16 +99,11 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
         try {
             callOriginParallel(requestPartitions, response::putAll);
         } catch (final ExecutionException e) {
-            logger().error(e.getCause().getMessage(), e.getCause());
             throw new BatchServiceException(e.getCause().getMessage(), e.getCause());
         } catch (final InterruptedException e) {
-            final var end = System.currentTimeMillis();
-            logger().warn("Origin call stopped after {} ms (timeout set to {}).", (end - start), batchServiceCaller().timeoutMillis(), e);
             Thread.currentThread().interrupt();
             throw new BatchServiceException("Origin call timed out.", e);
         } catch (final TimeoutException e) {
-            final var end = System.currentTimeMillis();
-            logger().warn("Origin call stopped after {} ms (timeout set to {}).", (end - start), batchServiceCaller().timeoutMillis(), e);
             throw new BatchServiceException("Origin call timed out.", e);
         } finally {
             final var end = System.currentTimeMillis();

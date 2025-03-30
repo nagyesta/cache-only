@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * @param <BR> The type of the batch request.
  * @param <BS> The type of the batch response.
  */
+@SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public interface CachingServiceTemplate<BR, BS> {
 
     /**

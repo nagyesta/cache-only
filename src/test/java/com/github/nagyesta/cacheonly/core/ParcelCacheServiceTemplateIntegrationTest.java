@@ -18,7 +18,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -47,17 +46,17 @@ class ParcelCacheServiceTemplateIntegrationTest {
                 .add(Arguments.of(Collections.singletonList("A1234"), 1))
                 .add(Arguments.of(IntStream.rangeClosed(4001, 4009)
                         .mapToObj(i -> "B" + i)
-                        .collect(Collectors.toList()), 1))
+                        .toList(), 1))
                 .add(Arguments.of(IntStream.rangeClosed(4001, 4021)
                         .mapToObj(i -> "C" + i)
-                        .collect(Collectors.toList()), 3))
+                        .toList(), 3))
                 .add(Arguments.of(IntStream.rangeClosed(4001, 4100)
                         .mapToObj(i -> "D" + i)
-                        .collect(Collectors.toList()), 10))
+                        .toList(), 10))
                 .add(Arguments.of(IntStream.rangeClosed(4001, 4100)
                         .filter(i -> i % 5 == 0)
                         .mapToObj(i -> "B" + i)
-                        .collect(Collectors.toList()), 2))
+                        .toList(), 2))
                 .build();
     }
 
@@ -75,7 +74,7 @@ class ParcelCacheServiceTemplateIntegrationTest {
         final var expected = ids.stream()
                 .sorted()
                 .map(id -> new ParcelResponse(id, spyService.lookup(id)))
-                .collect(Collectors.toList());
+                .toList();
 
         //when
         final var actual = underTest.callCacheableBatchService(ids);

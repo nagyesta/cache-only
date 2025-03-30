@@ -12,6 +12,7 @@ plugins {
     checkstyle
     signing
     `maven-publish`
+    alias(libs.plugins.sonar.qube)
     alias(libs.plugins.lombok)
     alias(libs.plugins.versioner)
     alias(libs.plugins.index.scan)
@@ -64,6 +65,9 @@ buildscript {
         set("scmProjectUrl", "https://github.com/nagyesta/cache-only/")
         set("githubMavenRepoUrl", "https://maven.pkg.github.com/nagyesta/cache-only")
         set("ossrhMavenRepoUrl", "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+        set("sonarOrganization", "nagyesta")
+        set("sonarProjectKey", "nagyesta_cache-only")
+        set("sonarHostUrl", "https://sonarcloud.io/")
     }
 }
 
@@ -102,13 +106,18 @@ repositories {
 
 dependencies {
     annotationProcessor(libs.lombok)
+
     compileOnly(libs.jetbrains.annotations)
-    testCompileOnly(libs.jetbrains.annotations)
+
     implementation(libs.slf4j.api)
     implementation(libs.commons.collections4)
     implementation(libs.spring.context.support)
-    testImplementation(libs.jupiter.core)
+
+    testCompileOnly(libs.jetbrains.annotations)
+
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    testImplementation(libs.jupiter.core)
     testImplementation(libs.mockito.core)
     testImplementation(libs.spring.test)
     testImplementation(libs.spring.context.support)
@@ -117,7 +126,6 @@ dependencies {
 
 licensee {
     allow("Apache-2.0")
-    allow("MIT")
     allowUrl("https://opensource.org/license/mit")
 }
 
@@ -130,7 +138,19 @@ java {
     withSourcesJar()
 }
 
+sonar {
+    properties {
+        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/report.xml").get().asFile.path)
+        property("sonar.organization", project.extra.get("sonarOrganization") as String)
+        property("sonar.projectKey", project.extra.get("sonarProjectKey") as String)
+        property("sonar.host.url", project.extra.get("sonarHostUrl") as String)
+    }
+}
+tasks.sonar.get().dependsOn(tasks.jacocoTestReport)
+
 val copyLegalDocs = tasks.register<Copy>("copyLegalDocs") {
+    group = "documentation"
+    description = "Copies legal files and reports."
     from(file("${project.projectDir}/LICENSE"))
     from(layout.buildDirectory.file("reports/licensee/artifacts.json").get().asFile)
     from(layout.buildDirectory.file("reports/bom.json").get().asFile)

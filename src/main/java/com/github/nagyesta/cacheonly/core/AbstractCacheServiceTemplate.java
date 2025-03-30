@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
  * @param <I>  The type of the ID which allows unique association of partial request
  *             and partial response pairs in the scope of the batch.
  */
+@SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller<BR, BS>,
         CS extends PartialCacheSupport<PR, PS, C, I>, BR, BS, PR, PS, C, I>
         implements CachingServiceTemplate<BR, BS> {
@@ -162,7 +163,7 @@ public abstract class AbstractCacheServiceTemplate<SC extends BatchServiceCaller
         logger.debug("Created {} partitions.", partitions.size());
         return partitions.stream()
                 .map(p -> p.stream().collect(Collectors.toMap(Function.identity(), requestMap::get)))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @NotNull

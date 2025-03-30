@@ -27,7 +27,7 @@ public class MapBasedResponseTransformer<C extends Map<I, P>, P, I>
      * @param instanceSupplier Supplies a {@link Map} instance for the merge operation.
      */
     public MapBasedResponseTransformer(final @NotNull Supplier<C> instanceSupplier) {
-        super(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (T, U) -> T, instanceSupplier));
+        super(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (t, u) -> t, instanceSupplier));
     }
 
     /**

@@ -127,7 +127,7 @@ rules = ["markdownlint:MD034"]
 file_patterns = ["CODE_OF_CONDUCT.md"]
 
 [[ignore]]
-rules = ["radarlint:java:S117", "radarlint:java:S119"]
+rules = ["radarlint:java:S119"]
 
 [[ignore]]
 rules = ["radarlint:java:S1068"]

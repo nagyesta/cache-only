@@ -22,13 +22,13 @@ class WrappedCollectionBasedRequestTransformerTest {
 
     private static final CollectionWrapper<String> OUT_OF_ORDER_BATCH = new CollectionWrapper<>(Stream.of(1L, 42L, 3L)
             .map(String::valueOf)
-            .collect(Collectors.toList()));
+            .toList());
     private static final Map<Long, CollectionWrapper<String>> OUT_OF_ORDER_MAP = Stream.of(1L, 42L, 3L)
             .collect(Collectors.toMap(Function.identity(),
                     l -> new CollectionWrapper<>(Collections.singletonList(String.valueOf(l)))));
     private static final CollectionWrapper<String> ORDERED_BATCH = new CollectionWrapper<>(LongStream.range(0L, 30L).boxed()
             .map(String::valueOf)
-            .collect(Collectors.toList()));
+            .toList());
     private static final Map<Long, CollectionWrapper<String>> ORDERED_MAP = LongStream.range(0L, 30L).boxed()
             .collect(Collectors.toMap(Function.identity(),
                     l -> new CollectionWrapper<>(Collections.singletonList(String.valueOf(l)))));

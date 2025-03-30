@@ -25,7 +25,7 @@ class UnstableCacheServiceTemplateTest {
     }
 
     @Test
-    public void testExceptionsAreHandledWhenBothCacheAndOriginFails() {
+    void testExceptionsAreHandledWhenBothCacheAndOriginFails() {
         //given
         final var underTest = new UnstableCacheServiceTemplate();
         final var metricCollector = new BasicBatchServiceCallMetricCollector();
@@ -47,7 +47,7 @@ class UnstableCacheServiceTemplateTest {
     }
 
     @Test
-    public void testExceptionsAreHandledWhenCalledWithEmptyList() {
+    void testExceptionsAreHandledWhenCalledWithEmptyList() {
         //given
         final var underTest = new UnstableCacheServiceTemplate();
         final var metricCollector = new BasicBatchServiceCallMetricCollector();
@@ -70,7 +70,7 @@ class UnstableCacheServiceTemplateTest {
 
     @Test
     @Timeout(value = 60, unit = TimeUnit.MILLISECONDS)
-    public void testExceptionsAreHandledWhenBothCacheAndOriginTimesOut() {
+    void testExceptionsAreHandledWhenBothCacheAndOriginTimesOut() {
         //given
         final var underTest = new UnstableCacheServiceTemplate();
         final var metricCollector = new BasicBatchServiceCallMetricCollector();
@@ -91,7 +91,7 @@ class UnstableCacheServiceTemplateTest {
     }
 
     @Test
-    public void testExceptionsAreHandledWhenCallsResultErrors() {
+    void testExceptionsAreHandledWhenCallsResultErrors() {
         //given
         final var underTest = new UnstableCacheServiceTemplate();
         final var metricCollector = new BasicBatchServiceCallMetricCollector();
@@ -112,7 +112,7 @@ class UnstableCacheServiceTemplateTest {
     }
 
     @Test
-    public void testHappyCaseIsWorkingWhenFoundInCache() {
+    void testHappyCaseIsWorkingWhenFoundInCache() {
         //given
         final var underTest = new UnstableCacheServiceTemplate();
         final var metricCollector = new BasicBatchServiceCallMetricCollector();
