@@ -15,6 +15,7 @@ import org.springframework.cache.CacheManager;
  * @param <I>  The type of the request Id.
  */
 // qlty-ignore(radarlint:java:S1192): Strings are cached anyway
+@SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public class NoOpPartialCacheSupport<PR, PS, C, I> implements AsyncPartialCacheSupport<PR, PS, C, I> {
     @Override
     public @NotNull String cacheName() {

@@ -58,6 +58,7 @@ public class UnstablePartialCacheSupport implements AsyncPartialCacheSupport<Lon
         return key.key();
     }
 
+    @SuppressWarnings("java:S2925")
     private void handleExceptionalCases(final @NotNull CacheKey<String, Long> key) {
         if (key.id() == -15L) {
             throw new IllegalStateException("Get failed.");

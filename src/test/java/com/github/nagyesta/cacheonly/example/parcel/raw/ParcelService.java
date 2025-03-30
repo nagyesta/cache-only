@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @SuppressWarnings({"checkstyle:MagicNumber", "checkstyle:DesignForExtension"})
@@ -17,7 +16,7 @@ public class ParcelService {
         return batchRequest.stream()
                 .sorted()
                 .map(id -> new ParcelResponse(id, lookup(id)))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ParcelStatus lookup(final String id) {

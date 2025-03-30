@@ -16,6 +16,7 @@ import java.util.Optional;
  * @param <C>  The type of the cache key.
  * @param <I>  The type of the request Id.
  */
+@SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public interface PartialCacheSupport<PR, PS, C, I> {
 
     /**

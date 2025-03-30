@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("checkstyle:MagicNumber")
 @Slf4j
@@ -44,7 +43,7 @@ public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCa
         final var result = batchRequest.stream()
                 .filter(i -> i > 10)
                 .map(String::valueOf)
-                .collect(Collectors.toList());
+                .toList();
         if (result.isEmpty()) {
             return null;
         } else {
@@ -52,6 +51,7 @@ public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCa
         }
     }
 
+    @SuppressWarnings("java:S2925")
     private void handleExceptionalCases(final @NotNull List<Long> batchRequest) {
         if (batchRequest.stream().anyMatch(i -> i < -30L)) {
             try {

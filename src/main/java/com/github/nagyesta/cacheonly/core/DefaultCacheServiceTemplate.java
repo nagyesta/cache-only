@@ -23,6 +23,7 @@ import java.util.Map;
  * @param <I>  The type of the ID which allows unique association of partial request
  *             and partial response pairs in the scope of the batch.
  */
+@SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public class DefaultCacheServiceTemplate<BR, BS, PR, PS, C, I>
         extends AbstractCacheServiceTemplate<BatchServiceCaller<BR, BS>, PartialCacheSupport<PR, PS, C, I>, BR, BS, PR, PS, C, I> {
 

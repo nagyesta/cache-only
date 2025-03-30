@@ -9,6 +9,7 @@ import com.github.nagyesta.cacheonly.raw.BatchServiceCaller;
  * @param <BR> The type of the batch request.
  * @param <BS> The type of the batch response.
  */
+@SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public interface AsyncBatchServiceCaller<BR, BS>
         extends BatchServiceCaller<BR, BS>, ConcurrentOperationSupport {
 

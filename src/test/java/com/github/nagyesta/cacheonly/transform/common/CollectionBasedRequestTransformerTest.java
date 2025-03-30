@@ -20,12 +20,12 @@ class CollectionBasedRequestTransformerTest {
 
     private static final List<String> OUT_OF_ORDER_BATCH = Stream.of(1L, 42L, 3L)
             .map(String::valueOf)
-            .collect(Collectors.toList());
+            .toList();
     private static final Map<Long, String> OUT_OF_ORDER_MAP = Stream.of(1L, 42L, 3L)
             .collect(Collectors.toMap(Function.identity(), String::valueOf));
     private static final List<String> ORDERED_BATCH = LongStream.range(0L, 30L).boxed()
             .map(String::valueOf)
-            .collect(Collectors.toList());
+            .toList();
     private static final Map<Long, String> ORDERED_MAP = LongStream.range(0L, 30L).boxed()
             .collect(Collectors.toMap(Function.identity(), String::valueOf));
 

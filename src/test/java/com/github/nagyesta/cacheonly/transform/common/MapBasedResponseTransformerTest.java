@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 class MapBasedResponseTransformerTest {
 
     private static final SortedMap<Long, String> OUT_OF_ORDER_BATCH = Stream.of(1L, 42L, 3L)
-            .collect(Collectors.toMap(Function.identity(), String::valueOf, (T, U) -> T, TreeMap::new));
+            .collect(Collectors.toMap(Function.identity(), String::valueOf, (t, u) -> t, TreeMap::new));
     private static final Map<Long, String> OUT_OF_ORDER_MAP = Stream.of(1L, 42L, 3L)
             .collect(Collectors.toMap(Function.identity(), String::valueOf));
     private static final SortedMap<Long, String> ORDERED_BATCH = LongStream.range(0L, 30L).boxed()
-            .collect(Collectors.toMap(Function.identity(), String::valueOf, (T, U) -> T, TreeMap::new));
+            .collect(Collectors.toMap(Function.identity(), String::valueOf, (t, u) -> t, TreeMap::new));
     private static final Map<Long, String> ORDERED_MAP = LongStream.range(0L, 30L).boxed()
             .collect(Collectors.toMap(Function.identity(), String::valueOf));
 
@@ -68,7 +68,7 @@ class MapBasedResponseTransformerTest {
         //given
         final var underTest =
                 new MapBasedResponseTransformer<SortedMap<Long, String>, String, Long>(
-                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (T, U) -> T, TreeMap::new),
+                        Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (t, u) -> t, TreeMap::new),
                         Map.Entry::getKey,
                         Map.Entry::getValue, true);
 

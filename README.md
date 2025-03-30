@@ -6,8 +6,9 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.nagyesta/cache-only?logo=apache-maven)](https://search.maven.org/artifact/com.github.nagyesta/cache-only)
 [![JavaCI](https://img.shields.io/github/actions/workflow/status/nagyesta/cache-only/gradle.yml?logo=github&branch=main)](https://img.shields.io/github/actions/workflow/status/nagyesta/cache-only/gradle.yml?logo=github&branch=main)
 
-[![Code Coverage](https://qlty.sh/badges/befb4798-6447-4608-838c-39d46e5cc55e/test_coverage.svg?nocache)](https://qlty.sh/gh/nagyesta/projects/cache-only)
-[![Maintainability](https://qlty.sh/badges/befb4798-6447-4608-838c-39d46e5cc55e/maintainability.svg?nocache)](https://qlty.sh/gh/nagyesta/projects/cache-only)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nagyesta_cache-only&metric=coverage)](https://sonarcloud.io/summary/new_code?id=nagyesta_cache-only)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=nagyesta_cache-only&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=nagyesta_cache-only)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=nagyesta_cache-only&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=nagyesta_cache-only)
 [![last_commit](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)
 [![wiki](https://img.shields.io/badge/See-Wiki-informational)](https://github.com/nagyesta/cache-only/wiki)
 
