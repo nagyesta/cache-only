@@ -5,7 +5,7 @@ spring = "6.2.5"
 commonsCollections = "4.4"
 jupiter = "5.12.1"
 mockitoCore = "5.16.1"
-lombok = "1.18.36"
+lombok = "1.18.38"
 jetbrainsAnnotation = "26.0.2"
 
 lombokPlugin = "8.13.1"
