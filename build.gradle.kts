@@ -64,7 +64,8 @@ buildscript {
         set("scmConnection", "scm:git:https://github.com/nagyesta/cache-only.git")
         set("scmProjectUrl", "https://github.com/nagyesta/cache-only/")
         set("githubMavenRepoUrl", "https://maven.pkg.github.com/nagyesta/cache-only")
-        set("ossrhMavenRepoUrl", "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+        set("ossrhMavenRepoUrl", "https://ossrh-staging-api.central.sonatype.com/service/local/")
+        set("ossrhSnapshotRepoUrl", "https://central.sonatype.com/repository/maven-snapshots/")
         set("sonarOrganization", "nagyesta")
         set("sonarProjectKey", "nagyesta_cache-only")
         set("sonarHostUrl", "https://sonarcloud.io/")
@@ -305,6 +306,8 @@ checkstyle {
 nexusPublishing {
     repositories {
         sonatype {
+            nexusUrl.set(uri(project.extra.get("ossrhMavenRepoUrl").toString()))
+            snapshotRepositoryUrl.set(uri(project.extra.get("ossrhSnapshotRepoUrl").toString()))
             username = project.extra.get("ossrhUser").toString()
             password = project.extra.get("ossrhPass").toString()
         }
