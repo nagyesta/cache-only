@@ -1,7 +1,7 @@
 [versions]
 slf4j = "2.0.17"
 logback = "1.5.18"
-spring = "6.2.7"
+spring = "6.2.8"
 commonsCollections = "4.5.0"
 jupiter = "5.13.1"
 mockitoCore = "5.18.0"
