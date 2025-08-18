@@ -8,7 +8,7 @@ mockitoCore = "5.19.0"
 lombok = "1.18.38"
 jetbrainsAnnotation = "26.0.2"
 
-lombokPlugin = "8.14"
+lombokPlugin = "8.14.2"
 gitVersionerPlugin = "1.6.7"
 indexScanPlugin = "3.1.2"
 owaspPlugin = "12.1.3"
