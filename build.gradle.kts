@@ -3,6 +3,7 @@
 import groovy.util.Node
 import groovy.util.NodeList
 import org.apache.tools.ant.filters.ReplaceTokens
+import org.cyclonedx.Version
 import org.sonatype.gradle.plugins.scan.ossindex.OutputFormat
 import java.util.*
 
@@ -274,18 +275,16 @@ ossIndexAudit {
 }
 
 tasks.cyclonedxBom {
-    setProjectType("library")
-    setIncludeConfigs(listOf("runtimeClasspath"))
-    setSkipConfigs(listOf("compileClasspath", "testCompileClasspath"))
-    setSkipProjects(listOf())
-    setSchemaVersion("1.5")
-    setDestination(file("build/reports"))
-    setOutputName("bom")
-    setOutputFormat("json")
+    projectType.set(org.cyclonedx.model.Component.Type.LIBRARY)
+    schemaVersion.set(Version.VERSION_16)
+    includeConfigs.set(listOf("runtimeClasspath"))
+    skipConfigs.set(listOf("compileClasspath", "testCompileClasspath"))
+    skipProjects.set(listOf())
+    jsonOutput = project.layout.buildDirectory.file("reports/bom.json").get().asFile
     //noinspection UnnecessaryQualifiedReference
     val attachmentText = org.cyclonedx.model.AttachmentText()
     attachmentText.text = Base64.getEncoder().encodeToString(
-        file("${project.project.projectDir}/LICENSE").readBytes()
+        file("${project.projectDir}/LICENSE").readBytes()
     )
     attachmentText.encoding = "base64"
     attachmentText.contentType = "text/plain"
@@ -294,8 +293,8 @@ tasks.cyclonedxBom {
     license.name = "MIT License"
     license.setLicenseText(attachmentText)
     license.url = "https://raw.githubusercontent.com/nagyesta/cache-only/main/LICENSE"
-    setLicenseChoice {
-        it.addLicense(license)
+    licenseChoice = org.cyclonedx.model.LicenseChoice().apply {
+        addLicense(license)
     }
 }
 
