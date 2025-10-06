@@ -161,7 +161,7 @@ val copyLegalDocs = tasks.register<Copy>("copyLegalDocs") {
     rename("bom.json", "SBOM.json")
 }.get()
 copyLegalDocs.dependsOn(tasks.licensee)
-copyLegalDocs.dependsOn(tasks.cyclonedxBom)
+copyLegalDocs.dependsOn(tasks.cyclonedxDirectBom)
 tasks.javadoc.get().dependsOn(copyLegalDocs)
 tasks.compileJava.get().dependsOn(copyLegalDocs)
 tasks.processResources.get().finalizedBy(copyLegalDocs)
@@ -274,12 +274,11 @@ ossIndexAudit {
     excludeVulnerabilityIds = project.extra.get("ossIndexExclusions") as MutableSet<String>
 }
 
-tasks.cyclonedxBom {
+tasks.cyclonedxDirectBom {
     projectType.set(org.cyclonedx.model.Component.Type.LIBRARY)
     schemaVersion.set(Version.VERSION_16)
     includeConfigs.set(listOf("runtimeClasspath"))
     skipConfigs.set(listOf("compileClasspath", "testCompileClasspath"))
-    skipProjects.set(listOf())
     jsonOutput = project.layout.buildDirectory.file("reports/bom.json").get().asFile
     //noinspection UnnecessaryQualifiedReference
     val attachmentText = org.cyclonedx.model.AttachmentText()
