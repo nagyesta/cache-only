@@ -36,14 +36,6 @@ buildscript {
         }
     }
 
-    fun dockerAbortGroups(name: String): String {
-        return if (project.hasProperty(name)) {
-            "all"
-        } else {
-            ""
-        }
-    }
-
     extra.apply {
         set("gitToken", optionalPropertyString("githubToken"))
         set("gitUser", optionalPropertyString("githubUser"))
@@ -69,7 +61,6 @@ buildscript {
         set("ossrhSnapshotRepoUrl", "https://central.sonatype.com/repository/maven-snapshots/")
         set("sonarOrganization", "nagyesta")
         set("sonarProjectKey", "nagyesta_cache-only")
-        set("sonarHostUrl", "https://sonarcloud.io/")
     }
 }
 
@@ -143,9 +134,11 @@ java {
 sonar {
     properties {
         property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/report.xml").get().asFile.path)
+        property("sonar.junit.reportPaths", layout.buildDirectory.dir("test-results/test").get().asFile.path)
+        property("sonar.sources", "src/main/java")
+        property("sonar.exclusions", "**/*.md,.github/**,.idea/**")
         property("sonar.organization", project.extra.get("sonarOrganization") as String)
         property("sonar.projectKey", project.extra.get("sonarProjectKey") as String)
-        property("sonar.host.url", project.extra.get("sonarHostUrl") as String)
     }
 }
 tasks.sonar.get().dependsOn(tasks.jacocoTestReport)
@@ -201,7 +194,6 @@ tasks.jacocoTestReport {
 
 tasks.withType<JacocoCoverageVerification>().configureEach {
     inputs.file(layout.buildDirectory.file("reports/jacoco/report.xml"))
-    outputs.file(layout.buildDirectory.file("reports/jacoco/jacocoTestCoverageVerification"))
 
     violationRules {
         rule {
@@ -234,9 +226,6 @@ tasks.withType<JacocoCoverageVerification>().configureEach {
                 "com.github.nagyesta.cacheonly.transform.NoOpPartialCacheSupport"
             )
         }
-    }
-    doLast {
-        layout.buildDirectory.file("reports/jacoco/jacocoTestCoverageVerification").get().asFile.writeText("Passed")
     }
 }
 
@@ -300,6 +289,21 @@ tasks.cyclonedxDirectBom {
 checkstyle {
     toolVersion = project.libs.versions.checkstyle.get()
 }
+
+val writeVersion = tasks.register<DefaultTask>("writeVersion") {
+    group = "versioning"
+    description = "Writes project version to a file."
+    outputs.file(layout.buildDirectory.file("version").get().asFile)
+    inputs.property("version", project.version)
+
+    val versionFile = file("build/version")
+    val versionText = project.version.toString()
+    doLast {
+        versionFile.writeText("v${versionText}")
+    }
+    mustRunAfter(tasks.clean)
+}.get()
+tasks.build.get().dependsOn(writeVersion)
 
 nexusPublishing {
     repositories {
