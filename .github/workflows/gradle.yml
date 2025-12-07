@@ -70,7 +70,7 @@ jobs:
           git config --global user.name 'Esta Nagy'
           git config --global user.email 'nagyesta@gmail.com'
           git tag ${{ steps.read-tag-name.outputs.RELEASE_TAG_NAME }}
-          git git push origin ${{ steps.read-tag-name.outputs.RELEASE_TAG_NAME }}
+          git push origin ${{ steps.read-tag-name.outputs.RELEASE_TAG_NAME }}
       - name: Publish with Gradle
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
