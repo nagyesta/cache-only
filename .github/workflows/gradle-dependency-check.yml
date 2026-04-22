@@ -10,6 +10,7 @@ on:
       - "gradle/**"
       - "config/dependency-check/**"
       - ".release-trigger"
+      - ".github/workflows/gradle-dependency-check.yml"
   workflow_dispatch:
   schedule:
     # * is a special character in YAML, so we have to quote this string
@@ -34,9 +35,13 @@ jobs:
           java-version: 17
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # v6.1.0
+      - name: Cache DependencyCheck data
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          cache-provider: basic
-          cache-read-only: false # Allow writing cache entries on non-default branches
+          path: ${{ env.GRADLE_USER_HOME }}/dependency-check-data/**
+          key: gradle-build-dependency-check
+          restore-keys: |
+            gradle-build-dependency-check
       - name: Check dependencies with Gradle
         run:  >
           ./gradlew dependencyCheckAnalyze 
@@ -45,3 +50,4 @@ jobs:
           -PossIndexPassword=${{ secrets.OSS_INDEX_PASSWORD }} 
           --no-parallel 
           --info
+
