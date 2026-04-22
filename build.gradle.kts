@@ -2,9 +2,12 @@
 
 import groovy.util.Node
 import groovy.util.NodeList
+import groovy.xml.XmlNodePrinter
+import groovy.xml.XmlParser
 import org.apache.tools.ant.filters.ReplaceTokens
 import org.cyclonedx.Version
-import org.sonatype.gradle.plugins.scan.ossindex.OutputFormat
+import java.io.FileWriter
+import java.io.PrintWriter
 import java.util.*
 
 plugins {
@@ -16,7 +19,6 @@ plugins {
     alias(libs.plugins.sonar.qube)
     alias(libs.plugins.lombok)
     alias(libs.plugins.versioner)
-    alias(libs.plugins.index.scan)
     alias(libs.plugins.owasp.dependencycheck)
     alias(libs.plugins.cyclonedx.bom)
     alias(libs.plugins.licensee.plugin)
@@ -24,8 +26,6 @@ plugins {
 }
 
 group = "com.github.nagyesta"
-
-apply("config/ossindex/ossIndexAudit.gradle.kts")
 
 buildscript {
     fun optionalPropertyString(name: String): String {
@@ -41,6 +41,10 @@ buildscript {
         set("gitUser", optionalPropertyString("githubUser"))
         set("ossrhUser", optionalPropertyString("ossrhUsername"))
         set("ossrhPass", optionalPropertyString("ossrhPassword"))
+        set("nvdApiKey", optionalPropertyString("nvdApiKey"))
+        set("suppressedCveId", optionalPropertyString("suppressedCveId"))
+        set("suppressedCveArtifact", optionalPropertyString("suppressedCveArtifact"))
+        set("suppressedCveReason", optionalPropertyString("suppressedCveReason"))
         set("ossIndexUser", optionalPropertyString("ossIndexUsername"))
         set("ossIndexPass", optionalPropertyString("ossIndexPassword"))
         set("artifactDisplayName", "Cache-Only")
@@ -133,7 +137,10 @@ java {
 
 sonar {
     properties {
-        property("sonar.coverage.jacoco.xmlReportPaths", layout.buildDirectory.file("reports/jacoco/report.xml").get().asFile.path)
+        property(
+            "sonar.coverage.jacoco.xmlReportPaths",
+            layout.buildDirectory.file("reports/jacoco/report.xml").get().asFile.path
+        )
         property("sonar.junit.reportPaths", layout.buildDirectory.dir("test-results/test").get().asFile.path)
         property("sonar.sources", "src/main/java")
         property("sonar.exclusions", "**/*.md,.github/**,.idea/**")
@@ -252,15 +259,51 @@ tasks.withType<GenerateModuleMetadata>().configureEach {
     enabled = false
 }
 
-ossIndexAudit {
-    username = project.extra.get("ossIndexUser").toString()
-    password = project.extra.get("ossIndexPass").toString()
-    isPrintBanner = false
-    isColorEnabled = true
-    isShowAll = false
-    outputFormat = OutputFormat.DEFAULT
-    @Suppress("UNCHECKED_CAST")
-    excludeVulnerabilityIds = project.extra.get("ossIndexExclusions") as MutableSet<String>
+dependencyCheck {
+    nvd.apiKey.set(project.extra.get("nvdApiKey").toString())
+    analyzers.ossIndex.enabled.set(true)
+    analyzers.ossIndex.username = project.extra.get("ossIndexUser").toString()
+    analyzers.ossIndex.password = project.extra.get("ossIndexPass").toString()
+    analyzers.ossIndex.url = "https://api.guide.sonatype.com"
+    cache.ossIndex.set(true)
+    cache.central.set(true)
+    cache.nodeAudit.set(true)
+    outputDirectory.set(layout.buildDirectory.dir("reports/dependency-check"))
+    setSuppressionFile("config/dependency-check/suppressions.xml")
+}
+
+tasks.register<DefaultTask>("suppressCve") {
+    group = "owasp depedency-check"
+    description = "Adds a CVE suppression to the dependency-check suppression file."
+    inputs.file(file("config/dependency-check/suppressions.xml"))
+    outputs.file(file("config/dependency-check/suppressions.xml"))
+    inputs.property("suppressedCveId", project.ext.get("suppressedCveId"))
+    inputs.property("suppressedCveArtifact", project.ext.get("suppressedCveArtifact"))
+    inputs.property("suppressedCveReason", project.ext.get("suppressedCveReason"))
+
+    val suppressionFile = file("config/dependency-check/suppressions.xml")
+    val suppressedCveId = project.ext.get("suppressedCveId") as String
+    val suppressedArtifact = project.ext.get("suppressedCveArtifact") as String
+    val suppressionReason = project.ext.get("suppressedCveReason") as String
+    doLast {
+        //Parse the suppression file as XML and add a new xml element to it
+        val xmlParser = XmlParser()
+        val root = xmlParser.parse(suppressionFile)
+
+        //Create new suppression element
+        val newSuppression = Node(null, "suppress")
+        Node(newSuppression, "notes").setValue(suppressionReason)
+        Node(newSuppression, "packageUrl", mapOf(Pair("regex", "true"))).setValue(suppressedArtifact)
+        Node(newSuppression, "vulnerabilityName").setValue(suppressedCveId)
+
+        //Add to root
+        root.append(newSuppression)
+
+        //Write back to file
+        val xmlNodePrinter = XmlNodePrinter(PrintWriter(FileWriter(suppressionFile)))
+        xmlNodePrinter.isPreserveWhitespace = true
+        xmlNodePrinter.print(root)
+    }
 }
 
 tasks.cyclonedxDirectBom {

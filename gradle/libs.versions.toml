@@ -10,7 +10,6 @@ jetbrainsAnnotation = "26.1.0"
 
 lombokPlugin = "9.4.0"
 gitVersionerPlugin = "1.6.7"
-indexScanPlugin = "3.1.5"
 owaspPlugin = "12.2.1"
 
 checkstyle = "12.3.1"
@@ -38,7 +37,6 @@ jacoco = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 [plugins]
 lombok = { id = "io.freefair.lombok", version.ref = "lombokPlugin" }
 versioner = { id = "io.toolebox.git-versioner", version.ref = "gitVersionerPlugin" }
-index-scan = { id = "org.sonatype.gradle.plugins.scan", version.ref = "indexScanPlugin" }
 owasp-dependencycheck = { id = "org.owasp.dependencycheck", version.ref = "owaspPlugin" }
 cyclonedx-bom = { id = "org.cyclonedx.bom", version.ref = "cycloneDxBomPlugin" }
 licensee-plugin = { id = "app.cash.licensee", version.ref = "licenseePlugin" }
