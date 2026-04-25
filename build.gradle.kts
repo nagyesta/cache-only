@@ -268,6 +268,8 @@ dependencyCheck {
     cache.ossIndex.set(true)
     cache.central.set(true)
     cache.nodeAudit.set(true)
+    failBuildOnCVSS.set(1.0f)
+    failOnError.set(true)
     outputDirectory.set(layout.buildDirectory.dir("reports/dependency-check"))
     setSuppressionFile("config/dependency-check/suppressions.xml")
 }
