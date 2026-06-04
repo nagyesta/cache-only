@@ -50,22 +50,11 @@ jobs:
       - name: Build with Gradle
         run: >
           ./gradlew printVersion build
-      - name: Decode key
-        run: |
-          mkdir -p ${{ runner.temp }}/.gnupg/
-          echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}" | base64 --decode > ${{ runner.temp }}/.gnupg/secring.gpg
-      - name: Sign and analyze with Gradle
+      - name: Analyze with Gradle
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
-          ./gradlew sign sonar
-          -Psigning.keyId=${{ secrets.SIGNING_KEY_ID }}
-          -Psigning.password=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-          -Psigning.secretKeyRingFile=${{ runner.temp }}/.gnupg/secring.gpg
-      - name: Clean-up GPG key
-        if: always()
-        run: |
-          rm -rf ${{ runner.temp }}/.gnupg/
+          ./gradlew sonar
       - name: Upload Test reports
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

@@ -261,11 +261,13 @@ tasks.withType<GenerateModuleMetadata>().configureEach {
 
 dependencyCheck {
     nvd.apiKey.set(project.extra.get("nvdApiKey").toString())
-    analyzers.ossIndex.enabled.set(true)
-    analyzers.ossIndex.username = project.extra.get("ossIndexUser").toString()
-    analyzers.ossIndex.password = project.extra.get("ossIndexPass").toString()
-    analyzers.ossIndex.url = "https://api.guide.sonatype.com"
-    cache.ossIndex.set(true)
+    if (project.extra.get("ossIndexUser") != "" && project.extra.get("ossIndexPass") != "") {
+        analyzers.ossIndex.enabled.set(true)
+        analyzers.ossIndex.username = project.extra.get("ossIndexUser").toString()
+        analyzers.ossIndex.password = project.extra.get("ossIndexPass").toString()
+        analyzers.ossIndex.url = "https://api.guide.sonatype.com"
+        cache.ossIndex.set(true)
+    }
     cache.central.set(true)
     cache.nodeAudit.set(true)
     failBuildOnCVSS.set(1.0f)
