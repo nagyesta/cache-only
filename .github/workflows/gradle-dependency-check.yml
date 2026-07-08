@@ -19,6 +19,9 @@ permissions: read-all
 
 jobs:
   security:
+    permissions:
+      # required for all workflows
+      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
