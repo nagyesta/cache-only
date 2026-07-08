@@ -12,6 +12,9 @@
 [![last_commit](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)
 [![wiki](https://img.shields.io/badge/See-Wiki-informational)](https://github.com/nagyesta/cache-only/wiki)
 
+> [!NOTE]
+> This project is secured by [Snyk](https://snyk.io)
+
 ## About Cache-Only
 
 Cache-Only is a minimal library augmenting the Spring cache abstraction to better support bulk requests.
