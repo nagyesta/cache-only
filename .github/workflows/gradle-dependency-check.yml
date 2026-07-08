@@ -10,6 +10,7 @@ on:
       - "gradle/**"
       - ".release-trigger"
       - ".snyk"
+      - ".github/workflows/gradle-dependency-check.yml"
   workflow_dispatch:
   schedule:
     # * is a special character in YAML, so we have to quote this string
