@@ -21,9 +21,6 @@ permissions: read-all
 
 jobs:
   security:
-    permissions:
-      # required for all workflows
-      security-events: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -34,7 +31,6 @@ jobs:
           cp ./config/snyk/snyk.json ~/.config/configstore/snyk.json
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04 # v1.0.0
-        continue-on-error: true # To make sure that SARIF upload gets called
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
@@ -44,7 +40,6 @@ jobs:
             --all-projects
             --show-vulnerable-paths=all
             --configuration-matching="^runtimeClasspath|compileClassPath|testRuntimeClasspath|testCompileClassPath$" 
-            --sarif-file-output=snyk.sarif
       - name: Monitor changes with Snyk to continuously check for vulnerabilities
         uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04 # v1.0.0
         if: ${{ github.event_name != 'pull_request' }}
@@ -54,9 +49,5 @@ jobs:
           command: monitor
           args: >
             --all-projects
-      - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@99df26d4f13ea111d4ec1a7dddef6063f76b97e9 # v4.37.0
-        with:
-          sarif_file: snyk.sarif
 
 
