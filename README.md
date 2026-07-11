@@ -12,7 +12,7 @@
 [![last_commit](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)
 [![wiki](https://img.shields.io/badge/See-Wiki-informational)](https://github.com/nagyesta/cache-only/wiki)
 
-This project is secured by [Snyk](https://snyk.io)
+This project is secured by [Snyk](https://snyk.io/?utm_source=open-source&utm_medium=pg-ptr&utm_campaign=ref-2501-osp&utm_content=pg-cta)
 
 <img src="https://raw.githubusercontent.com/snyk-labs/secure-developer-sample-repo/main/Scanned_By_Snyk.png" alt="Scanned By Snyk Badge" width="10%" style="display: inline-block;">
 
