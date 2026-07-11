@@ -8,6 +8,7 @@ on:
     branches: ["main"]
     paths:
       - "gradle/**"
+      - "config/snyk/**"
       - ".release-trigger"
       - ".snyk"
       - ".github/workflows/gradle-dependency-check.yml"
@@ -27,6 +28,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Configure Snyk endpoint
+        run: |
+          mkdir -p ~/.config/configstore/
+          cp ./config/snyk/snyk.json ~/.config/configstore/snyk.json
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04 # v1.0.0
         continue-on-error: true # To make sure that SARIF upload gets called

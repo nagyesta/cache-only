@@ -6,14 +6,17 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.nagyesta/cache-only?logo=apache-maven)](https://search.maven.org/artifact/com.github.nagyesta/cache-only)
 [![JavaCI](https://img.shields.io/github/actions/workflow/status/nagyesta/cache-only/gradle.yml?logo=github&branch=main)](https://img.shields.io/github/actions/workflow/status/nagyesta/cache-only/gradle.yml?logo=github&branch=main)
 
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=nagyesta_cache-only&metric=coverage)](https://sonarcloud.io/summary/new_code?id=nagyesta_cache-only)
+[![Sonar Coverage](https://img.shields.io/sonar/coverage/nagyesta_cache-only?server=https%3A%2F%2Fsonarcloud.io&logo=sonar&logoColor=white)](https://sonarcloud.io/summary/new_code?id=nagyesta_cache-only)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=nagyesta_cache-only&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=nagyesta_cache-only)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=nagyesta_cache-only&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=nagyesta_cache-only)
 [![last_commit](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)](https://img.shields.io/github/last-commit/nagyesta/cache-only?logo=git)
 [![wiki](https://img.shields.io/badge/See-Wiki-informational)](https://github.com/nagyesta/cache-only/wiki)
 
-> [!NOTE]
-> This project is secured by [Snyk](https://snyk.io)
+This project is secured by [Snyk](https://snyk.io)
+
+<img src="https://raw.githubusercontent.com/snyk-labs/secure-developer-sample-repo/main/Scanned_By_Snyk.png" alt="Scanned By Snyk Badge" width="10%" style="display: inline-block;">
+
+[![Known Vulnerabilities](https://snyk.io/test/github/nagyesta/cache-only/badge.svg)](https://snyk.io/test/github/nagyesta/cache-only)
 
 ## About Cache-Only
 
