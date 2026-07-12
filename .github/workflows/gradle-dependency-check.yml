@@ -31,13 +31,15 @@ jobs:
           cp ./config/snyk/snyk.json ~/.config/configstore/snyk.json
       - name: Monitor changes with Snyk to continuously check for vulnerabilities
         uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04 # v1.0.0
-        if: ${{ github.event_name != 'pull_request' }}
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           command: monitor
           args: >
             --all-projects
+            --org=${{ secrets.SNYK_ORG_ID }}
+            --remote-repo-url=https://github.com/${{ github.repository }}/
+            --target-reference=${{ github.ref_name }}
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/gradle@9adf32b1121593767fc3c057af55b55db032dc04 # v1.0.0
         env:
@@ -47,6 +49,8 @@ jobs:
           args: >
             --fail-on=all
             --all-projects
+            --org=${{ secrets.SNYK_ORG_ID }}
+            --remote-repo-url=https://github.com/${{ github.repository }}/
             --show-vulnerable-paths=all
             --configuration-matching="^runtimeClasspath|compileClassPath|testRuntimeClasspath|testCompileClassPath$" 
 
