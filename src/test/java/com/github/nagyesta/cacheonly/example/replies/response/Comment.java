@@ -1,18 +1,10 @@
 package com.github.nagyesta.cacheonly.example.replies.response;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.jspecify.annotations.Nullable;
 
 import java.util.UUID;
 
-@Data
-@Builder
-@EqualsAndHashCode
-public class Comment {
-    private UUID articleId;
-    private long commentId;
-    private Long threadId;
-    private String message;
-    private String author;
+@SuppressWarnings("checkstyle:DesignForExtension")
+public record Comment(UUID articleId, long commentId, @Nullable Long threadId, String message, String author) {
+
 }

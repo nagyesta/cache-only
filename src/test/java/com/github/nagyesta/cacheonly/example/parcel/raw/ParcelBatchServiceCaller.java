@@ -4,8 +4,7 @@ import com.github.nagyesta.cacheonly.core.CacheRefreshStrategy;
 import com.github.nagyesta.cacheonly.example.parcel.response.ParcelResponse;
 import com.github.nagyesta.cacheonly.raw.concurrent.AsyncBatchServiceCaller;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,22 +30,19 @@ public class ParcelBatchServiceCaller
         return PARTITION_SIZE;
     }
 
-    @NotNull
     @Override
     public CacheRefreshStrategy refreshStrategy() {
         return CacheRefreshStrategy.NEVER_CACHE;
     }
 
-    @Nullable
     @Override
     @SuppressWarnings("RedundantThrows")
-    public List<ParcelResponse> callBatchService(final @NotNull List<String> batchRequest)
+    public @Nullable List<ParcelResponse> callBatchService(final List<String> batchRequest)
             throws BatchServiceException {
         // we call the service here
         return parcelService.lookup(batchRequest);
     }
 
-    @NotNull
     public final ParcelService getParcelService() {
         return parcelService;
     }

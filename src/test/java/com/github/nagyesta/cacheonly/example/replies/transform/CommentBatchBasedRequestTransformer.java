@@ -5,6 +5,7 @@ import com.github.nagyesta.cacheonly.transform.common.WrappedCollectionBasedRequ
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -13,7 +14,8 @@ public class CommentBatchBasedRequestTransformer
         extends WrappedCollectionBasedRequestTransformer<ThreadRequest, List<Long>, Long, Long> {
 
     public CommentBatchBasedRequestTransformer() {
-        super(ThreadRequest::new, ThreadRequest::getThreadIds, (request, threadIds) -> {
+        super(ThreadRequest::new, threadRequest -> Objects.requireNonNull(threadRequest.getThreadIds()),
+                (request, threadIds) -> {
             request.setThreadIds(threadIds);
             return request;
         }, Collectors.toList(), Function.identity());

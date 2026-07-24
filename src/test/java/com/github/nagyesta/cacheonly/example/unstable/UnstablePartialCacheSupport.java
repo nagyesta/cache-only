@@ -2,55 +2,52 @@ package com.github.nagyesta.cacheonly.example.unstable;
 
 import com.github.nagyesta.cacheonly.entity.CacheKey;
 import com.github.nagyesta.cacheonly.transform.concurrent.AsyncPartialCacheSupport;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.support.NoOpCacheManager;
 
 import java.util.concurrent.ForkJoinPool;
 
 @SuppressWarnings("checkstyle:MagicNumber")
-@Slf4j
-public class UnstablePartialCacheSupport implements AsyncPartialCacheSupport<Long, String, String, Long> {
+public class UnstablePartialCacheSupport
+        implements AsyncPartialCacheSupport<Long, String, String, Long> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UnstablePartialCacheSupport.class);
 
     @Override
     public long timeoutMillis() {
         return 10;
     }
 
-    @NotNull
     @Override
     public String cacheName() {
         return "none";
     }
 
-    @NotNull
     @Override
     public Class<String> getEntityClass() {
         return String.class;
     }
 
-    @Nullable
     @Override
-    public CacheKey<String, Long> toCacheKey(final @NotNull Long partialRequest) {
+    public CacheKey<String, Long> toCacheKey(final Long partialRequest) {
         return new CacheKey<>(String.valueOf(partialRequest), partialRequest);
     }
 
-    @NotNull
     @Override
     public CacheManager getCacheManager() {
         return new NoOpCacheManager();
     }
 
     @Override
-    public @NotNull ForkJoinPool forkJoinPool() {
+    public ForkJoinPool forkJoinPool() {
         return new ForkJoinPool(2);
     }
 
-    @Nullable
     @Override
-    public String getFromCache(final @NotNull CacheKey<String, Long> key) {
+    public @Nullable String getFromCache(final CacheKey<String, Long> key) {
         handleExceptionalCases(key);
         if (key.id() < 5 || key.id() > 20) {
             return null;
@@ -59,7 +56,7 @@ public class UnstablePartialCacheSupport implements AsyncPartialCacheSupport<Lon
     }
 
     @SuppressWarnings("java:S2925")
-    private void handleExceptionalCases(final @NotNull CacheKey<String, Long> key) {
+    private void handleExceptionalCases(final CacheKey<String, Long> key) {
         if (key.id() == -15L) {
             throw new IllegalStateException("Get failed.");
         }
@@ -68,9 +65,9 @@ public class UnstablePartialCacheSupport implements AsyncPartialCacheSupport<Lon
                 final var start = System.currentTimeMillis();
                 Thread.sleep(60);
                 final var end = System.currentTimeMillis();
-                log.trace("Took: {} ms", (end - start));
+                LOGGER.trace("Took: {} ms", (end - start));
             } catch (final InterruptedException e) {
-                log.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
                 Thread.currentThread().interrupt();
             }
         }

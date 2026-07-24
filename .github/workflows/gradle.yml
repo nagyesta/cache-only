@@ -24,7 +24,6 @@ on:
       - "config/dependency-check/**"
       - ".idea/**"
       - ".gitignore"
-      - ".qlty/**"
       - "config/snyk/**"
       - ".snyk"
 

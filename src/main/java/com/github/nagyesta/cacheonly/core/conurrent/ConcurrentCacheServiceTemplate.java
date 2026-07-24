@@ -8,7 +8,6 @@ import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
 import com.github.nagyesta.cacheonly.transform.BatchRequestTransformer;
 import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
 import com.github.nagyesta.cacheonly.transform.concurrent.AsyncPartialCacheSupport;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,7 @@ import java.util.function.Consumer;
  * @param <PR> The type of the partial request.
  * @param <PS> The type of the partial response.
  * @param <C>  The type of the cache key.
- * @param <I>  The type of the ID which allows unique association of partial request
+ * @param <I>  The type of the ID that allows unique association of partial request
  *             and partial response pairs in the scope of the batch.
  */
 @SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
@@ -43,23 +42,22 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
      * @param partialCacheSupport      The component defining how caching should work for a partial request.
      * @param batchRequestTransformer  The component handling transformations between batch and partial requests.
      * @param batchResponseTransformer The component handling transformations between batch and partial responses.
-     * @param batchServiceCaller       The wrapper which is calling the real batch service in case of cache miss.
+     * @param batchServiceCaller       The wrapper that is calling the real batch service in case of cache miss.
      */
     public ConcurrentCacheServiceTemplate(
-            final @NotNull AsyncPartialCacheSupport<PR, PS, C, I> partialCacheSupport,
-            final @NotNull BatchRequestTransformer<BR, PR, I> batchRequestTransformer,
-            final @NotNull BatchResponseTransformer<BS, PS, I> batchResponseTransformer,
-            final @NotNull AsyncBatchServiceCaller<BR, BS> batchServiceCaller) {
+            final AsyncPartialCacheSupport<PR, PS, C, I> partialCacheSupport,
+            final BatchRequestTransformer<BR, PR, I> batchRequestTransformer,
+            final BatchResponseTransformer<BS, PS, I> batchResponseTransformer,
+            final AsyncBatchServiceCaller<BR, BS> batchServiceCaller) {
         super(partialCacheSupport, batchRequestTransformer, batchResponseTransformer, batchServiceCaller);
         cachePool = partialCacheSupport.forkJoinPool();
         originPool = partialCacheSupport.forkJoinPool();
     }
 
-    @NotNull
     @Override
     protected Map<I, PS> fetchAllFromCache(
-            final @NotNull CacheRefreshStrategy strategy,
-            final @NotNull Map<I, PR> requestMap)
+            final CacheRefreshStrategy strategy,
+            final Map<I, PR> requestMap)
             throws CacheMissException {
         final var start = System.currentTimeMillis();
         final Map<I, PS> result = new ConcurrentHashMap<>();
@@ -89,10 +87,9 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
         return result;
     }
 
-    @NotNull
     @Override
     protected Map<I, PS> callOriginWithPartitions(
-            final @NotNull List<Map<I, PR>> requestPartitions)
+            final List<Map<I, PR>> requestPartitions)
             throws BatchServiceException {
         final var start = System.currentTimeMillis();
         final Map<I, PS> response = new ConcurrentHashMap<>();
@@ -113,9 +110,9 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
     }
 
     private void callCacheParallel(
-            final @NotNull CacheRefreshStrategy strategy,
-            final @NotNull Map<I, PR> requestMap,
-            final @NotNull BiConsumer<I, PS> resultConsumer)
+            final CacheRefreshStrategy strategy,
+            final Map<I, PR> requestMap,
+            final BiConsumer<I, PS> resultConsumer)
             throws InterruptedException, ExecutionException, TimeoutException {
         cachePool
                 .submit(() -> requestMap.entrySet()
@@ -126,8 +123,8 @@ public class ConcurrentCacheServiceTemplate<BR, BS, PR, PS, C, I>
     }
 
     private void callOriginParallel(
-            final @NotNull List<Map<I, PR>> requestPartitions,
-            final @NotNull Consumer<Map<I, PS>> responseProcessor)
+            final List<Map<I, PR>> requestPartitions,
+            final Consumer<Map<I, PS>> responseProcessor)
             throws InterruptedException, ExecutionException, TimeoutException {
         originPool
                 .submit(() -> requestPartitions

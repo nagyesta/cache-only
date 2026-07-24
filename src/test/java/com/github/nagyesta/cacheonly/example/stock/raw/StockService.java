@@ -1,6 +1,5 @@
 package com.github.nagyesta.cacheonly.example.stock.raw;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -33,14 +32,12 @@ public class StockService {
         priceMap = map;
     }
 
-    @NotNull
-    public Map<String, BigDecimal> lookup(final @NotNull Set<String> stockNames) {
+    public Map<String, BigDecimal> lookup(final Set<String> stockNames) {
         Assert.isTrue(stockNames.size() < 3, "Only 2 at a time please...");
         return lookupNoLimit(stockNames);
     }
 
-    @NotNull
-    public Map<String, BigDecimal> lookupNoLimit(final @NotNull Set<String> stockNames) {
+    public Map<String, BigDecimal> lookupNoLimit(final Set<String> stockNames) {
         return priceMap.entrySet().stream()
                 .filter(e -> stockNames.contains(e.getKey()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

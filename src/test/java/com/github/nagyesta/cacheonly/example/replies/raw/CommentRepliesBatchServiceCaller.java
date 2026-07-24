@@ -5,11 +5,12 @@ import com.github.nagyesta.cacheonly.example.replies.request.ThreadRequest;
 import com.github.nagyesta.cacheonly.example.replies.response.CommentThreads;
 import com.github.nagyesta.cacheonly.raw.BatchServiceCaller;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 import static org.mockito.Mockito.spy;
 
@@ -22,7 +23,7 @@ public class CommentRepliesBatchServiceCaller
     private final CommentService commentService;
 
     @Autowired
-    public CommentRepliesBatchServiceCaller(final @NotNull CommentService commentService) {
+    public CommentRepliesBatchServiceCaller(final CommentService commentService) {
         this.commentService = spy(commentService);
     }
 
@@ -31,25 +32,24 @@ public class CommentRepliesBatchServiceCaller
         return PARTITION_SIZE;
     }
 
-    @NotNull
     @Override
     public CacheRefreshStrategy refreshStrategy() {
         return CacheRefreshStrategy.OPPORTUNISTIC;
     }
 
-    @NotNull
     @Override
-    public CommentThreads callBatchService(final @NotNull ThreadRequest batchRequest)
+    public @Nullable CommentThreads callBatchService(final ThreadRequest batchRequest)
             throws BatchServiceException {
         // we call the service here
         try {
-            return commentService.threadsOf(batchRequest.getArticleId(), new HashSet<>(batchRequest.getThreadIds()));
+            return commentService.threadsOf(
+                    Objects.requireNonNull(batchRequest.getArticleId()),
+                    new HashSet<>(Objects.requireNonNull(batchRequest.getThreadIds())));
         } catch (final Exception e) {
             throw new BatchServiceException(e.getMessage(), e);
         }
     }
 
-    @NotNull
     public final CommentService getCommentService() {
         return commentService;
     }

@@ -16,7 +16,7 @@ A contribution might be any of the following:
 - Helping other members of the community
 
 Regardless of the option you choose, please be mindful about the fact that this is
-an open source project. Your contribution is considered to be voluntary and your
+an open source project. Your contribution is considered to be voluntary, and your
 contribution will become part of the Cache-Only project. Your code contributions
 will be released under our MIT license agreement. Once your code becomes part of
 our repository, you irrevocably transfer ownership to the Cache-Only project. Due
@@ -26,10 +26,10 @@ to this, we require you to sign off your commits and by doing so, sign the
 ## Issue creation guidelines
 
 In case you wish to submit an issue (regardless of which template you are using),
-please consider using the search function first in order to reduce the number of
+please consider using the search function first to reduce the number of
 duplicates and the effort spent on handling them.
 
-We have prepared some issue templates for you, to make issue creation more
+We have prepared some issue templates for you to make issue creation more
 streamlined. Please use the template that fits your situation best. This can help
 us resolve your issue faster.
 

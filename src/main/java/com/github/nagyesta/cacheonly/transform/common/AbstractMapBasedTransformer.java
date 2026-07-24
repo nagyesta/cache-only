@@ -1,7 +1,6 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -10,7 +9,7 @@ import java.util.stream.Collectors;
 
 /**
  * Abstract transformer intended to be used in cases when the batch request (or response)
- * is a simple {@link Map} of the partial requests (or responses) using the ID as key.
+ * is a simple {@link Map} of the partial requests (or responses) using the ID as a key.
  *
  * @param <C> The {@link Map} type used for the batch.
  * @param <P> The type of the partial request (or response) payload.
@@ -29,7 +28,7 @@ public class AbstractMapBasedTransformer<C extends Map<I, P>, P, I> {
      * @param mergeMapCollector The collector we want to use when we merge partials to a batch.
      */
     public AbstractMapBasedTransformer(
-            final @NotNull Collector<Map.Entry<I, P>, ?, C> mergeMapCollector) {
+            final Collector<Map.Entry<I, P>, ?, C> mergeMapCollector) {
         this(mergeMapCollector, Map.Entry::getKey, Map.Entry::getValue, false);
     }
 
@@ -44,9 +43,9 @@ public class AbstractMapBasedTransformer<C extends Map<I, P>, P, I> {
      * @param nullIfEmpty           True is we need to return null in case we are merging an empty map.
      */
     public AbstractMapBasedTransformer(
-            final @NotNull Collector<Map.Entry<I, P>, ?, C> mergeMapCollector,
-            final @NotNull Function<Map.Entry<I, P>, I> splitKeyTransformer,
-            final @NotNull Function<Map.Entry<I, P>, P> splitValueTransformer,
+            final Collector<Map.Entry<I, P>, ?, C> mergeMapCollector,
+            final Function<Map.Entry<I, P>, I> splitKeyTransformer,
+            final Function<Map.Entry<I, P>, P> splitValueTransformer,
             final boolean nullIfEmpty) {
         this.mergeMapCollector = mergeMapCollector;
         this.splitKeyTransformer = splitKeyTransformer;
@@ -54,14 +53,12 @@ public class AbstractMapBasedTransformer<C extends Map<I, P>, P, I> {
         this.nullIfEmpty = nullIfEmpty;
     }
 
-    @NotNull
-    protected final Map<I, P> splitToMap(final @NotNull C batch) {
+    protected final Map<I, P> splitToMap(final C batch) {
         return batch.entrySet().stream()
                 .collect(Collectors.toMap(splitKeyTransformer, splitValueTransformer));
     }
 
-    @Nullable
-    protected final C mergeToBatch(final @NotNull Map<I, P> map) {
+    protected final @Nullable C mergeToBatch(final Map<I, P> map) {
         if (map.isEmpty() && nullIfEmpty) {
             return null;
         }

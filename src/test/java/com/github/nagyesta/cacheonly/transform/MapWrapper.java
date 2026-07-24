@@ -1,19 +1,22 @@
 package com.github.nagyesta.cacheonly.transform;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-@Setter
-@Getter
 public final class MapWrapper<K, V> {
 
     private Map<K, V> map;
 
     public MapWrapper(final Map<K, V> map) {
+        this.map = map;
+    }
+
+    public Map<K, V> getMap() {
+        return map;
+    }
+
+    public void setMap(final Map<K, V> map) {
         this.map = map;
     }
 
