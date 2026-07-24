@@ -32,6 +32,7 @@ class CacheRefreshStrategyTest {
     private static final int PARTITION_SIZE_2 = 2;
     private static final int PARTITION_SIZE_3 = 2;
     private static final int EXTRA_2 = 2;
+    @SuppressWarnings("DataFlowIssue")
     private static final Set<Integer> NULL_VALUE_IN_SET = Collections.singleton(null);
 
     private static Stream<Arguments> cacheUseProvider() {

@@ -1,8 +1,7 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
 import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -35,11 +34,11 @@ public class WrappedCollectionBasedResponseTransformer<B, C extends Collection<E
      * @param idFunction                The function that can convert an entity to the ID identifying it.
      */
     public WrappedCollectionBasedResponseTransformer(
-            final @NotNull Supplier<B> instanceSupplier,
-            final @NotNull Function<B, C> collectionReadFunction,
-            final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
-            final @NotNull Collector<E, ?, C> collectionCollector,
-            final @NotNull Function<E, I> idFunction) {
+            final Supplier<B> instanceSupplier,
+            final Function<B, C> collectionReadFunction,
+            final BiFunction<B, C, B> collectionWriteBiFunction,
+            final Collector<E, ?, C> collectionCollector,
+            final Function<E, I> idFunction) {
         super(instanceSupplier, collectionReadFunction, collectionWriteBiFunction, collectionCollector, idFunction);
     }
 
@@ -53,23 +52,21 @@ public class WrappedCollectionBasedResponseTransformer<B, C extends Collection<E
      * @param idFunction                The function that can convert an entity to the ID identifying it.
      */
     public WrappedCollectionBasedResponseTransformer(
-            final @NotNull UnaryOperator<B> cloneFunction,
-            final @NotNull Function<B, C> collectionReadFunction,
-            final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
-            final @NotNull Collector<E, ?, C> collectionCollector,
-            final @NotNull Function<E, I> idFunction) {
+            final UnaryOperator<B> cloneFunction,
+            final Function<B, C> collectionReadFunction,
+            final BiFunction<B, C, B> collectionWriteBiFunction,
+            final Collector<E, ?, C> collectionCollector,
+            final Function<E, I> idFunction) {
         super(cloneFunction, collectionReadFunction, collectionWriteBiFunction, collectionCollector, idFunction);
     }
 
-    @NotNull
     @Override
-    public Map<I, B> splitToPartialResponse(final @NotNull B batchResponse) {
+    public Map<I, B> splitToPartialResponse(final B batchResponse) {
         return splitToMap(batchResponse);
     }
 
-    @Nullable
     @Override
-    public B mergeToBatchResponse(final @NotNull Map<I, B> entityMap) {
+    public @Nullable B mergeToBatchResponse(final Map<I, B> entityMap) {
         return mergeToBatch(entityMap);
     }
 

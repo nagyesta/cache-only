@@ -1,11 +1,9 @@
 package com.github.nagyesta.cacheonly.core.conurrent;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.ForkJoinPool;
 
 /**
- * Defines generic concurrency related behavior.
+ * Defines generic concurrency-related behavior.
  */
 public interface ConcurrentOperationSupport {
     /**
@@ -18,7 +16,6 @@ public interface ConcurrentOperationSupport {
      *
      * @return pool.
      */
-    @NotNull
     default ForkJoinPool forkJoinPool() {
         return ForkJoinPool.commonPool();
     }

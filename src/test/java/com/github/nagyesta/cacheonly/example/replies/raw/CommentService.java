@@ -2,7 +2,6 @@ package com.github.nagyesta.cacheonly.example.replies.raw;
 
 import com.github.nagyesta.cacheonly.example.replies.response.Comment;
 import com.github.nagyesta.cacheonly.example.replies.response.CommentThreads;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -24,121 +23,55 @@ public class CommentService {
     private final Map<UUID, List<Comment>> database;
 
     CommentService() {
-        this.database = Map.of(NO_COMMENT, Collections.emptyList(), CACHING_IS_NOT_ALWAYS_EASY, Collections.unmodifiableList(Arrays.asList(
-                Comment.builder()
-                        .articleId(CACHING_IS_NOT_ALWAYS_EASY)
-                        .commentId(1L)
-                        .author(J_KIDDING)
-                        .message("First!")
-                        .build(),
-                Comment.builder()
-                        .articleId(CACHING_IS_NOT_ALWAYS_EASY)
-                        .commentId(2L)
-                        .author(S_SERIOUS)
-                        .message("Great article, thank you!")
-                        .build(),
-                Comment.builder()
-                        .articleId(CACHING_IS_NOT_ALWAYS_EASY)
-                        .commentId(3)
-                        .threadId(1L)
-                        .author(K_BYE)
-                        .message("Second!")
-                        .build(),
-                Comment.builder()
-                        .articleId(CACHING_IS_NOT_ALWAYS_EASY)
-                        .commentId(4)
-                        .threadId(1L)
-                        .author(J_KIDDING)
-                        .message("Almost!")
-                        .build(),
-                Comment.builder()
-                        .articleId(CACHING_IS_NOT_ALWAYS_EASY)
-                        .commentId(5)
-                        .author(O_PEN)
-                        .message("Do you have an example project?")
-                        .build(),
-                Comment.builder()
-                        .articleId(CACHING_IS_NOT_ALWAYS_EASY)
-                        .commentId(6)
-                        .threadId(5L)
-                        .author(O_PEN)
-                        .message("Please ignore me, just found it on my own.")
-                        .build(),
-                Comment.builder()
-                        .articleId(CACHING_IS_NOT_ALWAYS_EASY)
-                        .commentId(7)
-                        .threadId(5L)
-                        .author(S_SERIOUS)
-                        .message("I am looking for one too, could you send a link?")
-                        .build()
-        )), ARE_YOU_OUT_OF_QUOTA, Collections.unmodifiableList(Arrays.asList(
-                Comment.builder()
-                        .articleId(ARE_YOU_OUT_OF_QUOTA)
-                        .commentId(1L)
-                        .author(S_SERIOUS)
-                        .message("I think you have a typo in the last paragraph.")
-                        .build(),
-                Comment.builder()
-                        .articleId(ARE_YOU_OUT_OF_QUOTA)
-                        .commentId(2L)
-                        .threadId(1L)
-                        .author(S_SERIOUS)
-                        .message("'Qutoa' should be 'Quota'.")
-                        .build(),
-                Comment.builder()
-                        .articleId(ARE_YOU_OUT_OF_QUOTA)
-                        .commentId(3)
-                        .threadId(1L)
-                        .author(O_PEN)
-                        .message("It happens.")
-                        .build()
-        )), AINT_NOBODY_GOT_TIME_FOR_THAT, Collections.unmodifiableList(Arrays.asList(
-                Comment.builder()
-                        .articleId(AINT_NOBODY_GOT_TIME_FOR_THAT)
-                        .commentId(1L)
-                        .author(J_KIDDING)
-                        .message("I want my 10 minutes back! :)")
-                        .build(),
-                Comment.builder()
-                        .articleId(AINT_NOBODY_GOT_TIME_FOR_THAT)
-                        .commentId(2L)
-                        .threadId(1L)
-                        .author(S_SERIOUS)
-                        .message("It wasn't that bad...")
-                        .build(),
-                Comment.builder()
-                        .articleId(AINT_NOBODY_GOT_TIME_FOR_THAT)
-                        .commentId(3L)
-                        .author(K_BYE)
-                        .message("First!")
-                        .build(),
-                Comment.builder()
-                        .articleId(AINT_NOBODY_GOT_TIME_FOR_THAT)
-                        .commentId(4L)
-                        .threadId(3L)
-                        .author(J_KIDDING)
-                        .message("LOL, more like third.")
-                        .build()
-        )));
+        this.database = Map.of(NO_COMMENT, Collections.emptyList(), CACHING_IS_NOT_ALWAYS_EASY, List.of(
+                        new Comment(CACHING_IS_NOT_ALWAYS_EASY,
+                                1L, null, J_KIDDING, "First!"),
+                        new Comment(CACHING_IS_NOT_ALWAYS_EASY,
+                                2L, null, S_SERIOUS, "Great article, thank you!"),
+                        new Comment(CACHING_IS_NOT_ALWAYS_EASY,
+                                3, 1L, K_BYE, "Second!"),
+                        new Comment(CACHING_IS_NOT_ALWAYS_EASY,
+                                4, 1L, J_KIDDING, "Almost!"),
+                        new Comment(CACHING_IS_NOT_ALWAYS_EASY,
+                                5, null, O_PEN, "Do you have an example project?"),
+                        new Comment(CACHING_IS_NOT_ALWAYS_EASY,
+                                6, 5L, O_PEN, "Please ignore me, just found it on my own."),
+                        new Comment(CACHING_IS_NOT_ALWAYS_EASY,
+                                7, 5L, S_SERIOUS, "I am looking for one too, could you send a link?")),
+                ARE_YOU_OUT_OF_QUOTA, List.of(
+                        new Comment(ARE_YOU_OUT_OF_QUOTA,
+                                1L, null, S_SERIOUS, "I think you have a typo in the last paragraph."),
+                        new Comment(ARE_YOU_OUT_OF_QUOTA,
+                                2L, 1L, S_SERIOUS, "'Quota' should be 'Quota'."),
+                        new Comment(ARE_YOU_OUT_OF_QUOTA,
+                                3, 1L, O_PEN, "It happens.")),
+                AINT_NOBODY_GOT_TIME_FOR_THAT, List.of(
+                        new Comment(AINT_NOBODY_GOT_TIME_FOR_THAT,
+                                1L, null, J_KIDDING, "I want my 10 minutes back! :)"),
+                        new Comment(AINT_NOBODY_GOT_TIME_FOR_THAT,
+                                2L, 1L, S_SERIOUS, "It wasn't that bad..."),
+                        new Comment(AINT_NOBODY_GOT_TIME_FOR_THAT,
+                                3L, null, K_BYE, "First!"),
+                        new Comment(AINT_NOBODY_GOT_TIME_FOR_THAT,
+                                4L, 3L, J_KIDDING, "LOL, more like third.")));
     }
 
-    @NotNull
     public CommentThreads threadsOf(
-            final @NotNull UUID article,
-            final @NotNull Set<Long> threadIds)
+            final UUID article,
+            final Set<Long> threadIds)
             throws NotFoundException {
         Assert.isTrue(threadIds.size() <= 5, "Batch size is too large.");
         if (!database.containsKey(article)) {
             throw new NotFoundException();
         }
         final var threadStarters = this.database.get(article).stream()
-                .filter(comment -> comment.getThreadId() == null)
-                .map(Comment::getCommentId)
+                .filter(comment -> comment.threadId() == null)
+                .map(Comment::commentId)
                 .collect(Collectors.toSet());
         final var threads = this.database.get(article).stream()
-                .filter(comment -> comment.getThreadId() != null)
-                .filter(comment -> threadIds.contains(comment.getThreadId()))
-                .collect(Collectors.groupingBy(Comment::getThreadId));
+                .filter(comment -> comment.threadId() != null)
+                .filter(comment -> threadIds.contains(comment.threadId()))
+                .collect(Collectors.groupingBy(Comment::threadId));
         final Map<Long, List<Comment>> result = new HashMap<>();
         threadIds.forEach(id -> {
             if (!threadStarters.contains(id)) {
@@ -146,9 +79,7 @@ public class CommentService {
             }
             result.put(id, threads.getOrDefault(id, Collections.emptyList()));
         });
-        return CommentThreads.builder()
-                .threads(result)
-                .build();
+        return new CommentThreads(result);
     }
 
 }

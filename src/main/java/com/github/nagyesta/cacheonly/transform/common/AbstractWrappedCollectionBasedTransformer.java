@@ -1,7 +1,6 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Collection;
@@ -41,11 +40,11 @@ public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E
      * @param idFunction                The function that can convert an entity to the ID identifying it.
      */
     public AbstractWrappedCollectionBasedTransformer(
-            final @NotNull Supplier<B> instanceSupplier,
-            final @NotNull Function<B, C> collectionReadFunction,
-            final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
-            final @NotNull Collector<E, ?, C> collectionCollector,
-            final @NotNull Function<E, I> idFunction) {
+            final Supplier<B> instanceSupplier,
+            final Function<B, C> collectionReadFunction,
+            final BiFunction<B, C, B> collectionWriteBiFunction,
+            final Collector<E, ?, C> collectionCollector,
+            final Function<E, I> idFunction) {
         this(response -> cloneWrapper(response, instanceSupplier), collectionReadFunction,
                 collectionWriteBiFunction, collectionCollector, idFunction);
     }
@@ -60,11 +59,11 @@ public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E
      * @param idFunction                The function that can convert an entity to the ID identifying it.
      */
     public AbstractWrappedCollectionBasedTransformer(
-            final @NotNull UnaryOperator<B> cloneFunction,
-            final @NotNull Function<B, C> collectionReadFunction,
-            final @NotNull BiFunction<B, C, B> collectionWriteBiFunction,
-            final @NotNull Collector<E, ?, C> collectionCollector,
-            final @NotNull Function<E, I> idFunction) {
+            final UnaryOperator<B> cloneFunction,
+            final Function<B, C> collectionReadFunction,
+            final BiFunction<B, C, B> collectionWriteBiFunction,
+            final Collector<E, ?, C> collectionCollector,
+            final Function<E, I> idFunction) {
         this.cloneFunction = cloneFunction;
         this.collectionReadFunction = collectionReadFunction;
         this.collectionWriteBiFunction = collectionWriteBiFunction;
@@ -72,25 +71,22 @@ public class AbstractWrappedCollectionBasedTransformer<B, C extends Collection<E
         this.idFunction = idFunction;
     }
 
-    @NotNull
     private static <B> B cloneWrapper(
-            final @NotNull B batch,
-            final @NotNull Supplier<B> instanceSupplier) {
+            final B batch,
+            final Supplier<B> instanceSupplier) {
         final var target = instanceSupplier.get();
         BeanUtils.copyProperties(batch, target);
         return target;
     }
 
-    @NotNull
-    protected final Map<I, B> splitToMap(final @NotNull B batch) {
+    protected final Map<I, B> splitToMap(final B batch) {
         return collectionReadFunction.apply(batch).stream()
                 .collect(Collectors.toMap(idFunction,
                         entity -> collectionWriteBiFunction
                                 .apply(cloneFunction.apply(batch), Stream.of(entity).collect(collectionCollector))));
     }
 
-    @Nullable
-    protected final B mergeToBatch(final @NotNull Map<I, B> map) {
+    protected final @Nullable B mergeToBatch(final Map<I, B> map) {
         return map.values().stream().findFirst()
                 .map(entity -> collectionWriteBiFunction.apply(cloneFunction.apply(entity),
                         map.values().stream()

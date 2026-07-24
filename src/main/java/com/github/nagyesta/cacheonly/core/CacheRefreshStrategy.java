@@ -1,7 +1,6 @@
 package com.github.nagyesta.cacheonly.core;
 
 import org.apache.commons.collections4.SetUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.Assert;
 
 import java.util.*;
@@ -11,16 +10,15 @@ import java.util.*;
  */
 public enum CacheRefreshStrategy {
     /**
-     * Only calls the batch service when explicit cache refresh is performed (for example
+     * Only calls the batch service when explicit cache refresh is performed (for example,
      * using {@link CachingServiceTemplate#callBatchServiceAndPutAllToCache(Object)}).
      * Every other time, the items not found in cache will be simply skipped.
      */
     CACHE_ONLY {
-        @NotNull
         @Override
         public <I> Set<I> selectItemsForFetch(
-                final @NotNull Set<I> allRequestIds,
-                final @NotNull Set<I> idsFoundInCache,
+                final Set<I> allRequestIds,
+                final Set<I> idsFoundInCache,
                 final int maxPartitionSize) {
             assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
             return Collections.emptySet();
@@ -31,17 +29,16 @@ public enum CacheRefreshStrategy {
      */
     OPTIMISTIC,
     /**
-     * Calls the batch service with the maximum amount of request items when we must call
+     * Calls the batch service with the maximum number of request items when we must call
      * the service anyway. This way some of the cached entities get refreshed before their
      * expiry (extending their expiry). This can be useful when a large number of items in
      * the cache is not an issue.
      */
     OPPORTUNISTIC {
-        @NotNull
         @Override
         public <I> Set<I> selectItemsForFetch(
-                final @NotNull Set<I> allRequestIds,
-                final @NotNull Set<I> idsFoundInCache,
+                final Set<I> allRequestIds,
+                final Set<I> idsFoundInCache,
                 final int maxPartitionSize) {
             assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
             final Set<I> result = new HashSet<>(SetUtils.difference(allRequestIds, idsFoundInCache));
@@ -68,11 +65,10 @@ public enum CacheRefreshStrategy {
             return true;
         }
 
-        @NotNull
         @Override
         public <I> Set<I> selectItemsForFetch(
-                final @NotNull Set<I> allRequestIds,
-                final @NotNull Set<I> idsFoundInCache,
+                final Set<I> allRequestIds,
+                final Set<I> idsFoundInCache,
                 final int maxPartitionSize) {
             assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
             Set<I> result = SetUtils.difference(allRequestIds, idsFoundInCache);
@@ -129,27 +125,26 @@ public enum CacheRefreshStrategy {
 
     /**
      * Filters the set of request IDs considering the IDs found in the cache and the maximum
-     * partition size. depending on the current strategy, we can decide to keep all or none
+     * partition size. Depending on the current strategy, we can decide to keep all or none
      * of the request IDs selected for fetching (or anything in between these two extremes).
      *
      * @param allRequestIds    The set of all partial request IDs in the batch.
-     * @param idsFoundInCache  The set of all partial request IDs we have found in cache.
+     * @param idsFoundInCache  The set of all partial request IDs we have found in the cache.
      * @param maxPartitionSize The maximum partition size we can use in a single batch.
      * @param <I>              The type of the request Id.
      * @return The set of request IDs we want to fetch.
      */
-    @NotNull
     public <I> Set<I> selectItemsForFetch(
-            final @NotNull Set<I> allRequestIds,
-            final @NotNull Set<I> idsFoundInCache,
+            final Set<I> allRequestIds,
+            final Set<I> idsFoundInCache,
             final int maxPartitionSize) {
         assertInputIsValid(allRequestIds, idsFoundInCache, maxPartitionSize);
         return SetUtils.difference(allRequestIds, idsFoundInCache);
     }
 
     protected <I> void assertInputIsValid(
-            final @NotNull Set<I> allRequestIds,
-            final @NotNull Set<I> idsFoundInCache,
+            final Set<I> allRequestIds,
+            final Set<I> idsFoundInCache,
             final int maxPartitionSize) {
         Assert.notNull(allRequestIds, "AllRequestIds cannot be null.");
         Assert.noNullElements(allRequestIds.toArray(), "AllRequestIds cannot contain null.");

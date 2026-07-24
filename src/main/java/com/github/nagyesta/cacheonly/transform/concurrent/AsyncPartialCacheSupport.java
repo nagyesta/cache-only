@@ -9,7 +9,7 @@ import com.github.nagyesta.cacheonly.transform.PartialCacheSupport;
  * @param <PR> The type of the partial request.
  * @param <PS> The type of the partial response.
  * @param <C>  The type of the cache key.
- * @param <I>  The type of the request Id.
+ * @param <I>  The type of the request ID.
  */
 @SuppressWarnings("java:S119") //the type parameter names are easier to recognize this way
 public interface AsyncPartialCacheSupport<PR, PS, C, I> extends PartialCacheSupport<PR, PS, C, I>, ConcurrentOperationSupport {

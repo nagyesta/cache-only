@@ -1,20 +1,24 @@
 package com.github.nagyesta.cacheonly.transform;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collection;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-@Setter
-@Getter
 public final class CollectionWrapper<E> {
 
     private Collection<E> collection;
 
     public CollectionWrapper(final Collection<E> collection) {
+        this.collection = collection;
+    }
+
+    public Collection<E> getCollection() {
+        return collection;
+    }
+
+    public void setCollection(final Collection<E> collection) {
         this.collection = collection;
     }
 

@@ -3,18 +3,19 @@ package com.github.nagyesta.cacheonly.example.unstable;
 import com.github.nagyesta.cacheonly.core.CacheRefreshStrategy;
 import com.github.nagyesta.cacheonly.raw.concurrent.AsyncBatchServiceCaller;
 import com.github.nagyesta.cacheonly.raw.exception.BatchServiceException;
-import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 
 @SuppressWarnings("checkstyle:MagicNumber")
-@Slf4j
-public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCaller<List<Long>, List<String>> {
+public class UnstableConcurrentBatchServiceCaller
+        implements AsyncBatchServiceCaller<List<Long>, List<String>> {
 
-    @NotNull
+    private static final Logger LOGGER = LoggerFactory.getLogger(UnstableConcurrentBatchServiceCaller.class);
+
     @Override
     public CacheRefreshStrategy refreshStrategy() {
         return CacheRefreshStrategy.PESSIMISTIC;
@@ -31,13 +32,12 @@ public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCa
     }
 
     @Override
-    public @NotNull ForkJoinPool forkJoinPool() {
+    public ForkJoinPool forkJoinPool() {
         return new ForkJoinPool(2);
     }
 
-    @Nullable
     @Override
-    public List<String> callBatchService(final @NotNull List<Long> batchRequest)
+    public @Nullable List<String> callBatchService(final List<Long> batchRequest)
             throws BatchServiceException {
         handleExceptionalCases(batchRequest);
         final var result = batchRequest.stream()
@@ -52,15 +52,15 @@ public class UnstableConcurrentBatchServiceCaller implements AsyncBatchServiceCa
     }
 
     @SuppressWarnings("java:S2925")
-    private void handleExceptionalCases(final @NotNull List<Long> batchRequest) {
+    private void handleExceptionalCases(final List<Long> batchRequest) {
         if (batchRequest.stream().anyMatch(i -> i < -30L)) {
             try {
                 final var start = System.currentTimeMillis();
                 Thread.sleep(60);
                 final var end = System.currentTimeMillis();
-                log.trace("Took: {} ms", (end - start));
+                LOGGER.trace("Took: {} ms", (end - start));
             } catch (final InterruptedException e) {
-                log.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
                 Thread.currentThread().interrupt();
             }
         }

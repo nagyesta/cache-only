@@ -1,8 +1,7 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
 import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -12,7 +11,7 @@ import java.util.stream.Collectors;
 
 /**
  * Abstract transformer intended to be used in cases when the batch response is a
- * simple {@link Map} of the partial responses using the ID as key.
+ * simple {@link Map} of the partial responses using the ID as a key.
  *
  * @param <C> The {@link Map} type used for the batch.
  * @param <P> The type of the partial response payload.
@@ -26,7 +25,7 @@ public class MapBasedResponseTransformer<C extends Map<I, P>, P, I>
      *
      * @param instanceSupplier Supplies a {@link Map} instance for the merge operation.
      */
-    public MapBasedResponseTransformer(final @NotNull Supplier<C> instanceSupplier) {
+    public MapBasedResponseTransformer(final Supplier<C> instanceSupplier) {
         super(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (t, u) -> t, instanceSupplier));
     }
 
@@ -41,22 +40,20 @@ public class MapBasedResponseTransformer<C extends Map<I, P>, P, I>
      * @param nullIfEmpty           True is we need to return null in case we are merging an empty map.
      */
     public MapBasedResponseTransformer(
-            final @NotNull Collector<Map.Entry<I, P>, ?, C> mergeMapCollector,
-            final @NotNull Function<Map.Entry<I, P>, I> splitKeyTransformer,
-            final @NotNull Function<Map.Entry<I, P>, P> splitValueTransformer,
+            final Collector<Map.Entry<I, P>, ?, C> mergeMapCollector,
+            final Function<Map.Entry<I, P>, I> splitKeyTransformer,
+            final Function<Map.Entry<I, P>, P> splitValueTransformer,
             final boolean nullIfEmpty) {
         super(mergeMapCollector, splitKeyTransformer, splitValueTransformer, nullIfEmpty);
     }
 
-    @NotNull
     @Override
-    public Map<I, P> splitToPartialResponse(final @NotNull C batchResponse) {
+    public Map<I, P> splitToPartialResponse(final C batchResponse) {
         return splitToMap(batchResponse);
     }
 
-    @Nullable
     @Override
-    public C mergeToBatchResponse(final @NotNull Map<I, P> entityMap) {
+    public @Nullable C mergeToBatchResponse(final Map<I, P> entityMap) {
         return mergeToBatch(entityMap);
     }
 

@@ -17,7 +17,6 @@ plugins {
     signing
     `maven-publish`
     alias(libs.plugins.sonar.qube)
-    alias(libs.plugins.lombok)
     alias(libs.plugins.versioner)
     alias(libs.plugins.owasp.dependencycheck)
     alias(libs.plugins.cyclonedx.bom)
@@ -102,22 +101,17 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor(libs.lombok)
-
-    compileOnly(libs.jetbrains.annotations)
+    compileOnly(libs.jspecify)
 
     implementation(libs.slf4j.api)
     implementation(libs.commons.collections4)
     implementation(libs.spring.context.support)
-
-    testCompileOnly(libs.jetbrains.annotations)
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testImplementation(libs.jupiter.core)
     testImplementation(libs.mockito.core)
     testImplementation(libs.spring.test)
-    testImplementation(libs.spring.context.support)
     testImplementation(libs.logback.classic)
 }
 

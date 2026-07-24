@@ -1,8 +1,7 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
 import com.github.nagyesta.cacheonly.transform.BatchRequestTransformer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -28,20 +27,18 @@ public class CollectionBasedRequestTransformer<C extends Collection<P>, P, I>
      * @param idFunction          The transformation that can determine the ID of a given partial request.
      */
     public CollectionBasedRequestTransformer(
-            final @NotNull Collector<P, ?, C> collectionCollector,
-            final @NotNull Function<P, I> idFunction) {
+            final Collector<P, ?, C> collectionCollector,
+            final Function<P, I> idFunction) {
         super(collectionCollector, idFunction);
     }
 
-    @NotNull
     @Override
-    public Map<I, P> splitToPartialRequest(final @NotNull C batchRequest) {
+    public Map<I, P> splitToPartialRequest(final C batchRequest) {
         return splitToMap(batchRequest);
     }
 
-    @Nullable
     @Override
-    public C mergeToBatchRequest(final @NotNull Map<I, P> requestMap) {
+    public @Nullable C mergeToBatchRequest(final Map<I, P> requestMap) {
         return mergeToBatch(requestMap);
     }
 

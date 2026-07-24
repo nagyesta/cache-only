@@ -5,10 +5,8 @@ spring = "7.0.8"
 commonsCollections = "4.5.0"
 jupiter = "6.1.2"
 mockitoCore = "5.23.0"
-lombok = "1.18.46"
-jetbrainsAnnotation = "26.1.0"
+jspecify = "1.0.0"
 
-lombokPlugin = "9.5.0"
 gitVersionerPlugin = "1.6.7"
 owaspPlugin = "12.2.2"
 
@@ -27,15 +25,13 @@ logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "lo
 commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollections" }
 jupiter-core = { module = "org.junit.jupiter:junit-jupiter", version.ref = "jupiter" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
-lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
-jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrainsAnnotation" }
+jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 # used by Renovate
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 # used by Renovate
 jacoco = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 
 [plugins]
-lombok = { id = "io.freefair.lombok", version.ref = "lombokPlugin" }
 versioner = { id = "io.toolebox.git-versioner", version.ref = "gitVersionerPlugin" }
 owasp-dependencycheck = { id = "org.owasp.dependencycheck", version.ref = "owaspPlugin" }
 cyclonedx-bom = { id = "org.cyclonedx.bom", version.ref = "cycloneDxBomPlugin" }

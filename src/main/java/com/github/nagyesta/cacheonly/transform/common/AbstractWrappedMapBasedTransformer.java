@@ -1,7 +1,6 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 
 import java.util.Collection;
@@ -39,10 +38,10 @@ public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>,
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
     protected AbstractWrappedMapBasedTransformer(
-            final @NotNull Supplier<B> instanceSupplier,
-            final @NotNull Function<B, C> mapReadFunction,
-            final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
-            final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
+            final Supplier<B> instanceSupplier,
+            final Function<B, C> mapReadFunction,
+            final BiFunction<B, C, B> mapWriteBiFunction,
+            final Collector<Map.Entry<I, E>, ?, C> mapCollector) {
         this(request -> cloneWrapper(request, instanceSupplier), mapReadFunction, mapWriteBiFunction, mapCollector);
     }
 
@@ -55,35 +54,32 @@ public abstract class AbstractWrappedMapBasedTransformer<B, C extends Map<I, E>,
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
     protected AbstractWrappedMapBasedTransformer(
-            final @NotNull UnaryOperator<B> cloneFunction,
-            final @NotNull Function<B, C> mapReadFunction,
-            final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
-            final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
+            final UnaryOperator<B> cloneFunction,
+            final Function<B, C> mapReadFunction,
+            final BiFunction<B, C, B> mapWriteBiFunction,
+            final Collector<Map.Entry<I, E>, ?, C> mapCollector) {
         this.cloneFunction = cloneFunction;
         this.mapReadFunction = mapReadFunction;
         this.mapWriteBiFunction = mapWriteBiFunction;
         this.mapCollector = mapCollector;
     }
 
-    @NotNull
     private static <B> B cloneWrapper(
-            final @NotNull B batch,
-            final @NotNull Supplier<B> instanceSupplier) {
+            final B batch,
+            final Supplier<B> instanceSupplier) {
         final var target = instanceSupplier.get();
         BeanUtils.copyProperties(batch, target);
         return target;
     }
 
-    @NotNull
-    protected final Map<I, B> splitToMap(final @NotNull B batch) {
+    protected final Map<I, B> splitToMap(final B batch) {
         return mapReadFunction.apply(batch).entrySet().stream()
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         entry -> mapWriteBiFunction.apply(cloneFunction.apply(batch), Stream.of(entry)
                                 .collect(mapCollector))));
     }
 
-    @Nullable
-    protected final B mergeToBatch(final @NotNull Map<I, B> map) {
+    protected final @Nullable B mergeToBatch(final Map<I, B> map) {
         return map.values().stream().findFirst()
                 .map(request -> mapWriteBiFunction.apply(cloneFunction.apply(request), map.values().stream()
                         .map(mapReadFunction)

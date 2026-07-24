@@ -3,8 +3,7 @@ package com.github.nagyesta.cacheonly.example.unstable;
 import com.github.nagyesta.cacheonly.core.conurrent.ConcurrentCacheServiceTemplate;
 import com.github.nagyesta.cacheonly.transform.BatchRequestTransformer;
 import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +15,13 @@ public class UnstableCacheServiceTemplate extends ConcurrentCacheServiceTemplate
 
     private static final BatchRequestTransformer<List<Long>, Long, Long> BATCH_REQUEST_TRANSFORMER =
             new BatchRequestTransformer<>() {
-                @NotNull
                 @Override
-                public Map<Long, Long> splitToPartialRequest(final @NotNull List<Long> batchRequest) {
+                public Map<Long, Long> splitToPartialRequest(final List<Long> batchRequest) {
                     return batchRequest.stream().collect(Collectors.toMap(Function.identity(), Function.identity()));
                 }
 
-                @Nullable
                 @Override
-                public List<Long> mergeToBatchRequest(final @NotNull Map<Long, Long> requestMap) {
+                public @Nullable List<Long> mergeToBatchRequest(final Map<Long, Long> requestMap) {
                     if (requestMap.isEmpty()) {
                         return null;
                     }
@@ -33,15 +30,13 @@ public class UnstableCacheServiceTemplate extends ConcurrentCacheServiceTemplate
             };
     private static final BatchResponseTransformer<List<String>, String, Long> BATCH_RESPONSE_TRANSFORMER =
             new BatchResponseTransformer<>() {
-                @NotNull
                 @Override
-                public Map<Long, String> splitToPartialResponse(final @NotNull List<String> batchResponse) {
+                public Map<Long, String> splitToPartialResponse(final List<String> batchResponse) {
                     return batchResponse.stream().collect(Collectors.toMap(Long::parseLong, Function.identity()));
                 }
 
-                @Nullable
                 @Override
-                public List<String> mergeToBatchResponse(final @NotNull Map<Long, String> entityMap) {
+                public @Nullable List<String> mergeToBatchResponse(final Map<Long, String> entityMap) {
                     if (entityMap.isEmpty()) {
                         return null;
                     }

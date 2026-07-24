@@ -6,7 +6,6 @@ import com.github.nagyesta.cacheonly.raw.concurrent.AsyncBatchServiceCaller;
 import com.github.nagyesta.cacheonly.transform.BatchRequestTransformer;
 import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
 import com.github.nagyesta.cacheonly.transform.concurrent.AsyncPartialCacheSupport;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +17,10 @@ public class ParcelCacheServiceTemplate
 
     @Autowired
     public ParcelCacheServiceTemplate(
-            final @NotNull AsyncPartialCacheSupport<String, ParcelResponse, String, String> partialCacheSupport,
-            final @NotNull BatchRequestTransformer<List<String>, String, String> batchRequestTransformer,
-            final @NotNull BatchResponseTransformer<List<ParcelResponse>, ParcelResponse, String> batchResponseTransformer,
-            final @NotNull AsyncBatchServiceCaller<List<String>, List<ParcelResponse>> batchServiceCaller) {
+            final AsyncPartialCacheSupport<String, ParcelResponse, String, String> partialCacheSupport,
+            final BatchRequestTransformer<List<String>, String, String> batchRequestTransformer,
+            final BatchResponseTransformer<List<ParcelResponse>, ParcelResponse, String> batchResponseTransformer,
+            final AsyncBatchServiceCaller<List<String>, List<ParcelResponse>> batchServiceCaller) {
         super(partialCacheSupport, batchRequestTransformer, batchResponseTransformer, batchServiceCaller);
     }
 }

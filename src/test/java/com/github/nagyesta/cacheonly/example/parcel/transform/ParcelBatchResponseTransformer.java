@@ -2,8 +2,7 @@ package com.github.nagyesta.cacheonly.example.parcel.transform;
 
 import com.github.nagyesta.cacheonly.example.parcel.response.ParcelResponse;
 import com.github.nagyesta.cacheonly.transform.common.CollectionBasedResponseTransformer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,10 +18,9 @@ public class ParcelBatchResponseTransformer
         super(Collectors.toList(), ParcelResponse::id, true);
     }
 
-    @Nullable
     @Override
-    public List<ParcelResponse> mergeToBatchResponse(
-            final @NotNull Map<String, ParcelResponse> entityMap) {
+    public @Nullable List<ParcelResponse> mergeToBatchResponse(
+            final Map<String, ParcelResponse> entityMap) {
         return super.mergeToBatchResponse(new TreeMap<>(entityMap));
     }
 }

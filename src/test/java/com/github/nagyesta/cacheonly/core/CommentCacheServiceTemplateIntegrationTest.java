@@ -48,15 +48,12 @@ class CommentCacheServiceTemplateIntegrationTest {
     void testCallCacheableBatchServiceShouldWrapExceptionWhenExceptionCaught() {
         //given
         // create the test request
-        final var request = ThreadRequest.builder()
-                .articleId(UUID.randomUUID())
-                .threadIds(Collections.singletonList(1L))
-                .build();
+        final var request = new ThreadRequest(UUID.randomUUID(), List.of(1L));
 
         //when
         assertThrows(BatchServiceException.class, () -> underTest.callCacheableBatchService(request));
 
-        //then + excception
+        //then + exception
     }
 
     @Test
@@ -66,10 +63,7 @@ class CommentCacheServiceTemplateIntegrationTest {
         //given
         // create the test request
         final var threadIds = Arrays.asList(1L, 2L, 3L, 4L);
-        final var request = ThreadRequest.builder()
-                .articleId(CommentService.NO_COMMENT)
-                .threadIds(threadIds)
-                .build();
+        final var request = new ThreadRequest(CommentService.NO_COMMENT, threadIds);
 
         //when
         final var actual = underTest.callCacheableBatchService(request);
@@ -92,10 +86,7 @@ class CommentCacheServiceTemplateIntegrationTest {
         //given
         // create the test request
         final var threadIds = Arrays.asList(1L, 2L, 3L, 4L);
-        final var request = ThreadRequest.builder()
-                .articleId(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT)
-                .threadIds(threadIds)
-                .build();
+        final var request = new ThreadRequest(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT, threadIds);
         final var expected = commentService.threadsOf(CommentService.AINT_NOBODY_GOT_TIME_FOR_THAT, new HashSet<>(threadIds));
 
         //when
@@ -103,6 +94,7 @@ class CommentCacheServiceTemplateIntegrationTest {
 
         //then
         assertNotNull(actual);
+        assertNotNull(actual.getThreads());
         assertEquals(2, actual.getThreads().size());
         assertEquals(expected, actual);
         // all items were tried from the cache and missed
@@ -124,10 +116,7 @@ class CommentCacheServiceTemplateIntegrationTest {
         //given
         // create the test request
         final var threadIds = Collections.singletonList(1L);
-        final var request = ThreadRequest.builder()
-                .articleId(CommentService.ARE_YOU_OUT_OF_QUOTA)
-                .threadIds(threadIds)
-                .build();
+        final var request = new ThreadRequest(CommentService.ARE_YOU_OUT_OF_QUOTA, threadIds);
         // fetch expected data
         final var expected = underTest.callBatchServiceAndPutAllToCache(request);
         // verify it was just put into the cache
@@ -145,6 +134,7 @@ class CommentCacheServiceTemplateIntegrationTest {
 
         //then
         assertNotNull(actual);
+        assertNotNull(actual.getThreads());
         assertEquals(1, actual.getThreads().size());
         assertEquals(expected, actual);
         // opportunistic processing will not call when all the items are already cached
@@ -160,8 +150,7 @@ class CommentCacheServiceTemplateIntegrationTest {
             throws BatchServiceException, NotFoundException {
         //given
         // warm-up cache
-        final var warmUpRequest = ThreadRequest.builder()
-                .articleId(CommentService.CACHING_IS_NOT_ALWAYS_EASY).threadIds(Collections.singletonList(1L)).build();
+        final var warmUpRequest = new ThreadRequest(CommentService.CACHING_IS_NOT_ALWAYS_EASY, List.of(1L));
         underTest.callBatchServiceAndPutAllToCache(warmUpRequest);
         // verify it was just put into the cache
         final var cache = cacheManager.getCache(THREADS);
@@ -170,8 +159,7 @@ class CommentCacheServiceTemplateIntegrationTest {
         reset(cache);
         // create the test request
         final var threadIds = Arrays.asList(1L, 5L);
-        final var request = ThreadRequest.builder()
-                .articleId(CommentService.CACHING_IS_NOT_ALWAYS_EASY).threadIds(threadIds).build();
+        final var request = new ThreadRequest(CommentService.CACHING_IS_NOT_ALWAYS_EASY, threadIds);
         // fetch expected data
         final var expected = commentService.threadsOf(CommentService.CACHING_IS_NOT_ALWAYS_EASY, new HashSet<>(threadIds));
         final var spyService = batchServiceCaller.getCommentService();
@@ -183,6 +171,7 @@ class CommentCacheServiceTemplateIntegrationTest {
 
         //then
         assertNotNull(actual);
+        assertNotNull(actual.getThreads());
         assertEquals(2, actual.getThreads().size());
         assertEquals(expected, actual);
         // opportunistic processing will refresh the already cached value as well

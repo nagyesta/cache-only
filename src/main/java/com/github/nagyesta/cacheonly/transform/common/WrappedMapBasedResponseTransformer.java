@@ -1,8 +1,7 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
 import com.github.nagyesta.cacheonly.transform.BatchResponseTransformer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -33,10 +32,10 @@ public class WrappedMapBasedResponseTransformer<B, C extends Map<I, E>, E, I>
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
     public WrappedMapBasedResponseTransformer(
-            final @NotNull Supplier<B> instanceSupplier,
-            final @NotNull Function<B, C> mapReadFunction,
-            final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
-            final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
+            final Supplier<B> instanceSupplier,
+            final Function<B, C> mapReadFunction,
+            final BiFunction<B, C, B> mapWriteBiFunction,
+            final Collector<Map.Entry<I, E>, ?, C> mapCollector) {
         super(instanceSupplier, mapReadFunction, mapWriteBiFunction, mapCollector);
     }
 
@@ -49,22 +48,20 @@ public class WrappedMapBasedResponseTransformer<B, C extends Map<I, E>, E, I>
      * @param mapCollector       The collector creating a new map from the partial entities.
      */
     public WrappedMapBasedResponseTransformer(
-            final @NotNull UnaryOperator<B> cloneFunction,
-            final @NotNull Function<B, C> mapReadFunction,
-            final @NotNull BiFunction<B, C, B> mapWriteBiFunction,
-            final @NotNull Collector<Map.Entry<I, E>, ?, C> mapCollector) {
+            final UnaryOperator<B> cloneFunction,
+            final Function<B, C> mapReadFunction,
+            final BiFunction<B, C, B> mapWriteBiFunction,
+            final Collector<Map.Entry<I, E>, ?, C> mapCollector) {
         super(cloneFunction, mapReadFunction, mapWriteBiFunction, mapCollector);
     }
 
-    @NotNull
     @Override
-    public Map<I, B> splitToPartialResponse(final @NotNull B batchResponse) {
+    public Map<I, B> splitToPartialResponse(final B batchResponse) {
         return splitToMap(batchResponse);
     }
 
-    @Nullable
     @Override
-    public B mergeToBatchResponse(final @NotNull Map<I, B> entityMap) {
+    public @Nullable B mergeToBatchResponse(final Map<I, B> entityMap) {
         return mergeToBatch(entityMap);
     }
 

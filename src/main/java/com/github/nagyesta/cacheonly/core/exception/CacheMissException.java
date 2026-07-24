@@ -1,9 +1,7 @@
 package com.github.nagyesta.cacheonly.core.exception;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
- * This exception is used when a cache miss is observed and the configuration
+ * This exception is used when a cache miss is observed, and the configuration
  * does not allow us to continue and try and fetch more items from the cache.
  */
 public class CacheMissException extends RuntimeException {
@@ -13,7 +11,7 @@ public class CacheMissException extends RuntimeException {
      *
      * @param message The message detailing the cache miss.
      */
-    public CacheMissException(final @NotNull String message) {
+    public CacheMissException(final String message) {
         super(message);
     }
 

@@ -1,7 +1,6 @@
 package com.github.nagyesta.cacheonly.transform.common;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Map;
@@ -30,8 +29,8 @@ public class AbstractCollectionBasedTransformer<C extends Collection<P>, P, I> {
      * @param idFunction          The transformation that can determine the ID of a given partial request (or response).
      */
     public AbstractCollectionBasedTransformer(
-            final @NotNull Collector<P, ?, C> collectionCollector,
-            final @NotNull Function<P, I> idFunction) {
+            final Collector<P, ?, C> collectionCollector,
+            final Function<P, I> idFunction) {
         this(collectionCollector, idFunction, false);
     }
 
@@ -43,22 +42,20 @@ public class AbstractCollectionBasedTransformer<C extends Collection<P>, P, I> {
      * @param nullIfEmpty         Flag telling the implementation whether we want to use null in case of an empty {@link Collection}.
      */
     public AbstractCollectionBasedTransformer(
-            final @NotNull Collector<P, ?, C> collectionCollector,
-            final @NotNull Function<P, I> idFunction,
+            final Collector<P, ?, C> collectionCollector,
+            final Function<P, I> idFunction,
             final boolean nullIfEmpty) {
         this.collectionCollector = collectionCollector;
         this.idFunction = idFunction;
         this.nullIfEmpty = nullIfEmpty;
     }
 
-    @NotNull
-    protected final Map<I, P> splitToMap(final @NotNull C batch) {
+    protected final Map<I, P> splitToMap(final C batch) {
         return batch.stream()
                 .collect(Collectors.toMap(idFunction, Function.identity()));
     }
 
-    @Nullable
-    protected final C mergeToBatch(final @NotNull Map<I, P> map) {
+    protected final @Nullable C mergeToBatch(final Map<I, P> map) {
         if (map.isEmpty() && nullIfEmpty) {
             return null;
         }
